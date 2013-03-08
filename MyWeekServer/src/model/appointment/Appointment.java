@@ -10,7 +10,7 @@ import model.Room;
  * @author Hans Olav Slotte
  */
 public class Appointment {
-	int id;
+	private int id;
 	private Time start, end;
 	private Room room;
 	private Person registeredBy;
