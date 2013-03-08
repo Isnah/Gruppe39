@@ -11,20 +11,24 @@ import model.Room;
 public class Appointment {
 	int id;
 	private Time start, end;
-	String descr;
+	private String name, descr, roomDescr;
 	Room room;
 	
 	/**
 	 * @param id
-	 * @param start
-	 * @param end
+	 * @param start When the appointment start
+	 * @param end When the appointment end
+	 * @param name The name of the appointment
 	 * @param descr Short description of the appointment
 	 */
-	public Appointment(int id, Time start, Time end, String descr) {
+	public Appointment(int id, Time start, Time end, String name, String descr) {
 		this.id = id;
 		this.start = start;
 		this.end = end;
+		this.name = name; 
 		this.descr = descr;
+		this.roomDescr = null; //This might never ever be set
+		this.room = null; //This one as well
 	}
 	
 	public void setStart(Time start) {
@@ -56,10 +60,23 @@ public class Appointment {
 	
 	/**
 	 * 
-	 * @return The start time in milliseconds from 1/1/1970 00:00:00 GMT
+	 * @return The end time in milliseconds from 1/1/1970 00:00:00 GMT
 	 */
 	public long getEnd() {
 		return end.getTime();
+	}
+	
+	
+	/**
+	 * 
+	 * @return A copy of the appointment name
+	 */
+	public String getName() {
+		return new String(name);
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/**
@@ -72,6 +89,19 @@ public class Appointment {
 	
 	public void setDescr(String descr) {
 		this.descr = descr;
+	}
+	
+	
+	/**
+	 * 
+	 * @return A copy of the room description
+	 */
+	public String getRoomDescr(){
+		return new String(roomDescr);
+	}
+	
+	public void setRoomDescr(String roomDescr) {
+		this.roomDescr = roomDescr;
 	}
 	
 	public void setRoom(Room room) {

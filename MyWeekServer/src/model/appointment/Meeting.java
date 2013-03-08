@@ -16,8 +16,8 @@ public class Meeting extends Appointment {
 		return registeredBy;
 	}
 	
-	public Meeting(int id, Time start, Time end, String descr, Person registeredBy, ArrayList<Person> initialAttendees) {
-		super(id, start, end, descr);
+	public Meeting(int id, Time start, Time end, String name, String descr, Person registeredBy, ArrayList<Person> initialAttendees) {
+		super(id, start, end, name, descr);
 		this.registeredBy = registeredBy;
 		attendees = initialAttendees;
 	}
