@@ -17,9 +17,13 @@ public class Appointment {
 	private String name, descr, roomDescr;
 	
 	/**
-	 * @param id
-	 * @param start When the appointment start
-	 * @param end When the appointment end
+	 * @param id The id of the appointment. This is the only place this is set, only
+	 * important and correct for appointments that have been fetched from the
+	 * database, upon insertion into the database, it will be ignored due to the
+	 * auto increment. <b>QUESTION: Do we want to make this more important and use it
+	 * as a check during insertion to avoid duplicates?</b>
+	 * @param start When the appointment starts
+	 * @param end When the appointment ends
 	 * @param name The name of the appointment
 	 * @param descr Short description of the appointment
 	 */
@@ -132,5 +136,9 @@ public class Appointment {
 	 */
 	public boolean wasRegisteredBy(Person person) {
 		return person == registeredBy;
+	}
+	
+	public int getID() {
+		return id;
 	}
 }

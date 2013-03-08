@@ -21,6 +21,8 @@ public class SQLTranslator {
 	 * This method connects to the database and returns this connection. Remember to
 	 * send this connection to all methods through this class to ensure that the
 	 * connection is always the same.
+	 * TODO: Set correct username and password in properties, as well as the database
+	 * url.
 	 * @return A connection to the database.
 	 */
 	public static Connection connectToDatabase() {
@@ -152,7 +154,6 @@ public class SQLTranslator {
 	
 	/**
 	 * Adds a meeting to the database
-	 * TODO: On hold due to uncertainties in the database.
 	 * @param mtn
 	 * @param c
 	 * @return true if successful, false otherwise
