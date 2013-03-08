@@ -9,26 +9,11 @@ import model.Person;
  * @author Hans Olav Slotte
  */
 public class Meeting extends Appointment {
-	private Person registeredBy;
 	private ArrayList<Person> attendees;
 	
-	public Person getRegisteredBy() {
-		return registeredBy;
-	}
-	
 	public Meeting(int id, Time start, Time end, String descr, Person registeredBy, ArrayList<Person> initialAttendees) {
-		super(id, start, end, descr);
-		this.registeredBy = registeredBy;
+		super(id, start, end, descr, registeredBy);
 		attendees = initialAttendees;
-	}
-	
-	/**
-	 * Checks if this person registered the meeting
-	 * @param person
-	 * @return True if person is who registered the Meeting
-	 */
-	public boolean wasRegisteredBy(Person person) {
-		return person == registeredBy;
 	}
 	
 	public Person getAttendee(int index) {

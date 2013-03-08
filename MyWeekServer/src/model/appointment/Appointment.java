@@ -2,6 +2,7 @@ package model.appointment;
 
 import java.sql.Time;
 
+import model.Person;
 import model.Room;
 
 /**
@@ -11,8 +12,9 @@ import model.Room;
 public class Appointment {
 	int id;
 	private Time start, end;
-	String descr;
-	Room room;
+	private String descr;
+	private Room room;
+	private Person registeredBy;
 	
 	/**
 	 * @param id
@@ -20,11 +22,12 @@ public class Appointment {
 	 * @param end
 	 * @param descr Short description of the appointment
 	 */
-	public Appointment(int id, Time start, Time end, String descr) {
+	public Appointment(int id, Time start, Time end, String descr, Person registeredBy) {
 		this.id = id;
 		this.start = start;
 		this.end = end;
 		this.descr = descr;
+		this.registeredBy = registeredBy;
 	}
 	
 	public void setStart(Time start) {
@@ -76,5 +79,26 @@ public class Appointment {
 	
 	public void setRoom(Room room) {
 		this.room = room;
+	}
+	
+	/**
+	 * Returns the room of this appointment, <b>not a copy!</b>
+	 * @return
+	 */
+	public Room getRoom() {
+		return room;
+	}
+	
+	public Person getRegisteredBy() {
+		return registeredBy;
+	}
+	
+	/**
+	 * Checks if this person registered the appointment
+	 * @param person
+	 * @return True if person is who registered the Appointment
+	 */
+	public boolean wasRegisteredBy(Person person) {
+		return person == registeredBy;
 	}
 }
