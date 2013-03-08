@@ -16,22 +16,11 @@ public class Room {
 	private ArrayList<Appointment> appointments;
 	
 	/**
-	 * KEEP SORTED!
-	 */
-	static private ArrayList<Room> rooms = new ArrayList<Room>();
-	
-	/**
 	 * @param id
 	 * @param space
 	 * @param name
-	 * @throws Exception Will throw an exception if the id is already in use
 	 */
-	public Room(int id, int space, String name) throws Exception { // consider making a custom exception type
-		for(int i = 0; i < rooms.size(); ++i) {
-			Room room = rooms.get(i);
-			if(room.getID() == id) throw new Exception("ID not available");
-			if(room.getID() > id) break;
-		}
+	public Room(int id, int space, String name) {
 		this.id = id;
 		this.space = space;
 		this.name = name;
@@ -91,13 +80,5 @@ public class Room {
 		appointments.add(app);
 		app.setRoom(this);
 		return true;
-	}
-	
-	/**
-	 * 
-	 * @return A copy of the static rooms list
-	 */
-	public static ArrayList<Room> getRooms() {
-		return new ArrayList<Room>(rooms);
 	}
 }

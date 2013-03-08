@@ -12,15 +12,11 @@ import model.appointment.Appointment;
  */
 public class Person {
 	private String lastName, firstName, email;
-	ArrayList<Appointment> appointments;
-	
-	private static ArrayList<Person> persons = new ArrayList<Person>();
+	private ArrayList<Appointment> appointments;
 	
 	/**
 	 * Constructor for the model.Person object. This is currently the only time you can
-	 * set these parameters in a Person. Be aware that there is <b>NO CHECK FOR WHETHER
-	 * THIS EMAIL IS AVAILABLE IN THE SYSTEM</b>. Please handle this properly, since
-	 * the Person is added to the static persons list on creation.
+	 * set these parameters in a Person.
 	 * @param email This persons email
 	 * @param lastName The persons last name
 	 * @param firstName The persons first name
@@ -29,8 +25,6 @@ public class Person {
 		this.email = email;
 		this.lastName = lastName;
 		this.firstName = firstName;
-		
-		persons.add(this);
 	}
 	
 	/**
@@ -78,12 +72,5 @@ public class Person {
 	
 	public void addAppointment(Appointment app) {
 		appointments.add(app);
-	}
-	/**
-	 * 
-	 * @return A copy of the static persons list
-	 */
-	public static ArrayList<Person> getPersons() {
-		return new ArrayList<Person>(persons);
 	}
 }

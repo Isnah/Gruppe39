@@ -36,6 +36,16 @@ public class Meeting extends Appointment {
 	}
 	
 	/**
+	 * Checks whether a person is already in the attendees list before adding
+	 * them to it.
+	 * @param person The person you want to add to the attendees list
+	 */
+	public void addAttendee(Person person) {
+		if(attendees.contains(person)) return;
+		attendees.add(person);
+	}
+	
+	/**
 	 * 
 	 * @return A copy of the attendee list. Person instances in the list are still
 	 * editable as normal.

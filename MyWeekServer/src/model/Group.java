@@ -13,18 +13,13 @@ public class Group {
 	String name;
 	int id;
 	
-	public static ArrayList<Group> groups = new ArrayList<Group>();
-	
 	/**
-	 * Just as with Person there is <b> no check for whether the id is available </b>
-	 * Users will need to deal with this appropriately.
 	 * @param id
 	 * @param name
 	 */
 	public Group(int id, String name) {
 		this.id = id;
 		this.name = name;
-		groups.add(this);
 	}
 	
 	public int getID() {
@@ -35,8 +30,12 @@ public class Group {
 		this.name = name;
 	}
 	
+	/**
+	 * 
+	 * @return A copy of the name
+	 */
 	public String getName() {
-		return name;
+		return new String(name);
 	}
 	
 	public boolean isDirectMember(Person person) {
@@ -50,5 +49,26 @@ public class Group {
 	 */
 	public ArrayList<Person> getMembers() {
 		return new ArrayList<Person>(members);
+	}
+	
+	/**
+	 * Get the subgroups of this group
+	 * @return A copy of the group list. The actual group list cannot be edited
+	 * through this list, but the members of the list can be.
+	 */
+	public ArrayList<Group> getSubgroups() {
+		return new ArrayList<Group>(subgroups);
+	}
+	
+	/**
+	 * Add a group to the subgroups of this group
+	 * @param group The group you wish to add
+	 * @return true if the group was successfully added, false if the
+	 * subgroups list already contains this group.
+	 */
+	public boolean addSubgroup(Group group) {
+		if(subgroups.contains(group)) return false;
+		subgroups.add(group);
+		return true;
 	}
 }

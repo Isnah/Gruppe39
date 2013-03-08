@@ -1,7 +1,6 @@
 package model.appointment;
 
 import java.sql.Time;
-import java.util.ArrayList;
 
 import model.Room;
 
@@ -15,14 +14,7 @@ public class Appointment {
 	String descr;
 	Room room;
 	
-	private static ArrayList<Appointment> appointments = new ArrayList<Appointment>();
-	
 	/**
-	 * Since there will be appointments made during validity checking etc., new
-	 * Appointments WILL NOT be added to the static appointments list. This must
-	 * be handled by Model when appointments are actually added to the working
-	 * model. This can be done through the <code>addAppointment(Appointment app)
-	 * </code> function.
 	 * @param id
 	 * @param start
 	 * @param end
@@ -33,25 +25,6 @@ public class Appointment {
 		this.start = start;
 		this.end = end;
 		this.descr = descr;
-	}
-	
-	/**
-	 * 
-	 * @return A copy of the static appointments list
-	 */
-	public static ArrayList<Appointment> getAppointments() {
-		return new ArrayList<Appointment>(appointments);
-	}
-	
-	/**
-	 * This method adds the appointment app to the static appointments
-	 * list. It automatically checks whether the given element is already
-	 * in the list, but does not automatically check for whether the id
-	 * is available.
-	 * @param app
-	 */
-	public static void addAppointment(Appointment app) {
-		if(!appointments.contains(app)) appointments.add(app);
 	}
 	
 	public void setStart(Time start) {
