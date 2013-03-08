@@ -4,20 +4,27 @@ import java.sql.Time;
 import java.util.ArrayList;
 
 import model.Person;
+import model.Group;
 
 /**
  * @author Hans Olav Slotte
  */
 public class Meeting extends Appointment {
 	private ArrayList<Person> attendees;
+	private ArrayList<Group> groupAttendees;
 	
-	public Meeting(int id, Time start, Time end, String name, String descr, Person registeredBy, ArrayList<Person> initialAttendees) {
+	public Meeting(int id, Time start, Time end, String name, String descr, Person registeredBy, ArrayList<Person> initialAttendees, ArrayList<Group> initialGroups) {
 		super(id, start, end, name, descr, registeredBy);
 		attendees = initialAttendees;
+		groupAttendees = initialGroups;
 	}
 	
 	public Person getAttendee(int index) {
 		return attendees.get(index);
+	}
+	
+	public Group getGroupAttendee(int index) {
+		return groupAttendees.get(index);
 	}
 	
 	/**
@@ -41,5 +48,17 @@ public class Meeting extends Appointment {
 	
 	public boolean isAttending(Person person) {
 		return attendees.contains(person);
+	}
+	
+	/**
+	 * @return A copy of the group attendee list. Group instances are editable
+	 * as normal.
+	 */
+	public ArrayList<Group> getGroupAttendees() {
+		return new ArrayList<Group>(groupAttendees);
+	}
+	
+	public boolean isAttendingGroup(Group group) {
+		return groupAttendees.contains(group);
 	}
 }
