@@ -51,6 +51,12 @@ public class Login extends javax.swing.JFrame {
 
         passwordLabel.setText("Password");
 
+        jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPasswordField1KeyPressed(evt);
+            }
+        });
+
         errorPanel.setBackground(new java.awt.Color(240, 240, 200));
         errorPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
@@ -143,7 +149,24 @@ public class Login extends javax.swing.JFrame {
         errorPanel.setVisible(true);
         //TODO: Fix login check.
     }//GEN-LAST:event_loginButtonActionPerformed
+    /**
+     * Called when pressing enter while focusing the password field.
+     */
+    private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
+        if (evt.getKeyCode() == 10) {
+            if (checkLogin()) {
+                dispose();
+                new MainWindow().setVisible(true);
+            }
+        }
+    }//GEN-LAST:event_jPasswordField1KeyPressed
 
+    /**
+     * Login check
+     */
+    private boolean checkLogin() {
+        return true;
+    }
     /**
      * @param args the command line arguments
      */
