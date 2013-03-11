@@ -104,9 +104,9 @@ public class SQLTranslator {
 		query.append("INSERT INTO Appointment (name, start, end_time, descr, ");
 		if(app.getRoomDescr() != null) query.append("room_descr, ");
 		else if(app.getRoom() != null) query.append("room_id, ");
-		query.append("created_by ) VALUES ( ");
+		query.append("created_by ) VALUES ( \"");
 		query.append(app.getName());
-		query.append(", ");
+		query.append("\", ");
 		query.append(app.getStart());
 		query.append(", ");
 		query.append(app.getEnd());
@@ -163,13 +163,15 @@ public class SQLTranslator {
 		
 		query.append("INSERT INTO Appointment VALUES ( name, start, end_time, descr, ");
 		if(mtn.getRoom() != null) query.append("room_id, ");
-		query.append("created_by ) VALUES ( ");
-		query.append(mtn.getName() + ", ");
+		query.append("created_by ) VALUES ( \"");
+		query.append(mtn.getName() + "\", ");
 		query.append(mtn.getStart() + ", ");
-		query.append(mtn.getEnd() + ", ");
-		query.append(mtn.getDescr() + ", ");
+		query.append(mtn.getEnd() + ", \"");
+		query.append(mtn.getDescr() + "\", ");
 		if(mtn.getRoom() != null) query.append(mtn.getRoom().getID() + ", ");
-		query.append(mtn.getRegisteredBy());
+		query.append("\"");
+		query.append(mtn.getRegisteredBy().getEmail());
+		query.append("\" );\n");
 		try {
 			Statement s = c.createStatement();
 			s.executeUpdate(query.toString());
