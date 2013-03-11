@@ -17,7 +17,6 @@ public class Person {
 
 	/**
 	 * @Author Endre Elvestad
-	 * 
 	 */  
 	
 
