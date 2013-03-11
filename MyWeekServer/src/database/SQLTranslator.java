@@ -256,7 +256,7 @@ public class SQLTranslator {
 	
 	/*
 	 * Legge til:
-	 * getMeetingAnswers(Meeting) - should return answers that belongs to the meeting
+	 * getMeetingAnswers(Meeting) - Should return answers that belongs to the meeting
 	 */
 	
 	/**
