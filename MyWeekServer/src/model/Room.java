@@ -69,6 +69,8 @@ public class Room {
 		return true;
 	}
 	
+	
+	
 	/**
 	 * This adds an appointment to the room if it is available
 	 * @param app The appointment you wish to add.
@@ -81,4 +83,23 @@ public class Room {
 		app.setRoom(this);
 		return true;
 	}
+	
+	
+	/**
+	 * Wil return a list of strings with the correct time format for 
+	 * the dropdown menus we are planning to have for each room
+	 * @param day The time of the day in milliseconds
+	 * @return ArrayList<String> when the room is occupied, format: xx:xx-xx:xx
+	 */
+	public ArrayList<String> getOccupiedTime(long day) {
+		ArrayList<String> occupiedTimes = new ArrayList<String>();
+		
+		for(int i = 0; i < appointments.size(); ++i) {
+			Appointment app = appointments.get(i);
+			occupiedTimes.add(app.getTimeFormat());
+		}
+		
+		return occupiedTimes;
+	}
+	
 }

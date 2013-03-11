@@ -141,4 +141,13 @@ public class Appointment {
 	public int getID() {
 		return id;
 	}
+	
+	/**
+	 * @return String of the time format for when the meeting is planned: xx:xx-xx:xx
+	 */
+	public String getTimeFormat(){
+		String timeFormat = start.toString().substring(0, 5); //xx:xx
+		timeFormat += "-" + end.toString().substring(0, 5); //-xx:xx
+		return timeFormat;
+	}
 }
