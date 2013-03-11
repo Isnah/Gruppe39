@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import model.appointment.Appointment;
 
@@ -108,4 +109,7 @@ public class Room {
 		return occupiedTimes;
 	}
 	
+	public Iterator<Appointment> getAppointmentIterator() {
+		return appointments.iterator();
+	}
 }
