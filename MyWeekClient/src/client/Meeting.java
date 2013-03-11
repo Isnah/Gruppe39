@@ -3,14 +3,21 @@ package client;
 import java.sql.Time;
 import java.util.ArrayList;
 
-
+import client.Appointment;
+import client.Person;
+import client.Group;
 
 /**
- * @author Hans Olav Slotte
+ * @author Tobias Linkjendal
  */
 public class Meeting extends Appointment {
 	private ArrayList<Person> attendees;
 	private ArrayList<Group> groupAttendees;
+	
+	//This is awesome for GUI
+	private ArrayList<Person> accepted;
+	private ArrayList<Person> pending;
+	private ArrayList<Person> declined;
 	
 	public Meeting(int id, Time start, Time end, String name, String descr, Person registeredBy, ArrayList<Person> initialAttendees, ArrayList<Group> initialGroups) {
 		super(id, start, end, name, descr, registeredBy);
@@ -18,12 +25,43 @@ public class Meeting extends Appointment {
 		groupAttendees = initialGroups;
 	}
 	
+	
 	public Person getAttendee(int index) {
 		return attendees.get(index);
 	}
 	
 	public Group getGroupAttendee(int index) {
 		return groupAttendees.get(index);
+	}
+	
+	/**
+	 * Checks whether a person is already in the accepted list before adding
+	 * them to it.
+	 * @param person The person you want to add to the accepted list
+	 */
+	public void addToAccepted(Person person) {
+		if(accepted.contains(person)) return;
+		accepted.add(person);
+	}
+	
+	/**
+	 * Checks whether a person is already in the declined list before adding
+	 * them to it.
+	 * @param person The person you want to add to the declined list
+	 */
+	public void addToDeclined(Person person) {
+		if(declined.contains(person)) return;
+		declined.add(person);
+	}
+	
+	/**
+	 * Checks whether a person is already in the pending list before adding
+	 * them to it.
+	 * @param person The person you want to add to the pending list
+	 */
+	public void addToPending(Person person) {
+		if(pending.contains(person)) return;
+		pending.add(person);
 	}
 	
 	/**
