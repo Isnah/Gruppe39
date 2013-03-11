@@ -223,4 +223,46 @@ public class SQLTranslator {
 		
 		return true;
 	}
+	
+	public static Person getPerson(String email, Connection c) {
+		
+		//SELECT COUNT(*) FROM Person WHERE email=[email];
+		
+		StringBuilder query1 = new StringBuilder(); 
+		query1.append("SELECT COUNT(*) FROM Person WHERE email=");
+		query1.append(email);
+		query1.toString();
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query1.toString());
+			//Les: http://docs.oracle.com/javase/1.4.2/docs/api/java/sql/ResultSet.html
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			//return false;
+		}
+		
+		
+		
+		String lastname;
+		String firstname;
+		
+		
+		
+		Person person = new Person("email", "lastname", "firstname");
+		
+		return person;
+		
+	}
+	
+	/*
+	 * Ikke enda implementerte metoder:
+	 * 
+	 * addGroup
+	 * getPerson(id)
+	 * getAppointment(id)
+	 * getMeeting(id)
+	 * 
+	 */
 }
