@@ -13,6 +13,7 @@ import model.appointment.Meeting;
  * database.
  * 
  * @author Hans Olav Slotte
+ * @author Thor Jarle Skinstad
  *
  */
 public class SQLTranslator {
@@ -222,6 +223,67 @@ public class SQLTranslator {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Adds a room to the database
+	 * @param room The room you wish to add.
+	 * @param c The connection to the database.
+	 * @return True if the addition was successful, false if an exception is met
+	 * during execution.
+	 */
+	public static boolean addRoom(Room room, Connection c) {
+		StringBuilder query = new StringBuilder();
+		
+		query.append("INSERT INTO Room VALUES ( ");
+		query.append(room.getID());
+		query.append(", ");
+		query.append(room.getSpace());
+		query.append(", '");
+		query.append(room.getName());
+		query.append("' )");
+		
+		try {
+			Statement s = c.createStatement();
+			s.executeUpdate(query.toString());
+			return true;
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in room addition");
+			System.err.println("Message: " + ex.getMessage());
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if the email and password are correct and belongs to a user.
+	 * @param email 
+	 * @param password 
+	 * @param c The connection to the database.
+	 * @return True if a user exists with the given email and password, false otherwise.
+	 */
+	public static boolean isValidEmailAndPassword(String email, String password, Connection c)
+	{
+		StringBuilder query = new StringBuilder();
+		
+		query.append("SELECT email, password FROM Person");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery(query.toString());
+			while(rs.next()) {
+				if(email.equals(rs.getString(1)) && password.equals(rs.getString(2))) {
+					rs.close();
+					return true;
+				}
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in email and password validation");
+			System.err.println("Message: " + ex.getMessage());
+			return false;
+		}
+		
+		return false;
 	}
 	
 	public static Person getPerson(String email, Connection c) {
