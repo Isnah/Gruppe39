@@ -85,6 +85,7 @@ public class MainWindow extends javax.swing.JFrame {
         alarmList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
         infoParticipantsList = new javax.swing.JList();
+        removeAlarmButton = new javax.swing.JButton();
         calendarScrollPane = new javax.swing.JScrollPane();
         calendarPanel = new javax.swing.JPanel();
         timestampPanel = new javax.swing.JPanel();
@@ -486,6 +487,8 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(infoParticipantsList);
 
+        removeAlarmButton.setText("Remove");
+
         javax.swing.GroupLayout informationPanelLayout = new javax.swing.GroupLayout(informationPanel);
         informationPanel.setLayout(informationPanelLayout);
         informationPanelLayout.setHorizontalGroup(
@@ -507,13 +510,15 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(infoAlarmLabel)
-                    .addGroup(informationPanelLayout.createSequentialGroup()
-                        .addComponent(infoAlarmBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addAlarmButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(infoAlarmLabel)
+                        .addGroup(informationPanelLayout.createSequentialGroup()
+                            .addComponent(infoAlarmBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(addAlarmButton))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(removeAlarmButton, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(infoSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -562,7 +567,9 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(infoAlarmBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(addAlarmButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1)))
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeAlarmButton)))
                 .addContainerGap())
         );
 
@@ -582,7 +589,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp0Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel15)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp0Layout.setVerticalGroup(
             timestamp0Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -604,7 +611,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel16)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp1Layout.setVerticalGroup(
             timestamp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -626,7 +633,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel17)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp2Layout.setVerticalGroup(
             timestamp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -648,7 +655,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel19)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp3Layout.setVerticalGroup(
             timestamp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -670,7 +677,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel18)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp4Layout.setVerticalGroup(
             timestamp4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -692,7 +699,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel20)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp5Layout.setVerticalGroup(
             timestamp5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -714,7 +721,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel21)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp6Layout.setVerticalGroup(
             timestamp6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -736,7 +743,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel22)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp7Layout.setVerticalGroup(
             timestamp7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -758,7 +765,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel23)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp8Layout.setVerticalGroup(
             timestamp8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -780,7 +787,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp9Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel24)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp9Layout.setVerticalGroup(
             timestamp9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -802,7 +809,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp10Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel25)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp10Layout.setVerticalGroup(
             timestamp10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -824,7 +831,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp11Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel26)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp11Layout.setVerticalGroup(
             timestamp11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -846,7 +853,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp12Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel27)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp12Layout.setVerticalGroup(
             timestamp12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -868,7 +875,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp13Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel28)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp13Layout.setVerticalGroup(
             timestamp13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -890,7 +897,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp14Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel29)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp14Layout.setVerticalGroup(
             timestamp14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -912,7 +919,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp15Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel30)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp15Layout.setVerticalGroup(
             timestamp15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -934,7 +941,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp16Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel31)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp16Layout.setVerticalGroup(
             timestamp16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -956,7 +963,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp17Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel32)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp17Layout.setVerticalGroup(
             timestamp17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -978,7 +985,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp18Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel33)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp18Layout.setVerticalGroup(
             timestamp18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1000,7 +1007,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp19Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel34)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp19Layout.setVerticalGroup(
             timestamp19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1022,7 +1029,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp20Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel35)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp20Layout.setVerticalGroup(
             timestamp20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1044,7 +1051,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp21Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel36)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp21Layout.setVerticalGroup(
             timestamp21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1066,7 +1073,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp22Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel37)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp22Layout.setVerticalGroup(
             timestamp22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1088,7 +1095,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(timestamp23Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel38)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         timestamp23Layout.setVerticalGroup(
             timestamp23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1102,12 +1109,13 @@ public class MainWindow extends javax.swing.JFrame {
         calendarPanel.add(timestampPanel);
 
         mondayPanel.setBackground(new java.awt.Color(240, 240, 200));
+        mondayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout mondayPanelLayout = new javax.swing.GroupLayout(mondayPanel);
         mondayPanel.setLayout(mondayPanelLayout);
         mondayPanelLayout.setHorizontalGroup(
             mondayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 59, Short.MAX_VALUE)
+            .addGap(0, 114, Short.MAX_VALUE)
         );
         mondayPanelLayout.setVerticalGroup(
             mondayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1116,11 +1124,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         calendarPanel.add(mondayPanel);
 
+        tuesdayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout tuesdayPanelLayout = new javax.swing.GroupLayout(tuesdayPanel);
         tuesdayPanel.setLayout(tuesdayPanelLayout);
         tuesdayPanelLayout.setHorizontalGroup(
             tuesdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 59, Short.MAX_VALUE)
+            .addGap(0, 114, Short.MAX_VALUE)
         );
         tuesdayPanelLayout.setVerticalGroup(
             tuesdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1130,12 +1140,13 @@ public class MainWindow extends javax.swing.JFrame {
         calendarPanel.add(tuesdayPanel);
 
         wednesdayPanel.setBackground(new java.awt.Color(240, 240, 200));
+        wednesdayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout wednesdayPanelLayout = new javax.swing.GroupLayout(wednesdayPanel);
         wednesdayPanel.setLayout(wednesdayPanelLayout);
         wednesdayPanelLayout.setHorizontalGroup(
             wednesdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 59, Short.MAX_VALUE)
+            .addGap(0, 114, Short.MAX_VALUE)
         );
         wednesdayPanelLayout.setVerticalGroup(
             wednesdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1144,11 +1155,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         calendarPanel.add(wednesdayPanel);
 
+        thursdayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout thursdayPanelLayout = new javax.swing.GroupLayout(thursdayPanel);
         thursdayPanel.setLayout(thursdayPanelLayout);
         thursdayPanelLayout.setHorizontalGroup(
             thursdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 59, Short.MAX_VALUE)
+            .addGap(0, 114, Short.MAX_VALUE)
         );
         thursdayPanelLayout.setVerticalGroup(
             thursdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1158,12 +1171,13 @@ public class MainWindow extends javax.swing.JFrame {
         calendarPanel.add(thursdayPanel);
 
         fridayPanel.setBackground(new java.awt.Color(240, 240, 200));
+        fridayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout fridayPanelLayout = new javax.swing.GroupLayout(fridayPanel);
         fridayPanel.setLayout(fridayPanelLayout);
         fridayPanelLayout.setHorizontalGroup(
             fridayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 59, Short.MAX_VALUE)
+            .addGap(0, 114, Short.MAX_VALUE)
         );
         fridayPanelLayout.setVerticalGroup(
             fridayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1172,11 +1186,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         calendarPanel.add(fridayPanel);
 
+        saturdayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout saturdayPanelLayout = new javax.swing.GroupLayout(saturdayPanel);
         saturdayPanel.setLayout(saturdayPanelLayout);
         saturdayPanelLayout.setHorizontalGroup(
             saturdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 59, Short.MAX_VALUE)
+            .addGap(0, 114, Short.MAX_VALUE)
         );
         saturdayPanelLayout.setVerticalGroup(
             saturdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1186,12 +1202,13 @@ public class MainWindow extends javax.swing.JFrame {
         calendarPanel.add(saturdayPanel);
 
         sundayPanel.setBackground(new java.awt.Color(240, 240, 200));
+        sundayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout sundayPanelLayout = new javax.swing.GroupLayout(sundayPanel);
         sundayPanel.setLayout(sundayPanelLayout);
         sundayPanelLayout.setHorizontalGroup(
             sundayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 59, Short.MAX_VALUE)
+            .addGap(0, 114, Short.MAX_VALUE)
         );
         sundayPanelLayout.setVerticalGroup(
             sundayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1204,7 +1221,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         dayAndDatePanel.setMaximumSize(new java.awt.Dimension(861, 157));
         dayAndDatePanel.setMinimumSize(new java.awt.Dimension(0, 0));
-        dayAndDatePanel.setLayout(new java.awt.GridLayout());
+        dayAndDatePanel.setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel11.setBackground(new java.awt.Color(240, 240, 200));
         jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -1425,18 +1442,20 @@ public class MainWindow extends javax.swing.JFrame {
         centerPanelLayout.setHorizontalGroup(
             centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(centerPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(informationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(centerPanelLayout.createSequentialGroup()
                 .addGroup(centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(centerPanelLayout.createSequentialGroup()
-                        .addGap(125, 125, 125)
-                        .addComponent(dayAndDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(centerPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(calendarScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 931, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(informationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(centerPanelLayout.createSequentialGroup()
+                        .addGroup(centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(centerPanelLayout.createSequentialGroup()
+                                .addGap(125, 125, 125)
+                                .addComponent(dayAndDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(centerPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(calendarScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 931, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         centerPanelLayout.setVerticalGroup(
             centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1459,9 +1478,9 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(logoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(topPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(centerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(centerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(topPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1641,6 +1660,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTable otherCalendarsTable;
     private javax.swing.JComboBox otherPersonBox;
     private javax.swing.JButton previousWeekButton;
+    private javax.swing.JButton removeAlarmButton;
     private javax.swing.JButton removeAppointmentButton;
     private javax.swing.JPanel saturdayPanel;
     private javax.swing.JSeparator separator1;
