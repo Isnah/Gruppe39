@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import model.appointment.Appointment;
 
@@ -20,11 +21,17 @@ public class Person {
 	 * @param email This persons email
 	 * @param lastName The persons last name
 	 * @param firstName The persons first name
+	 * @param 
 	 */
-	public Person(String email, String lastName, String firstName) {
+	public Person(String email, String lastName, String firstName, ArrayList<Appointment> appointments) {
 		this.email = email;
 		this.lastName = lastName;
 		this.firstName = firstName;
+		this.appointments = appointments;
+	}
+	
+	public Person(String email, String lastName, String firstName) {
+		this(email, lastName, firstName, new ArrayList<Appointment>());
 	}
 	
 	/**
@@ -72,5 +79,9 @@ public class Person {
 	
 	public void addAppointment(Appointment app) {
 		appointments.add(app);
+	}
+	
+	public Iterator<Appointment> getAppointmentIterator() {
+		return appointments.iterator();
 	}
 }

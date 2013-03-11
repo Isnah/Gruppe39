@@ -20,11 +20,17 @@ public class Room {
 	 * @param space
 	 * @param name
 	 */
-	public Room(int id, int space, String name) {
+	public Room(int id, int space, String name, ArrayList<Appointment> appointments) {
 		this.id = id;
 		this.space = space;
 		this.name = name;
+		this.appointments = appointments;
 	}
+	
+	public Room(int id, int space, String name) {
+		this(id, space, name, new ArrayList<Appointment>());
+	}
+	
 	/**
 	 * DO NOT USE! Under construction. Needs model change events.
 	 * @param space

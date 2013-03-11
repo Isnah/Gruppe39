@@ -106,6 +106,7 @@ public class Appointment {
 	 * @return A copy of the room description
 	 */
 	public String getRoomDescr(){
+		if(roomDescr == null) return null;
 		return new String(roomDescr);
 	}
 	

@@ -112,7 +112,7 @@ public class XMLSerializer {
 		
 		return room;
 	}
-	/* Testkode
+	
 	public static void main(String[] args) {
 		Person person = new Person("ola@nordmann.no", "nordmann", "ola");
 		Appointment app1 = new Appointment(1, new Time(1), new Time(2), "test1", "tester xml parsing", person);
@@ -139,5 +139,5 @@ public class XMLSerializer {
 		root.appendChild(appointmentToXml(person.getAppointmentIterator().next()));
 		
 		return new Document(root);
-	}*/
+	}
 }
