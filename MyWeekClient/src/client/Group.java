@@ -64,6 +64,7 @@ public class Group {
 		if(subgroup.contains(group)) return false;
 		subgroup.add(group);
 		return true;
+		
 	}
 	
 	
