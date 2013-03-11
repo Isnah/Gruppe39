@@ -5,10 +5,12 @@ import java.util.ArrayList;
 
 
 
+
 public class Group {
 
 	/**
 	 * @Author Endre Elvestad
+	 * @Kudos  Hans Olav
 	 */
 	final int id;
 	String name;
@@ -38,7 +40,7 @@ public class Group {
 
 	//Returns all memebers in the current group - Not subgroups. 
 	public ArrayList<Person> getMember() {
-		return member;
+		return new ArrayList<Person>(member);
 	}
 	
 	//Chekcs to see if a Person isntance is a memeber of the current group
@@ -56,7 +58,7 @@ public class Group {
 
 	//Get a list of subgroups, where the current group is the parrent 
 	public ArrayList<Group> getSubgroup() {
-		return subgroup;
+		return new ArrayList<Group>(subgroup);
 	}
 
 	//Creates a new subgroup, where the current group is parrent. Returns False if allready a subgroup
