@@ -1,5 +1,14 @@
 package client;
 
+import java.sql.Time;
+import java.util.ArrayList;
+
+
+
+
+
+
+
 //import java.beans.PropertyChangeEvent;
 
 
@@ -15,6 +24,8 @@ public class Person {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private ArrayList<Appointment> appointments;
+	
 	
 
 	public Person(String email, String lastName, String firstName) {
@@ -25,7 +36,7 @@ public class Person {
 	
 	
 	public String getFirstName() {
-		return firstName;
+		return new String(firstName);
 	}
 
 /**
@@ -37,7 +48,7 @@ public class Person {
 */
 
 	public String getLastName() {
-		return lastName;
+		return new String(lastName);
 	}
 
 
@@ -50,7 +61,7 @@ public class Person {
 
 	 */
 	public String getEmail() {
-		return email;
+		return new String(email);
 	}
 
 
@@ -65,10 +76,21 @@ public class Person {
 	*/
 
 
+	public ArrayList<Appointment> getAppointments(Time start, Time end) {
+		ArrayList<Appointment> returnAppointments = new ArrayList<Appointment>();
+		for(int i = 0; i < appointments.size(); ++i) {
+			Appointment app = appointments.get(i);
+			if(app.getStart() > start.getTime() && app.getStart() < end.getTime()) {
+				returnAppointments.add(app);
+			} else if(app.getStart() < end.getTime() && app.getEnd() > start.getTime()) {
+				returnAppointments.add(app);
+			}
+		}
+		return returnAppointments;
+	}
 	
-	
-
-
-
+	public void addAppointment(Appointment app) {
+		appointments.add(app);
+	}
 
 }
