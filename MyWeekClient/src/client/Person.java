@@ -1,9 +1,9 @@
 package client;
 
-import gui.Appointment;
-
 import java.sql.Time;
 import java.util.ArrayList;
+
+
 
 
 
@@ -75,8 +75,7 @@ public class Person {
 	
 	*/
 
-//Need Appointment class to work
-/**
+
 	public ArrayList<Appointment> getAppointments(Time start, Time end) {
 		ArrayList<Appointment> returnAppointments = new ArrayList<Appointment>();
 		for(int i = 0; i < appointments.size(); ++i) {
@@ -93,6 +92,5 @@ public class Person {
 	public void addAppointment(Appointment app) {
 		appointments.add(app);
 	}
-*/
 
 }
