@@ -231,26 +231,64 @@ public class SQLTranslator {
 		StringBuilder query1 = new StringBuilder(); 
 		query1.append("SELECT COUNT(*) FROM Person WHERE email=");
 		query1.append(email);
-		query1.toString();
+		
+		int antPersoner;
 		
 		try {
 			Statement s = c.createStatement();
 			ResultSet r = s.executeQuery(query1.toString());
 			//Les: http://docs.oracle.com/javase/1.4.2/docs/api/java/sql/ResultSet.html
+			antPersoner = r.getInt(1);
+			
 		} catch (SQLException ex) {
 			System.err.println("SQLException while adding personappointment");
 			System.err.println("Message: " + ex.getMessage());
-			//return false;
+			return null;
 		}
 		
+		if(antPersoner!=1){
+			System.err.println("Message: Noe er galt. Sjekk getPerson(...)");
+		}
 		
+		//SELECT first_name FROM Person WHERE email=[email];
 		
-		String lastname;
+		StringBuilder query2 = new StringBuilder(); 
+		query2.append("SELECT first_name FROM Person WHERE email=");
+		query2.append(email);
+		
 		String firstname;
 		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query2.toString());
+			firstname = r.getString(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}	
 		
+		//SELECT last_name FROM Person WHERE email=[email];
 		
-		Person person = new Person("email", "lastname", "firstname");
+		String lastname;
+		
+		StringBuilder query3 = new StringBuilder(); 
+		query3.append("SELECT last_name FROM Person WHERE email=");
+		query3.append(email);	
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query3.toString());
+			lastname = r.getString(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}	
+		
+		Person person = new Person(email, lastname, firstname);
 		
 		return person;
 		
@@ -260,7 +298,6 @@ public class SQLTranslator {
 	 * Ikke enda implementerte metoder:
 	 * 
 	 * addGroup
-	 * getPerson(id)
 	 * getAppointment(id)
 	 * getMeeting(id)
 	 * 
