@@ -254,6 +254,52 @@ public class SQLTranslator {
 		}
 	}
 	
+	/*
+	 * Legge til:
+	 * getMeetingAnswers(Meeting) - should return answers that belongs to the meeting
+	 */
+	
+	/**
+	 * Adds a meeting answer related to the person with the email to the database
+	 * @param meetingID The ID of the meeting
+	 * @param email The persons email
+	 * @param c The connection to the database.
+	 * @return True if the addition was successful, false if an exception is met
+	 * during execution.
+	 */
+	public static boolean addMeetingAnswer(int meetingID, String email, Boolean answer, Connection c) {
+		StringBuilder query = new StringBuilder();
+		
+		query.append("INSERT INTO MeetingAnswer VALUES ( ");
+		query.append(meetingID);
+		query.append(", '");
+		query.append(email);
+		query.append("', ");
+		if(answer == null)
+		{
+			query.append("NULL");
+		}
+		else if(answer)
+		{
+			query.append("1");
+		}
+		else
+		{
+			query.append("0");
+		}
+		query.append(" )");
+		
+		try {
+			Statement s = c.createStatement();
+			s.executeUpdate(query.toString());
+			return true;
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in room addition");
+			System.err.println("Message: " + ex.getMessage());
+			return false;
+		}
+	} 
+	
 	/**
 	 * Checks if the email and password are correct and belongs to a user.
 	 * @param email 
