@@ -86,7 +86,7 @@ public class Person {
 	
 	public void addAppointment(Appointment app) {
 		appointments.add(app);
-	}
+	} 
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) 
 	{
