@@ -377,7 +377,15 @@ public class SQLTranslator {
 		return false;
 	}
 	
-public static Person getPerson(String email, Connection c) {
+
+	/**
+	 * 
+	 * @param email
+	 * @param c
+	 * @return
+	 */
+	
+	public static Person getPerson(String email, Connection c) {
 		
 		//SELECT first_name, last_name FROM Person WHERE email=[email];
 		
@@ -402,6 +410,13 @@ public static Person getPerson(String email, Connection c) {
 		return new Person(email, lastname, firstname);
 		
 	}
+
+	/**
+	 * Method to make a group with a specific id in the database into an object.
+	 * @param id: id of the group
+	 * @param c: Connection to the database.
+	 * @return
+	 */
 	
 	public static Group getGroup(int id, Connection c){
 		
@@ -428,7 +443,6 @@ public static Person getPerson(String email, Connection c) {
 		}
 		
 		return new Group(id, name, email);
-		//return new Group(id, name);
 	}
 	
 	public static Appointment getAppointment(int id, Connection c) {
@@ -547,6 +561,8 @@ public static Person getPerson(String email, Connection c) {
 		return new Meeting(id, start, end, name, descr, registeredBy, initialAttendees, initialGroups);
 		
 	}
+	
+	
 	
 
 	/*
