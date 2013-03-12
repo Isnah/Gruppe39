@@ -405,8 +405,29 @@ public static Person getPerson(String email, Connection c) {
 	
 	public static Group getGroup(int id, Connection c){
 		
+		//SELECT name, email WHERE id=[id]
 		
-		return null;
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT name, email WHERE id=");
+		query.append(id);
+		
+		String name;
+		String email;
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			r.next();
+			name = r.getString(1);
+			email = r.getString(2);
+				
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		
+		return new Group(id, name, email);
 		//return new Group(id, name);
 	}
 	
@@ -532,6 +553,7 @@ public static Person getPerson(String email, Connection c) {
 	 * Ikke enda implementerte metoder:
 	 * 
 	 * addGroup
+	 * getNotification(id)
 	 * 
 	 */
 
