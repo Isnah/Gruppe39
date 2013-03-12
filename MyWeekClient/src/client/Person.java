@@ -8,7 +8,8 @@ import java.beans.PropertyChangeSupport;
 
 
 /**
- * @Author Endre Elvestad & Tobias Linkjendal
+ * @author Endre Elvestad 
+ * @kudos Tobias Linkjendal
  */  
 
 public class Person {

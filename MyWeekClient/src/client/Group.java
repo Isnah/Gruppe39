@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Group {
 
 	/**
-	 * @Author Endre Elvestad
-	 * @Kudos  Hans Olav
+	 * @author Endre Elvestad
+	 * @kudos  Hans Olav
 	 * @alsoCoolGuy Tobias Linkendal
 	 */
 	private int id;
