@@ -1244,7 +1244,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+     
     /**
      * The method used to disconnect from the server and return the user to the login window.
      */

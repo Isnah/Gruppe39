@@ -13,7 +13,7 @@ import gui.Login;
 public class Main {
 	
 	private Person person;
-
+ 
     public boolean login(String username, char[] password) {
     	System.out.println("Logging in");
 		return true;

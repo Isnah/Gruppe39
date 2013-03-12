@@ -171,7 +171,7 @@ public class Login extends javax.swing.JFrame {
      */
     private boolean checkLogin() {
         return main.login(usernameField.getText(), passwordField.getPassword());
-    }
+    } 
     /**
      * @param args the command line arguments
      */
