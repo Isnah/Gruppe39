@@ -11,15 +11,21 @@ public class Group {
 	ArrayList<Person> members;
 	ArrayList<Group> subgroups;
 	String name;
+	String email;
 	int id;
 	
 	/**
 	 * @param id
 	 * @param name
 	 */
-	public Group(int id, String name) {
+	public Group(int id, String name, String email) {
 		this.id = id;
 		this.name = name;
+		this.email = email;
+	}
+	
+	public String getEmail(){
+		return email;
 	}
 	
 	public int getID() {
