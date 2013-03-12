@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import model.*;
@@ -403,26 +404,7 @@ public class SQLTranslator {
 	}
 	
 	public static Appointment getAppointment(int id, Connection c) {
-		
-		/*
-		CREATE TABLE Appointment(
-		id			int NOT NULL AUTO_INCREMENT,
-		name		varchar(50),
-		start		Timestamp NOT NULL,
-		end_time	Timestamp NOT NULL,
-		descr		varchar(255),
-		room_descr	varchar(255),
-		room_id		int,
-		created_by	varchar(50) NOT NULL,	
-		PRIMARY KEY (id),
-		FOREIGN KEY (room_id) REFERENCES Room(id) ON UPDATE CASCADE,
-		FOREIGN KEY (created_by) REFERENCES Person(email) ON DELETE CASCADE ON UPDATE CASCADE
-		*/
-		
-		//public Appointment(int id, Time start, Time end, String name, String descr, Person registeredBy)
-		
-		
-		
+				
 		//SELECT start FROM Appointment WHERE id=[id];
 		
 		Timestamp start;
@@ -441,8 +423,6 @@ public class SQLTranslator {
 			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}
-		
-		
 		
 		//SELECT end_time FROM Appointment WHERE id=[id];
 		
@@ -528,6 +508,183 @@ public class SQLTranslator {
 		
 	}
 	
+	public static Meeting getMeeting(int id, Connection c){
+		
+		
+		//*****KOPIERT FRA getAppointment*****
+		
+		Timestamp start;
+		
+		StringBuilder query1 = new StringBuilder(); 
+		query1.append("SELECT start FROM Appointment WHERE id=");
+		query1.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query1.toString());
+			start = r.getTimestamp(1);
+				
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		
+		//SELECT end_time FROM Appointment WHERE id=[id];
+		
+		Timestamp end;
+		
+		StringBuilder query2 = new StringBuilder(); 
+		query2.append("SELECT end_time FROM Appointment WHERE id=");
+		query2.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query2.toString());
+			end = r.getTimestamp(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}		
+		
+		
+		
+		//SELECT name FROM Appointment WHERE id=[id];
+		
+		String name;
+		
+		StringBuilder query3 = new StringBuilder(); 
+		query3.append("SELECT name FROM Appointment WHERE id=");
+		query3.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query3.toString());
+			name = r.getString(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}			
+		
+		
+		//SELECT descr FROM Appointment WHERE id=[id];
+		
+		String descr;
+		
+		StringBuilder query4 = new StringBuilder(); 
+		query4.append("SELECT name FROM Appointment WHERE id=");
+		query4.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query4.toString());
+			descr = r.getString(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}			
+		
+		
+		String created_by;
+		
+		StringBuilder query5 = new StringBuilder(); 
+		query5.append("SELECT name FROM Appointment WHERE id=");
+		query5.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query5.toString());
+			created_by = r.getString(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}		
+		
+		Person registeredBy = getPerson(created_by, c);
+		
+		//*****SLUTT PÅ KOPIERING FRA getAppointment*****
+		
+		//SELECT email FROM PersonAppointment WHERE app_id=[id]
+		
+		StringBuilder query6 = new StringBuilder(); 
+		query6.append("SELECT email FROM PersonAppointment WHERE app_id=");
+		query6.append(id);
+		
+		ResultSet personer;
+		
+		try {
+			Statement s = c.createStatement();
+			personer = s.executeQuery(query6.toString());
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}				
+		
+		ArrayList<Person> initialAttendees = new ArrayList<Person>();
+		
+		for(int i = 1; true; i++){
+			try{
+				Person person = getPerson(personer.getString(i), c);
+				if(person == null){
+					break;
+				}
+				initialAttendees.add(person);
+			} catch (SQLException e){
+					break;
+			}
+		}
+		
+		//SELECT DISTINCT added_by FROM PersonAppointment WHERE app_id=[id]
+		
+		StringBuilder query7 = new StringBuilder(); 
+		query7.append("SELECT DISTINCT added_by FROM PersonAppointment WHERE app_id=");
+		query7.append(id);
+		
+		ResultSet grupper;
+		
+		try {
+			Statement s = c.createStatement();
+			grupper = s.executeQuery(query7.toString());
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}	
+		
+		ArrayList<Group> initialGroups = new ArrayList<Group>();
+		
+		for(int i = 1; true; i++){
+			try{
+				Group group = getGroup(grupper.getInt(i), c);
+				if(group == null){
+					break;
+				}
+				initialGroups.add(group);
+			} catch (SQLException e){
+					break;
+			}
+		}		
+		
+		return new Meeting(id, start, end, name, descr, registeredBy, initialAttendees, initialGroups);
+		
+	}
+	
+	public static Group getGroup(int id, Connection c){
+		return null;
+	}
+	
+
 	/*
 	 * Ikke enda implementerte metoder:
 	 * 
@@ -536,3 +693,20 @@ public class SQLTranslator {
 	 * 
 	 */
 }
+
+/*SØPPEL:
+ * 
+ * 	public static boolean hjelpeMetodeGetMeeting1(ResultSet r, int i){
+		String s;
+		try{
+			s = r.getString(i);
+		} catch (Exception e){
+			return false;
+		}
+		
+		if(s != null){
+			return true;
+		}
+		return false;
+	}
+	*/

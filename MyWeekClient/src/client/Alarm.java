@@ -19,5 +19,18 @@ public class Alarm {
 		this.appointment = appointment;
 		this.message = message;
 	}
+	
+	public boolean startAlarmNow(Time currentTime){
+		if (startAlarm.getTime() > currentTime.getTime()) return false;
+		else return true;
+	}
+	
+	public String getMessage(){
+		return new String(message);
+	}
+	
+	public Appointment getAppointment(){
+		return appointment;
+	}
 
 }
