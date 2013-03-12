@@ -3,14 +3,12 @@ package client;
 import java.sql.Time;
 import java.util.ArrayList;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 
 
-
-
-
-
-//import java.beans.PropertyChangeEvent;
-
+//NB skal vi gjøre dette som vi har gjort i øvingen 
 
 
 public class Person {
@@ -24,9 +22,9 @@ public class Person {
 	private String lastName;
 	private String email;
 	private ArrayList<Appointment> appointments;
+	private PropertyChangeSupport pcs;
 	
 	
-
 	public Person(String email, String lastName, String firstName) {
 		this.email = email;
 		this.lastName = lastName;
@@ -64,7 +62,7 @@ public class Person {
 	}
 
 
-	/**
+	/** 
 	  
 	 public void setEmail(String email) {
 		this.email = email;
@@ -90,6 +88,11 @@ public class Person {
 	
 	public void addAppointment(Appointment app) {
 		appointments.add(app);
+	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) 
+	{
+		pcs.addPropertyChangeListener(listener);
 	}
 
 }
