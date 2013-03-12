@@ -2,8 +2,6 @@ package client;
 
 import java.sql.Time;
 
-import client.Appointment;
-
 /**
  * 
  * @author Tobias Linkjendal
@@ -20,10 +18,8 @@ public class Alarm {
 		this.message = message;
 	}
 	
-	public boolean startAlarmNow(Time currentTime){
-		if (startAlarm.getTime() > currentTime.getTime()) return false;
-		else return true;
-	}
+	
+	//GETTERS
 	
 	public String getMessage(){
 		return new String(message);
@@ -32,5 +28,16 @@ public class Alarm {
 	public Appointment getAppointment(){
 		return appointment;
 	}
+	
+	/**
+	 * @param currentTime The time now at this very moment
+	 * @return Boolean if it should start this alarm or not
+	 */
+	public boolean startAlarmNow(Time currentTime){
+		if (startAlarm.getTime() > currentTime.getTime()) return false;
+		else return true;
+	}
+	
+
 
 }

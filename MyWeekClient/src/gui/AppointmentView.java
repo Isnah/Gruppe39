@@ -4,21 +4,112 @@
  */
 package gui;
 
+import client.Appointment;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author Laxcor
  */
-public class AppointmentView extends javax.swing.JPanel {
-
-    private String name;
-    private String room;
-    private String time;
+public class AppointmentView extends javax.swing.JPanel implements PropertyChangeListener, MouseListener {
+    
+    private MainWindow frame;
+    private Appointment model;
+    
     
     /**
      * Creates new form AppointmentView
      */
-    public AppointmentView(String name, String room, String time) {
+    public AppointmentView(MainWindow frame,Appointment model) {
         initComponents();
+        
+        this.frame = frame;
+        
+        addMouseListener(this);
+        
+        this.model = model;
+        model.addPropertyChangeListener(this);
+        
+        appointmentName.setText(model.getName());
+        appointmentTime.setText(model.getTimeFormat());
+        appointmentRoom.setText(getRoom());
+        appointmentStatus.setText("");
+        alarmIcon.setText("");
+        
+        setPosition();
+    }
+    private String getRoom() {
+        if (model.getRoom() != null) {
+            return model.getRoom().getName();
+        }
+        else {
+            return model.getRoomDescr();
+        }
+    }
+    private void setPosition() {
+        int x, y, width, height, durationH, startH;
+        startH = Integer.parseInt(model.getTimeFormat().substring(0, 2));
+        durationH = Integer.parseInt(model.getTimeFormat().substring(6, 8)) - startH;
+        x = 2;
+        y = 40*startH; //*antall timer fra 00:00 til start
+        width = 110;
+        height = 38*durationH; // *antall timer
+        
+        System.out.println(x + " " + y + " " + width + " " + height);
+        setBounds(x, y, width, height);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        switch (evt.getPropertyName()) {
+            case Appointment.NAME:
+                appointmentName.setText(model.getName());
+                break;
+            case Appointment.START:
+                appointmentTime.setText(model.getTimeFormat());
+                setPosition();
+                break;
+            case Appointment.END:
+                appointmentTime.setText(model.getTimeFormat());
+                setPosition();
+                break;
+            case Appointment.ROOM:
+                appointmentRoom.setText(getRoom());
+                break;
+            default:
+        }
+        repaint();
+    }
+    
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        frame.showInformationPanel(model);
+                    }
+                });
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
 
     /**
@@ -36,6 +127,7 @@ public class AppointmentView extends javax.swing.JPanel {
         appointmentRoom = new javax.swing.JLabel();
         appointmentStatus = new javax.swing.JLabel();
 
+        setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         setPreferredSize(new java.awt.Dimension(112, 38));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -66,4 +158,5 @@ public class AppointmentView extends javax.swing.JPanel {
     private javax.swing.JLabel appointmentStatus;
     private javax.swing.JLabel appointmentTime;
     // End of variables declaration//GEN-END:variables
+
 }

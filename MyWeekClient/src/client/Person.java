@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeEvent;
 
 
 /**
- * @Author Endre Elvestad & Tobias Linkjendal
+ * @author Endre Elvestad 
+ * @kudos Tobias Linkjendal
  */  
 
 public class Person {
