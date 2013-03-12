@@ -532,7 +532,6 @@ public class SQLTranslator {
 	 * Ikke enda implementerte metoder:
 	 * 
 	 * addGroup
-	 * getAppointment(id)
 	 * getMeeting(id)
 	 * 
 	 */

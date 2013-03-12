@@ -1,6 +1,6 @@
 package model.appointment;
 
-import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -14,7 +14,7 @@ public class Meeting extends Appointment {
 	private ArrayList<Person> attendees;
 	private ArrayList<Group> groupAttendees;
 	
-	public Meeting(int id, Time start, Time end, String name, String descr, Person registeredBy, ArrayList<Person> initialAttendees, ArrayList<Group> initialGroups) {
+	public Meeting(int id, Timestamp start, Timestamp end, String name, String descr, Person registeredBy, ArrayList<Person> initialAttendees, ArrayList<Group> initialGroups) {
 		super(id, start, end, name, descr, registeredBy);
 		attendees = initialAttendees;
 		groupAttendees = initialGroups;
