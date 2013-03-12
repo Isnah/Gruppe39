@@ -14,7 +14,7 @@ public class Meeting extends Appointment {
 	private ArrayList<Person> attendees;
 	private ArrayList<Group> groupAttendees;
 	
-	//This is awesome for GUI
+	//This is awesome for GUI, they contain only persons
 	private ArrayList<Person> accepted;
 	private ArrayList<Person> pending;
 	private ArrayList<Person> declined;

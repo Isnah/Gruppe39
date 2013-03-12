@@ -195,6 +195,10 @@ public class Appointment {
 		return id;
 	}
 	
+	public ArrayList<Alarm> getAlarmList(){
+		return new ArrayList<Alarm>(alarms);
+	}
+	
 	public void addAlarm(Alarm a){
 		ArrayList<Alarm> oldAlarms = new ArrayList<Alarm>(alarms);
 		alarms.add(a);
