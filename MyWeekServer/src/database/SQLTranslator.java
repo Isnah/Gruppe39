@@ -684,7 +684,19 @@ public class SQLTranslator {
 		return null;
 	}
 	
-	public static boolean hjelpeMetodeGetMeeting1(ResultSet r, int i){
+
+	/*
+	 * Ikke enda implementerte metoder:
+	 * 
+	 * addGroup
+	 * getMeeting(id)
+	 * 
+	 */
+}
+
+/*S¯PPEL:
+ * 
+ * 	public static boolean hjelpeMetodeGetMeeting1(ResultSet r, int i){
 		String s;
 		try{
 			s = r.getString(i);
@@ -697,12 +709,4 @@ public class SQLTranslator {
 		}
 		return false;
 	}
-	
-	/*
-	 * Ikke enda implementerte metoder:
-	 * 
-	 * addGroup
-	 * getMeeting(id)
-	 * 
-	 */
-}
+	*/
