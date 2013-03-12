@@ -1,7 +1,6 @@
 package database;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -344,14 +343,6 @@ public class SQLTranslator {
 		}
 		
 		return null;
-	}
-	
-	/**
-	 * Helper method to convert from long time(used in jdbc) to datetime to use in database
-	 */
-	private static String longTimeToDatetime(long time) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return dateFormat.format(time);
 	}
 	
 	/**
