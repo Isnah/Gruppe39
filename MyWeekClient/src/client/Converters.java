@@ -16,7 +16,7 @@ public class Converters {
      * @param millis
      * @return 
      */
-    public String MillisecondsToHHMM(long millis) {
+    public static String MillisecondsToHHMM(long millis) {
         String hhmmss = String.format("%02d:%02d", 
             TimeUnit.MILLISECONDS.toHours(millis),
             TimeUnit.MILLISECONDS.toMinutes(millis) - 
