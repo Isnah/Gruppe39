@@ -84,7 +84,6 @@ public class InformationPanel extends javax.swing.JPanel {
         confirmYes = new javax.swing.JButton();
         confirmNo = new javax.swing.JButton();
         alarmLabel = new javax.swing.JLabel();
-        alarmBox = new javax.swing.JComboBox();
         participantsLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         addAlarmButton = new javax.swing.JButton();
@@ -93,6 +92,10 @@ public class InformationPanel extends javax.swing.JPanel {
         participantsScrollPane = new javax.swing.JScrollPane();
         oarticipantList = new javax.swing.JList();
         removeAlarmButton = new javax.swing.JButton();
+        jSpinner1 = new javax.swing.JSpinner();
+        jSpinner2 = new javax.swing.JSpinner();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(200, 230, 230));
 
@@ -173,8 +176,6 @@ public class InformationPanel extends javax.swing.JPanel {
         alarmLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         alarmLabel.setText("Alarms");
 
-        alarmBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         participantsLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         participantsLabel.setText("Participants");
 
@@ -189,6 +190,10 @@ public class InformationPanel extends javax.swing.JPanel {
         participantsScrollPane.setViewportView(oarticipantList);
 
         removeAlarmButton.setText("Remove");
+
+        jLabel1.setText("h");
+
+        jLabel2.setText("min");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -212,14 +217,24 @@ public class InformationPanel extends javax.swing.JPanel {
                 .addComponent(infoSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(alarmLabel)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(alarmBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(alarmLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(alarmListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(addAlarmButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(removeAlarmButton))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addAlarmButton))
-                    .addComponent(alarmListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(removeAlarmButton, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addGap(4, 4, 4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,10 +280,14 @@ public class InformationPanel extends javax.swing.JPanel {
                                 .addComponent(alarmLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(alarmBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(addAlarmButton))
+                                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(alarmListScrollPane)
+                                .addComponent(addAlarmButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(alarmListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(removeAlarmButton)))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -296,7 +315,6 @@ public class InformationPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addAlarmButton;
-    private javax.swing.JComboBox alarmBox;
     private javax.swing.JLabel alarmLabel;
     private javax.swing.JList alarmList;
     private javax.swing.JScrollPane alarmListScrollPane;
@@ -309,7 +327,11 @@ public class InformationPanel extends javax.swing.JPanel {
     private javax.swing.JButton editAppointmentButton;
     private javax.swing.JSeparator infoSeparator1;
     private javax.swing.JSeparator infoSeparator2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JSpinner jSpinner2;
     private javax.swing.JLabel location;
     private javax.swing.JLabel name;
     private javax.swing.JList oarticipantList;
