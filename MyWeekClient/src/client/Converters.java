@@ -4,11 +4,12 @@
  */
 package client;
 
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 /**
  *
- * @author Laxcor
+ * @author Laxcor & Tobias 
  */
 public class Converters {
     /**
@@ -22,5 +23,13 @@ public class Converters {
             TimeUnit.MILLISECONDS.toMinutes(millis) - 
             TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
         return hhmmss;
+    }
+    
+    public long dateAndTimeToMilliseconds(int year, int month, int day, int hour, int minutes){
+    	Calendar c = c = Calendar.getInstance();
+    	c.set(year, (month-1), day, hour, minutes, 0);
+    	
+    	return c.getTimeInMillis();
+    	
     }
 }
