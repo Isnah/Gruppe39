@@ -8,21 +8,22 @@ import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeEvent;
 
 
-//NB skal vi gjøre dette som vi har gjort i øvingen 
-
+/**
+ * @Author Endre Elvestad & Tobias Linkjendal
+ */  
 
 public class Person {
-
-	/**
-	 * @Author Endre Elvestad
-	 */  
-	
 
 	private String firstName;
 	private String lastName;
 	private String email;
 	private ArrayList<Appointment> appointments;
 	private PropertyChangeSupport pcs;
+	
+	public final static String NAME = "name";
+	public final static String EMAIL = "email";
+	public final static String DESCR = "descr";
+	public final static String ROOM = "room";
 	
 	
 	public Person(String email, String lastName, String firstName) {
@@ -36,41 +37,38 @@ public class Person {
 		return new String(firstName);
 	}
 
-/**
+	
 	public void setFirstName(String firstName) {
+		String oldName = this.firstName;
 		this.firstName = firstName;
-		PropertyChangeEvent event = new PropertyChangeEvent(this, NAME_PROPERTY_NAME, oldName, name);
-		propChangeSupp.firePropertyChange(event);
+		
+		pcs.firePropertyChange(NAME, oldName, firstName);
+		
 	}
-*/
 
 	public String getLastName() {
 		return new String(lastName);
 	}
 
 
-	/**
+
 	public void setLastName(String lastName) {
+		String oldName = this.lastName;
 		this.lastName = lastName;
-		PropertyChangeEvent event = new PropertyChangeEvent(this, NAME_PROPERTY_NAME, oldName, name);
-		propChangeSupp.firePropertyChange(event);
+		
+		pcs.firePropertyChange(NAME, oldName, lastName);
 	}
 
-	 */
 	public String getEmail() {
 		return new String(email);
 	}
-
-
-	/** 
 	  
 	 public void setEmail(String email) {
+		String oldMail = this.email;
 		this.email = email;
-		PropertyChangeEvent event = new PropertyChangeEvent(this, NAME_PROPERTY_NAME, oldName, name);
-		propChangeSupp.firePropertyChange(event);
+		
+		pcs.firePropertyChange(EMAIL, oldMail, email);
 	}
-	
-	*/
 
 
 	public ArrayList<Appointment> getAppointments(Time start, Time end) {
