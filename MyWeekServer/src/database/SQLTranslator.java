@@ -346,14 +346,6 @@ public class SQLTranslator {
 	}
 	
 	/**
-	 * Helper method to convert from long time(used in jdbc) to datetime to use in database
-	 */
-	private static String longTimeToDatetime(long time) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return dateFormat.format(time);
-	}
-	
-	/**
 	 * Checks if the email and password are correct and belongs to a user.
 	 * @param email 
 	 * @param password 
