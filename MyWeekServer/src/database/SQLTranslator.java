@@ -380,7 +380,7 @@ public class SQLTranslator {
 	}
 	
 	/**
-	 * Helper method to convert from long time(used in jdbc) to datetime to use in database
+	 * Helper method to convert from long time(used in jdbc) to datetime to use in database.
 	 */
 	private static String longTimeToDatetime(long time) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -388,7 +388,7 @@ public class SQLTranslator {
 	}
 	
 	/**
-	 * Helper method to convert from datetime(used in database) to long time(used in jdbc)
+	 * Helper method to convert from datetime(used in database) to long time(used in jdbc).
 	 */
 	private static long datetimeToLongTime(String datetime) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
