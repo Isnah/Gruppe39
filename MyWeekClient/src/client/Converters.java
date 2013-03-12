@@ -28,7 +28,7 @@ public class Converters {
 	}
     
     public long dateAndTimeToMilliseconds(int year, int month, int day, int hour, int minutes){
-    	Calendar c = c = Calendar.getInstance();
+    	Calendar c = Calendar.getInstance();
     	c.set(year, (month-1), day, hour, minutes, 0);
     	
     	return c.getTimeInMillis(); 
