@@ -265,6 +265,37 @@ public class XMLSerializer {
 	}
 	
 	/**
+	 * Very similar to assembleSimplePerson() except that it also assembles
+	 * the person's appointments and places them into the person's
+	 * appointments list
+	 * @param xmlPersonElement
+	 * @return
+	 */
+	public static Person assembleCompletePerson(Element xmlPersonElement) {
+		Person person = assembleSimplePerson(xmlPersonElement);
+		
+		Element element = xmlPersonElement.getFirstChildElement("appointments");
+		if(element == null) {
+			System.err.println("Malformed xml element. No appointments tag in assemble complete person.");
+			return null;
+		}
+		Elements appointments = element.getChildElements();
+		
+		for(int i = 0; i < appointments.size(); ++i) {
+			Element app = appointments.get(i);
+			if(app.getLocalName() == "meeting") {
+				Meeting meeting = assembleMeeting(app);
+				person.addAppointment(meeting);
+			} else if(app.getLocalName() == "appointment") {
+				Appointment appointment = assembleAppointment(app);
+				person.addAppointment(appointment);
+			}
+		}
+		
+		return person;
+	}
+	
+	/**
 	 * Assembles a simple person from an xml element. Returns null if the
 	 * element is malformed, along with printing an error message in
 	 * {@link System.err}
@@ -327,6 +358,11 @@ public class XMLSerializer {
 		return new Group(id, name);
 	}
 	
+	/**
+	 * Assembles a meeting from a xom element.
+	 * @param xmlMeetingElement
+	 * @return
+	 */
 	public static Meeting assembleMeeting(Element xmlMeetingElement) {
 		int id;
 		Timestamp start, end;
@@ -383,6 +419,10 @@ public class XMLSerializer {
 			return null;
 		}
 		registeredBy = assembleSimplePerson(element);
+		if(registeredBy == null) {
+			System.err.println("Malformed xml element. Assemble simple person returned null while assembling registered_by in meeting");
+			return null;
+		}
 		
 		boolean hasRoomDescr = true;
 		element = xmlMeetingElement.getFirstChildElement("room_description");
@@ -402,6 +442,10 @@ public class XMLSerializer {
 			room = null;
 		} else {
 			room = assembleRoom(element);
+			if(room == null) {
+				System.err.println("Malformed xml element. Room assembly returned null while assembling meeting");
+				return null;
+			}
 		}
 		
 		element = xmlMeetingElement.getFirstChildElement("attendees");
@@ -416,6 +460,10 @@ public class XMLSerializer {
 		for(int i = 0; i < people.size(); ++i) {
 			personAtt = people.get(i);
 			Person per = assembleSimplePerson(personAtt);
+			if(per == null) {
+				System.err.println("Malformed xml element. Assemble simple person returned null while assembling meeting.");
+				return null;
+			}
 			attendees.add(per);
 		}
 		
@@ -425,6 +473,10 @@ public class XMLSerializer {
 		for(int i = 0; i < groups.size(); ++i) {
 			grpAtt = groups.get(i);
 			Group grp = assembleSimpleGroup(grpAtt);
+			if(grp == null) {
+				System.err.println("Malformed xml element. Assemble simple group returned null while assembling meeting");
+				return null;
+			}
 			groupAttendees.add(grp);
 		}
 		
@@ -495,6 +547,10 @@ public class XMLSerializer {
 			return null;
 		}
 		registeredBy = assembleSimplePerson(element);
+		if(registeredBy == null) {
+			System.err.println("Malformed xml element. Assemble simple person returned null while assembling registered_by in appointment");
+			return null;
+		}
 		
 		
 		boolean hasRoomDescr = true;
@@ -515,6 +571,9 @@ public class XMLSerializer {
 			room = null;
 		} else {
 			room = assembleRoom(element);
+			if(room == null) {
+				System.err.println("Malformed xml element. Assemble room returned null while assembling appointment");
+			}
 		}
 		
 		Appointment app = new Appointment(id, start, end, name, descr, registeredBy);
@@ -565,39 +624,4 @@ public class XMLSerializer {
 		
 		return new Room(id, space, name);
 	}
-	
-	/*
-	public static void main(String[] args) {
-		Person user = new Person("kari@nordmann.no", "nordmann", "kari");
-		Person person = new Person("ola@nordmann.no", "nordmann", "ola");
-		Appointment app1 = new Appointment(1, new Time(1), new Time(2), "test1", "tester xml parsing", person);
-		Room room = new Room(1, 5, "testrom");
-		Meeting mtn = new Meeting(2, new Time(3), new Time(4), "meeting test", "a meeting between kari and ola", user, new ArrayList<Person>(), new ArrayList<Group>());
-		mtn.addAttendee(person);
-		room.addAppointment(mtn);
-		room.addAppointment(app1);
-		user.addAppointment(mtn);
-		person.addAppointment(app1);
-		person.addAppointment(mtn);
-		
-		Document doc = modelToXml(user);
-		
-		try {
-			Serializer serializer = new Serializer(System.out, "ISO-8859-1");
-			serializer.setIndent(4);
-			serializer.setMaxLength(64);
-			serializer.write(doc);
-		} catch (Exception ex) {
-			// do nothing
-		}
-	}
-	
-	public static Document testXml(Person person) {
-		Element root = new Element("user");
-		
-		root.appendChild(simplePersonToXml(person));
-		root.appendChild(appointmentToXml(person.getAppointmentIterator().next()));
-		
-		return new Document(root);
-	}*/
 }
