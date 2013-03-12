@@ -404,6 +404,8 @@ public static Person getPerson(String email, Connection c) {
 	}
 	
 	public static Group getGroup(int id, Connection c){
+		
+		
 		return null;
 		//return new Group(id, name);
 	}
@@ -526,13 +528,10 @@ public static Person getPerson(String email, Connection c) {
 	}
 	
 
-	
-
 	/*
 	 * Ikke enda implementerte metoder:
 	 * 
 	 * addGroup
-	 * getMeeting(id)
 	 * 
 	 */
 
