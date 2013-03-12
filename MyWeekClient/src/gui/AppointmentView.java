@@ -46,7 +46,7 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         if (model.getRoom() != null) {
             return model.getRoom().getName();
         }
-        else {
+        else { 
             return model.getRoomDescr();
         }
     }
@@ -58,8 +58,6 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         y = 40*startH; //*antall timer fra 00:00 til start
         width = 110;
         height = 38*durationH; // *antall timer
-        
-        System.out.println(x + " " + y + " " + width + " " + height);
         setBounds(x, y, width, height);
     }
 

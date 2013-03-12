@@ -6,6 +6,8 @@ package gui;
 
 import client.Appointment;
 import client.Converters;
+import client.Main;
+
 import java.sql.Time;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -1242,7 +1244,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+     
     /**
      * The method used to disconnect from the server and return the user to the login window.
      */
@@ -1251,13 +1253,13 @@ public class MainWindow extends javax.swing.JFrame {
         
         //For testing purposes:
         dispose();
-        new Login().setVisible(true);
+        new Login(new Main()).setVisible(true);
         // END 
     }
     /**
      * Method to add appointments to the calendar view
      */
-    private void addAppointment(Appointment model) {
+    public void addAppointment(Appointment model) {
         AppointmentView av = new AppointmentView(this, model);
         switch (Converters.dayStringFormat(model.getStart())) {
             case "Monday":
