@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  *
- * @author Laxcor & Tobias 
+ * @author Laxcor
  */
 public class Converters {
     /**
