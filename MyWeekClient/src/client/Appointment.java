@@ -6,7 +6,7 @@ import java.util.Calendar;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeEvent;
+//import java.beans.PropertyChangeEvent;
 
 import client.Person;
 import client.Room;
@@ -221,5 +221,8 @@ public class Appointment {
 		alarms.add(a);
 	}
 	
-	
+	public void addPropertyChangeListener(PropertyChangeListener listener) 
+	{
+		pcs.addPropertyChangeListener(listener);
+	}
 }
