@@ -5,6 +5,8 @@
 package client;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,6 +33,30 @@ public class Converters {
     	
     	return c.getTimeInMillis(); 
     	
-    	
     }
+    public static String dayStringFormat(long msecs) {
+        GregorianCalendar cal = new GregorianCalendar();
+
+        cal.setTime(new Date(msecs));
+
+        int dow = cal.get(Calendar.DAY_OF_WEEK);
+
+        switch (dow) {
+        case Calendar.MONDAY:
+            return "Monday";
+        case Calendar.TUESDAY:
+            return "Tuesday";
+        case Calendar.WEDNESDAY:
+            return "Wednesday";
+        case Calendar.THURSDAY:
+            return "Thursday";
+        case Calendar.FRIDAY:
+            return "Friday";
+        case Calendar.SATURDAY:
+            return "Saturday";
+        case Calendar.SUNDAY:
+            return "Sunday";
+        }
+    return "Unknown";
+  }
 }
