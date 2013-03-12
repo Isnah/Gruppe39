@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import server.helpers.LoginCredentials;
+
 import model.appointment.Appointment;
 import model.appointment.Meeting;
 import nu.xom.Document;
@@ -25,6 +27,49 @@ public class XMLSerializer {
 		Document doc = new Document(root);
 		
 		return doc;
+	}
+	
+	public static Document loginToXml(String username, char[] password) {
+		String passwordString = String.valueOf(password);
+		
+		Element root = new Element("login");
+		
+		Element user = new Element("user");
+		user.appendChild(username);
+		
+		Element pword = new Element("password");
+		pword.appendChild(passwordString);
+		
+		root.appendChild(user);
+		root.appendChild(pword);
+		
+		return new Document(root);
+	}
+	
+	public LoginCredentials assembleLogin(Document loginDoc) {
+		String user, password;
+		
+		Element root = loginDoc.getRootElement();
+		if(root.getLocalName() != "login") {
+			System.err.println("Not a login xml");
+			return null;
+		}
+		
+		Element element = root.getFirstChildElement("user");
+		if(element == null) {
+			System.err.println("Not a valid login xml. No user.");
+			return null;
+		}
+		user = element.getValue();
+		
+		element = root.getFirstChildElement("password");
+		if(element == null) {
+			System.err.println("Not a valid login xml. No password.");
+			return null;
+		}
+		password = element.getValue();
+		
+		return new LoginCredentials(user, password);
 	}
 	
 	/**
