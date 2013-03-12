@@ -24,13 +24,15 @@ public class Appointment {
 	private String name, descr, roomDescr;
 	private Person registeredBy;
 	private ArrayList<Alarm> alarms;
-	private PropertyChangeSupport pcs;
+	protected PropertyChangeSupport pcs;
 	
 	public final static String START = "start";
 	public final static String END = "end";
 	public final static String NAME = "name";
 	public final static String DESCR = "descr";
 	public final static String ROOM = "room";
+	public final static String ALARMS = "alarms";
+	public final static String LISTS = "lists";
 	
 	
 	/**
@@ -193,6 +195,20 @@ public class Appointment {
 		return id;
 	}
 	
+	public void addAlarm(Alarm a){
+		ArrayList<Alarm> oldAlarms = new ArrayList<Alarm>(alarms);
+		alarms.add(a);
+		
+		pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
+	}
+	
+	public void removeAlarm(Alarm a){
+		ArrayList<Alarm> oldAlarms = new ArrayList<Alarm>(alarms);
+		if (alarms.contains(a)) alarms.remove(a);
+		
+		pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
+	}
+	
 	/**
 	 * This function is usefull in Room.java and to show info about a meeting
 	 * @return String of the time format for when the meeting is planned: xx:xx-xx:xx
@@ -215,10 +231,6 @@ public class Appointment {
 							(c.get(Calendar.MONTH) + 1) + "/" +
 							c.get(Calendar.YEAR);
 		return dateFormat;
-	}
-	
-	public void addAlarm(Alarm a){
-		alarms.add(a);
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) 
