@@ -401,7 +401,48 @@ public class SQLTranslator {
 		return 0;
 	}
 	
-
+	/**
+	 * Method that communicates with database in order to return an object representing
+	 * a person based on the e-mail key.
+	 * The person is returned with all the appointments that the person is attending.
+	 * @param email: The key to identify a specific person.
+	 * @param c: Connection to database.
+	 * @return
+	 */
+	public static Person getPersonWithAppointments(String email, Connection c) {
+		
+		//getting info about the person from the database
+		
+		//SELECT first_name, last_name FROM Person WHERE email=[email];
+		
+		StringBuilder query = new StringBuilder(); 
+		query.append("SELECT first_name, last_name FROM Person WHERE email='");
+		query.append(email);
+		query.append("'");
+		
+		String firstname, lastname;
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			r.next();
+			firstname = r.getString(1);
+			lastname = r.getString(2);
+			r.close();
+		} catch (SQLException ex) {
+			System.err.println("SQLException while getting a person with appointments");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}	
+		
+		//fetching the person's appointments
+		ArrayList<Appointment> appointments;
+		//...
+		
+		return new Person(email, lastname, firstname);
+		
+	}
+	
 	/**
 	 * Method that communicates with database in order to return an object representing
 	 * a person based on the e-mail key.
@@ -409,25 +450,26 @@ public class SQLTranslator {
 	 * @param c: Connection to database.
 	 * @return
 	 */
-	
 	public static Person getPerson(String email, Connection c) {
 		
 		//SELECT first_name, last_name FROM Person WHERE email=[email];
 		
 		StringBuilder query = new StringBuilder(); 
-		query.append("SELECT first_name, last_name FROM Person WHERE email=");
+		query.append("SELECT first_name, last_name FROM Person WHERE email='");
 		query.append(email);
+		query.append("'");
 		
 		String firstname, lastname;
 		
 		try {
 			Statement s = c.createStatement();
 			ResultSet r = s.executeQuery(query.toString());
+			r.next();
 			firstname = r.getString(1);
 			lastname = r.getString(2);
-			
+			r.close();
 		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
+			System.err.println("SQLException while getting a person");
 			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}	
