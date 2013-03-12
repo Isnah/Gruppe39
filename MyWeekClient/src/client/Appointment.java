@@ -10,9 +10,6 @@ import java.beans.PropertyChangeSupport;
 import javax.swing.DefaultListModel;
 //import java.beans.PropertyChangeEvent;
 
-import client.Person;
-import client.Room;
-
 
 /**
  * 
@@ -63,18 +60,8 @@ public class Appointment {
 		pcs = new PropertyChangeSupport(this);
 	}
 	
-	/**
-	 * Decides if this appointment should come before/after another appointment
-	 * @param other Is another Appointment that this is compared to
-	 * @return int -1: This comes before. 1: This comes after. 0: This is equal
-	 */
-	public int compareTo(Appointment other){
-		if (other.getStart() > start.getTime()) return -1;
-		else if (other.getStart() < start.getTime()) return 1;
-		else if (other.getEnd() > end.getTime()) return -1;
-		else if (other.getEnd() < end.getTime()) return 1;
-		else return 0;
-	}
+	
+	//SETTERS
 	
 	public void setStart(Time start) {
 		Time oldStart = this.start;
@@ -94,20 +81,51 @@ public class Appointment {
 		pcs.firePropertyChange(START, oldStart, this.start);
 	}
 	
-	/**
-	 * 
-	 * @return The start time in milliseconds from 1/1/1970 00:00:00 GMT
-	 */
-	public long getStart() {
-		return start.getTime();
-	}
-	
 	public void setEnd(Time end) throws Exception {
 		Time oldEnd = this.end;
 		if(end.getTime() < start.getTime()) throw new Exception("INVALID! End earlier than start.");
 		this.end = end;
 		
 		pcs.firePropertyChange(END, oldEnd, end);
+	}
+	
+	public void setName(String name) {
+		String oldName = this.name;
+		this.name = name;
+		
+		pcs.firePropertyChange(NAME, oldName, name);
+	}
+	
+	public void setDescr(String descr) {
+		String oldDescr = this.descr; 
+		this.descr = descr;
+		
+		pcs.firePropertyChange(DESCR, oldDescr, descr);
+	}
+	
+	public void setRoomDescr(String roomDescr) {
+		String oldRoomDescr = this.roomDescr;
+		this.roomDescr = roomDescr;
+		
+		pcs.firePropertyChange(ROOM, oldRoomDescr, roomDescr);
+	}
+	
+	public void setRoom(Room room) {
+		Room oldRoom = this.room;
+		this.room = room;
+		
+		pcs.firePropertyChange(ROOM, oldRoom, room);
+	}
+	
+	
+	//GETTERS
+	
+	/**
+	 * 
+	 * @return The start time in milliseconds from 1/1/1970 00:00:00 GMT
+	 */
+	public long getStart() {
+		return start.getTime();
 	}
 	
 	/**
@@ -118,20 +136,12 @@ public class Appointment {
 		return end.getTime();
 	}
 	
-	
 	/**
 	 * 
 	 * @return A copy of the appointment name
 	 */
 	public String getName() {
 		return new String(name);
-	}
-	
-	public void setName(String name) {
-		String oldName = this.name;
-		this.name = name;
-		
-		pcs.firePropertyChange(NAME, oldName, name);
 	}
 	
 	/**
@@ -142,27 +152,12 @@ public class Appointment {
 		return new String(descr);
 	}
 	
-	public void setDescr(String descr) {
-		String oldDescr = this.descr; 
-		this.descr = descr;
-		
-		pcs.firePropertyChange(DESCR, oldDescr, descr);
-	}
-	
-	
 	/**
 	 * 
 	 * @return A copy of the room description
 	 */
 	public String getRoomDescr(){
 		return new String(roomDescr);
-	}
-	
-	public void setRoomDescr(String roomDescr) {
-		String oldRoomDescr = this.roomDescr;
-		this.roomDescr = roomDescr;
-		
-		pcs.firePropertyChange(ROOM, oldRoomDescr, roomDescr);
 	}
 	
 	/**
@@ -173,24 +168,8 @@ public class Appointment {
 		return room;
 	}
 	
-	public void setRoom(Room room) {
-		Room oldRoom = this.room;
-		this.room = room;
-		
-		pcs.firePropertyChange(ROOM, oldRoom, room);
-	}
-	
 	public Person getRegisteredBy() {
 		return registeredBy;
-	}
-	
-	/**
-	 * Checks if this person registered the appointment
-	 * @param person
-	 * @return True if person is who registered the Appointment
-	 */
-	public boolean wasRegisteredBy(Person person) {
-		return person == registeredBy;
 	}
 	
 	public int getID() {
@@ -199,20 +178,6 @@ public class Appointment {
 	
 	public DefaultListModel<Alarm> getAlarmList(){
 		return alarms;
-	}
-	
-	public void addAlarm(Alarm a){
-		//ArrayList<Alarm> oldAlarms = new DefaultListModel<Alarm>(alarms);
-		alarms.addElement(a);
-		
-		//pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
-	}
-	
-	public void removeAlarm(Alarm a){
-		//ArrayList<Alarm> oldAlarms = new DefaultListModel<Alarm>(alarms);
-		if (alarms.contains(a)) alarms.removeElement(a);
-		
-		//pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
 	}
 	
 	/**
@@ -237,6 +202,40 @@ public class Appointment {
 							(c.get(Calendar.MONTH) + 1) + "/" +
 							c.get(Calendar.YEAR);
 		return dateFormat;
+	}
+	
+	public void addAlarm(Alarm a){
+		//ArrayList<Alarm> oldAlarms = new DefaultListModel<Alarm>(alarms);
+		alarms.addElement(a);
+		//pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
+	}
+	
+	public void removeAlarm(Alarm a){
+		//ArrayList<Alarm> oldAlarms = new DefaultListModel<Alarm>(alarms);
+		if (alarms.contains(a)) alarms.removeElement(a);
+		//pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
+	}
+	
+	/**
+	 * Checks if this person registered the appointment
+	 * @param person
+	 * @return True if person is who registered the Appointment
+	 */
+	public boolean isRegisteredBy(Person person) {
+		return person == registeredBy;
+	}
+		
+	/**
+	 * Decides if this appointment should come before/after another appointment
+	 * @param other Is another Appointment that this is compared to
+	 * @return int -1: This comes before. 1: This comes after. 0: This is equal
+	 */
+	public int compareTo(Appointment other){
+		if (other.getStart() > start.getTime()) return -1;
+		else if (other.getStart() < start.getTime()) return 1;
+		else if (other.getEnd() > end.getTime()) return -1;
+		else if (other.getEnd() < end.getTime()) return 1;
+		else return 0;
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) 

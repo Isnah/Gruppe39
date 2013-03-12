@@ -3,10 +3,6 @@ package client;
 import java.sql.Time;
 import java.util.ArrayList;
 
-import client.Appointment;
-import client.Person;
-import client.Group;
-
 /**
  * @author Tobias Linkjendal
  */
@@ -26,6 +22,7 @@ public class Meeting extends Appointment {
 	}
 	
 	
+	//SETTERS
 	/**
 	 * This is the function that should immediately set one of the three GUI-lists
 	 * @param accepted The list of persons that have accepted
@@ -59,6 +56,9 @@ public class Meeting extends Appointment {
 		//pcs.firePropertyChange(LISTS, oldPending, pending);
 	}
 	
+	
+	//GETTERS
+	
 	public Person getAttendee(int index) {
 		return attendees.get(index);
 	}
@@ -83,6 +83,9 @@ public class Meeting extends Appointment {
 	public ArrayList<Group> getGroupAttendees() {
 		return new ArrayList<Group>(groupAttendees);
 	}
+	
+	
+	//ADDERS
 	
 	/**
 	 * Checks whether a person is already in the attendees list before adding

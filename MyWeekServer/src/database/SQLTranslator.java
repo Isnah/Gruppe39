@@ -1,6 +1,8 @@
 package database;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -108,11 +110,11 @@ public class SQLTranslator {
 		else if(app.getRoom() != null) query.append("room_id, ");
 		query.append("created_by ) VALUES ( \"");
 		query.append(app.getName());
-		query.append("\", ");
-		query.append(app.getStart());
-		query.append(", ");
-		query.append(app.getEnd());
-		query.append(", \"");
+		query.append("\", \"");
+		query.append(longTimeToDatetime(app.getStart()));
+		query.append("\", \"");
+		query.append(longTimeToDatetime(app.getEnd()));
+		query.append("\", \"");
 		query.append(app.getDescr());
 		query.append("\", ");
 		if(app.getRoomDescr() != null) {
@@ -377,7 +379,38 @@ public class SQLTranslator {
 		return false;
 	}
 	
-public static Person getPerson(String email, Connection c) {
+	/**
+	 * Helper method to convert from long time(used in jdbc) to datetime to use in database.
+	 */
+	private static String longTimeToDatetime(long time) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(time);
+	}
+	
+	/**
+	 * Helper method to convert from datetime(used in database) to long time(used in jdbc).
+	 */
+	private static long datetimeToLongTime(String datetime) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			return dateFormat.parse(datetime).getTime();
+		} catch (ParseException e) {
+			System.err.println("ParseException in datetimeToLongTime()");
+			System.err.println("Message: " + e.getMessage());
+		}
+		return 0;
+	}
+	
+
+	/**
+	 * Method that communicates with database in order to return an object representing
+	 * a person based on the e-mail key.
+	 * @param email: The key to identify a specific person.
+	 * @param c: Connection to database.
+	 * @return
+	 */
+	
+	public static Person getPerson(String email, Connection c) {
 		
 		//SELECT first_name, last_name FROM Person WHERE email=[email];
 		
@@ -402,10 +435,39 @@ public static Person getPerson(String email, Connection c) {
 		return new Person(email, lastname, firstname);
 		
 	}
+
+	/**
+	 * Method to make a group with a specific id in the database into an object.
+	 * @param id: id of the group
+	 * @param c: Connection to the database.
+	 * @return
+	 */
 	
 	public static Group getGroup(int id, Connection c){
-		return null;
-		//return new Group(id, name);
+		
+		//SELECT name, email WHERE id=[id]
+		
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT name, email WHERE id=");
+		query.append(id);
+		
+		String name;
+		String email;
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			r.next();
+			name = r.getString(1);
+			email = r.getString(2);
+				
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		
+		return new Group(id, name, email);
 	}
 	
 	public static Appointment getAppointment(int id, Connection c) {
@@ -525,14 +587,14 @@ public static Person getPerson(String email, Connection c) {
 		
 	}
 	
-
+	
 	
 
 	/*
 	 * Ikke enda implementerte metoder:
 	 * 
 	 * addGroup
-	 * getMeeting(id)
+	 * getNotification(id)
 	 * 
 	 */
 

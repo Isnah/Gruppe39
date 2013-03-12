@@ -6,8 +6,9 @@ package gui;
 
 import client.Appointment;
 import client.Converters;
-import java.util.Calendar;
-import java.util.Date;
+import client.Main;
+
+import java.sql.Time;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -16,8 +17,8 @@ import javax.swing.SwingUtilities;
  * @author Laxcor
  */
 public class MainWindow extends javax.swing.JFrame {
-
-    private Converters c;
+    
+    private Appointment testApp;
     /**
 	 * 
 	 */
@@ -27,7 +28,6 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         
-        c = new Converters();
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         initComponents();
         
@@ -38,8 +38,13 @@ public class MainWindow extends javax.swing.JFrame {
                 revalidate();
             }
         });
-        hideInformationPanel();
+        informationPanel.setVisible(false);
         
+        //Creating a test appointment
+        testApp = new Appointment(0, new Time(1363086894000L), new Time(1363106894000L), "Meeting", "A meeting", null);
+        testApp.setRoomDescr("Room 8");
+        addAppointment(testApp);
+        // End
     }
     
     /**
@@ -76,30 +81,6 @@ public class MainWindow extends javax.swing.JFrame {
         notificationScroll = new javax.swing.JScrollPane();
         notificationList = new javax.swing.JList();
         centerPanel = new javax.swing.JPanel();
-        informationPanel = new javax.swing.JPanel();
-        infoNameLabel = new javax.swing.JLabel();
-        infoDescriptionLabel = new javax.swing.JLabel();
-        infoTimeLabel = new javax.swing.JLabel();
-        infoDateLabel = new javax.swing.JLabel();
-        infoLocationLabel = new javax.swing.JLabel();
-        infoSeparator1 = new javax.swing.JSeparator();
-        infoSeparator2 = new javax.swing.JSeparator();
-        removeAppointmentButton = new javax.swing.JButton();
-        editAppointmentButton = new javax.swing.JButton();
-        infoConfirmRemovePanel = new javax.swing.JPanel();
-        infoConfirmationLabel = new javax.swing.JLabel();
-        infoConfirmYes = new javax.swing.JButton();
-        infoConfirmNo = new javax.swing.JButton();
-        infoAlarmLabel = new javax.swing.JLabel();
-        infoAlarmBox = new javax.swing.JComboBox();
-        infoParticipantsLabel = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        addAlarmButton = new javax.swing.JButton();
-        alarmListScrollPane = new javax.swing.JScrollPane();
-        alarmList = new javax.swing.JList();
-        participantsScrollPane = new javax.swing.JScrollPane();
-        infoParticipantsList = new javax.swing.JList();
-        removeAlarmButton = new javax.swing.JButton();
         calendarScrollPane = new javax.swing.JScrollPane();
         calendarPanel = new javax.swing.JPanel();
         timestampPanel = new javax.swing.JPanel();
@@ -180,6 +161,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel16 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        informationPanel = new gui.InformationPanel(this);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -398,196 +380,11 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGap(1, 1, 1)
                 .addComponent(notificationsLable)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(notificationScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                .addComponent(notificationScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         centerPanel.setBackground(new java.awt.Color(230, 230, 230));
-
-        informationPanel.setBackground(new java.awt.Color(200, 230, 230));
-        informationPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        infoNameLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        infoNameLabel.setText("<name>");
-
-        infoDescriptionLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        infoDescriptionLabel.setText("<description>");
-
-        infoTimeLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        infoTimeLabel.setText("<time from-to>");
-
-        infoDateLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        infoDateLabel.setText("<date>");
-
-        infoLocationLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        infoLocationLabel.setText("<location>");
-
-        infoSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
-        infoSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
-        removeAppointmentButton.setText("Remove Appointment");
-        removeAppointmentButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeAppointmentButtonActionPerformed(evt);
-            }
-        });
-
-        editAppointmentButton.setText("Edit Appointment");
-
-        infoConfirmRemovePanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51)));
-
-        infoConfirmationLabel.setText("<html>Are you sure you want to <br> remove this appointment?<html>");
-
-        infoConfirmYes.setText("Yes");
-        infoConfirmYes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                infoConfirmYesActionPerformed(evt);
-            }
-        });
-
-        infoConfirmNo.setText("No");
-        infoConfirmNo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                infoConfirmNoActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout infoConfirmRemovePanelLayout = new javax.swing.GroupLayout(infoConfirmRemovePanel);
-        infoConfirmRemovePanel.setLayout(infoConfirmRemovePanelLayout);
-        infoConfirmRemovePanelLayout.setHorizontalGroup(
-            infoConfirmRemovePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, infoConfirmRemovePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(infoConfirmRemovePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(infoConfirmRemovePanelLayout.createSequentialGroup()
-                        .addComponent(infoConfirmYes)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(infoConfirmNo, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(infoConfirmRemovePanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(infoConfirmationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18))
-        );
-        infoConfirmRemovePanelLayout.setVerticalGroup(
-            infoConfirmRemovePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(infoConfirmRemovePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(infoConfirmationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(infoConfirmRemovePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(infoConfirmYes)
-                    .addComponent(infoConfirmNo))
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
-
-        infoAlarmLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        infoAlarmLabel.setText("Alarms");
-
-        infoAlarmBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        infoParticipantsLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        infoParticipantsLabel.setText("Participants");
-
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
-        addAlarmButton.setText("Add");
-
-        alarmList.setBackground(new java.awt.Color(200, 230, 230));
-        alarmListScrollPane.setViewportView(alarmList);
-
-        infoParticipantsList.setBackground(new java.awt.Color(200, 230, 230));
-        infoParticipantsList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "-" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        participantsScrollPane.setViewportView(infoParticipantsList);
-
-        removeAlarmButton.setText("Remove");
-
-        javax.swing.GroupLayout informationPanelLayout = new javax.swing.GroupLayout(informationPanel);
-        informationPanel.setLayout(informationPanelLayout);
-        informationPanelLayout.setHorizontalGroup(
-            informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(informationPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(infoDateLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(infoTimeLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                    .addComponent(infoDescriptionLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(infoNameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(infoLocationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(infoSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(infoParticipantsLabel)
-                    .addComponent(participantsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(infoAlarmLabel)
-                        .addGroup(informationPanelLayout.createSequentialGroup()
-                            .addComponent(infoAlarmBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(addAlarmButton))
-                        .addComponent(alarmListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(removeAlarmButton, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(infoSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(editAppointmentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(removeAppointmentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
-                    .addComponent(infoConfirmRemovePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        informationPanelLayout.setVerticalGroup(
-            informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(infoSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(infoSeparator2)
-            .addComponent(jSeparator1)
-            .addGroup(informationPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(informationPanelLayout.createSequentialGroup()
-                        .addGroup(informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(informationPanelLayout.createSequentialGroup()
-                                .addComponent(infoNameLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(infoDescriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(infoTimeLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(infoDateLabel))
-                            .addGroup(informationPanelLayout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(editAppointmentButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(removeAppointmentButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(infoConfirmRemovePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(infoLocationLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(informationPanelLayout.createSequentialGroup()
-                        .addComponent(infoParticipantsLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(participantsScrollPane))
-                    .addGroup(informationPanelLayout.createSequentialGroup()
-                        .addComponent(infoAlarmLabel)
-                        .addGap(18, 18, 18)
-                        .addGroup(informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(infoAlarmBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(addAlarmButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(alarmListScrollPane)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeAlarmButton))))
-        );
 
         calendarScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -1135,111 +932,34 @@ public class MainWindow extends javax.swing.JFrame {
 
         mondayPanel.setBackground(new java.awt.Color(240, 240, 200));
         mondayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout mondayPanelLayout = new javax.swing.GroupLayout(mondayPanel);
-        mondayPanel.setLayout(mondayPanelLayout);
-        mondayPanelLayout.setHorizontalGroup(
-            mondayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 112, Short.MAX_VALUE)
-        );
-        mondayPanelLayout.setVerticalGroup(
-            mondayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 914, Short.MAX_VALUE)
-        );
-
+        mondayPanel.setLayout(null);
         calendarPanel.add(mondayPanel);
 
         tuesdayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout tuesdayPanelLayout = new javax.swing.GroupLayout(tuesdayPanel);
-        tuesdayPanel.setLayout(tuesdayPanelLayout);
-        tuesdayPanelLayout.setHorizontalGroup(
-            tuesdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 112, Short.MAX_VALUE)
-        );
-        tuesdayPanelLayout.setVerticalGroup(
-            tuesdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 914, Short.MAX_VALUE)
-        );
-
+        tuesdayPanel.setLayout(null);
         calendarPanel.add(tuesdayPanel);
 
         wednesdayPanel.setBackground(new java.awt.Color(240, 240, 200));
         wednesdayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout wednesdayPanelLayout = new javax.swing.GroupLayout(wednesdayPanel);
-        wednesdayPanel.setLayout(wednesdayPanelLayout);
-        wednesdayPanelLayout.setHorizontalGroup(
-            wednesdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 112, Short.MAX_VALUE)
-        );
-        wednesdayPanelLayout.setVerticalGroup(
-            wednesdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 914, Short.MAX_VALUE)
-        );
-
+        wednesdayPanel.setLayout(null);
         calendarPanel.add(wednesdayPanel);
 
         thursdayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout thursdayPanelLayout = new javax.swing.GroupLayout(thursdayPanel);
-        thursdayPanel.setLayout(thursdayPanelLayout);
-        thursdayPanelLayout.setHorizontalGroup(
-            thursdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 112, Short.MAX_VALUE)
-        );
-        thursdayPanelLayout.setVerticalGroup(
-            thursdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 914, Short.MAX_VALUE)
-        );
-
+        thursdayPanel.setLayout(null);
         calendarPanel.add(thursdayPanel);
 
         fridayPanel.setBackground(new java.awt.Color(240, 240, 200));
         fridayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout fridayPanelLayout = new javax.swing.GroupLayout(fridayPanel);
-        fridayPanel.setLayout(fridayPanelLayout);
-        fridayPanelLayout.setHorizontalGroup(
-            fridayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 112, Short.MAX_VALUE)
-        );
-        fridayPanelLayout.setVerticalGroup(
-            fridayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 914, Short.MAX_VALUE)
-        );
-
+        fridayPanel.setLayout(null);
         calendarPanel.add(fridayPanel);
 
         saturdayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout saturdayPanelLayout = new javax.swing.GroupLayout(saturdayPanel);
-        saturdayPanel.setLayout(saturdayPanelLayout);
-        saturdayPanelLayout.setHorizontalGroup(
-            saturdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 112, Short.MAX_VALUE)
-        );
-        saturdayPanelLayout.setVerticalGroup(
-            saturdayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 914, Short.MAX_VALUE)
-        );
-
+        saturdayPanel.setLayout(null);
         calendarPanel.add(saturdayPanel);
 
         sundayPanel.setBackground(new java.awt.Color(240, 240, 200));
         sundayPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout sundayPanelLayout = new javax.swing.GroupLayout(sundayPanel);
-        sundayPanel.setLayout(sundayPanelLayout);
-        sundayPanelLayout.setHorizontalGroup(
-            sundayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 112, Short.MAX_VALUE)
-        );
-        sundayPanelLayout.setVerticalGroup(
-            sundayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 914, Short.MAX_VALUE)
-        );
-
+        sundayPanel.setLayout(null);
         calendarPanel.add(sundayPanel);
 
         calendarScrollPane.setViewportView(calendarPanel);
@@ -1270,7 +990,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel8))
@@ -1300,7 +1020,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel9))
@@ -1331,7 +1051,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel10))
@@ -1361,7 +1081,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel11))
@@ -1392,7 +1112,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel12))
@@ -1422,7 +1142,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel17Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel13))
@@ -1453,7 +1173,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jLabel14))
@@ -1468,28 +1188,28 @@ public class MainWindow extends javax.swing.JFrame {
             centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(centerPanelLayout.createSequentialGroup()
                 .addGroup(centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(centerPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, centerPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(informationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(centerPanelLayout.createSequentialGroup()
-                        .addGroup(centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(centerPanelLayout.createSequentialGroup()
-                                .addGap(125, 125, 125)
-                                .addComponent(dayAndDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(centerPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(calendarScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 931, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap()
+                        .addComponent(calendarScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 931, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(centerPanelLayout.createSequentialGroup()
+                .addGap(126, 126, 126)
+                .addComponent(dayAndDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         centerPanelLayout.setVerticalGroup(
             centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(centerPanelLayout.createSequentialGroup()
-                .addComponent(dayAndDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(dayAndDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(calendarScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(calendarScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(informationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(informationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1517,14 +1237,14 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(logoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(centerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(centerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+     
     /**
      * The method used to disconnect from the server and return the user to the login window.
      */
@@ -1533,47 +1253,58 @@ public class MainWindow extends javax.swing.JFrame {
         
         //For testing purposes:
         dispose();
-        new Login().setVisible(true);
+        new Login(new Main()).setVisible(true);
         // END 
     }
     /**
      * Method to add appointments to the calendar view
      */
-    private void addAppointment(Appointment a) {
-        String time = Converters.MillisecondsToHHMM(a.getStart())+" - "+Converters.MillisecondsToHHMM(a.getEnd());
-        AppointmentView av = new AppointmentView(a.getName(), a.getRoom().getName(), time);
-        switch (Converters.dayStringFormat(a.getStart())) {
+    public void addAppointment(Appointment model) {
+        AppointmentView av = new AppointmentView(this, model);
+        switch (Converters.dayStringFormat(model.getStart())) {
             case "Monday":
+                mondayPanel.add(av);
                 break;
             case "Tuesday":
+                tuesdayPanel.add(av);
                 break;
             case  "Wednesday":
+                wednesdayPanel.add(av);
                 break;
             case  "Thursday":
+                thursdayPanel.add(av);
                 break;
             case  "Friday":
+                fridayPanel.add(av);
                 break;
             case  "Saturday":
+                saturdayPanel.add(av);
                 break;
             case  "Sunday":
+                sundayPanel.add(av);
                 break;
             default:
         }
     }
     /**
+     * Showing the information panel with a new model
+     * @param model 
+     */
+    public void showInformationPanel(Appointment model) {
+        informationPanel.setModel(model);
+        informationPanel.hideConfirmation();
+        informationPanel.setVisible(true);
+    }
+    /**
      * Hiding the information table
      */
-    private void hideInformationPanel() {
+    public void hideInformationPanel() {
         informationPanel.setVisible(false);
-        infoConfirmRemovePanel.setVisible(false);
     }
+    
     private void notificationListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notificationListMouseClicked
         informationPanel.setVisible(true); //TESTING
     }//GEN-LAST:event_notificationListMouseClicked
-
-    private void removeAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAppointmentButtonActionPerformed
-        infoConfirmRemovePanel.setVisible(true);
-    }//GEN-LAST:event_removeAppointmentButtonActionPerformed
 
     private void newAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newAppointmentButtonActionPerformed
         new AppointmentEditor().setVisible(true);
@@ -1590,20 +1321,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void calendarScrollPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_calendarScrollPaneMouseReleased
         revalidate();
     }//GEN-LAST:event_calendarScrollPaneMouseReleased
-
-    private void infoConfirmYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoConfirmYesActionPerformed
-        // TODO make it remove the appointment
-        hideInformationPanel();
-    }//GEN-LAST:event_infoConfirmYesActionPerformed
-
-    private void infoConfirmNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoConfirmNoActionPerformed
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                infoConfirmRemovePanel.setVisible(false);
-            }
-        });
-    }//GEN-LAST:event_infoConfirmNoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1640,32 +1357,13 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addAlarmButton;
     private javax.swing.JButton addOtherPersonButton;
-    private javax.swing.JList alarmList;
-    private javax.swing.JScrollPane alarmListScrollPane;
     private javax.swing.JPanel calendarPanel;
     private javax.swing.JScrollPane calendarScrollPane;
     private javax.swing.JPanel centerPanel;
     private javax.swing.JPanel dayAndDatePanel;
-    private javax.swing.JButton editAppointmentButton;
     private javax.swing.JPanel fridayPanel;
-    private javax.swing.JComboBox infoAlarmBox;
-    private javax.swing.JLabel infoAlarmLabel;
-    private javax.swing.JButton infoConfirmNo;
-    private javax.swing.JPanel infoConfirmRemovePanel;
-    private javax.swing.JButton infoConfirmYes;
-    private javax.swing.JLabel infoConfirmationLabel;
-    private javax.swing.JLabel infoDateLabel;
-    private javax.swing.JLabel infoDescriptionLabel;
-    private javax.swing.JLabel infoLocationLabel;
-    private javax.swing.JLabel infoNameLabel;
-    private javax.swing.JLabel infoParticipantsLabel;
-    private javax.swing.JList infoParticipantsList;
-    private javax.swing.JSeparator infoSeparator1;
-    private javax.swing.JSeparator infoSeparator2;
-    private javax.swing.JLabel infoTimeLabel;
-    private javax.swing.JPanel informationPanel;
+    private gui.InformationPanel informationPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1712,7 +1410,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel logoLabel;
     private javax.swing.JPanel logoPanel;
     private javax.swing.JPanel mondayPanel;
@@ -1725,10 +1422,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane otherCalendarsScroll;
     private javax.swing.JTable otherCalendarsTable;
     private javax.swing.JComboBox otherPersonBox;
-    private javax.swing.JScrollPane participantsScrollPane;
     private javax.swing.JButton previousWeekButton;
-    private javax.swing.JButton removeAlarmButton;
-    private javax.swing.JButton removeAppointmentButton;
     private javax.swing.JPanel saturdayPanel;
     private javax.swing.JSeparator separator1;
     private javax.swing.JSeparator separator2;

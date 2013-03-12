@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeEvent;
 
 
 /**
- * @Author Endre Elvestad & Tobias Linkjendal
+ * @author Endre Elvestad 
+ * @kudos Tobias Linkjendal
  */  
 
 public class Person {
@@ -31,10 +31,7 @@ public class Person {
 	}
 	
 	
-	public String getFirstName() {
-		return new String(firstName);
-	}
-
+	//SETTERS
 	
 	public void setFirstName(String firstName) {
 		String oldName = this.firstName;
@@ -43,32 +40,51 @@ public class Person {
 		pcs.firePropertyChange(NAME, oldName, firstName);
 		
 	}
-
-	public String getLastName() {
-		return new String(lastName);
-	}
-
-
-
+	
 	public void setLastName(String lastName) {
 		String oldName = this.lastName;
 		this.lastName = lastName;
 		
 		pcs.firePropertyChange(NAME, oldName, lastName);
 	}
-
-	public String getEmail() {
-		return new String(email);
-	}
-	  
-	 public void setEmail(String email) {
+	
+	public void setEmail(String email) {
 		String oldMail = this.email;
 		this.email = email;
 		
 		pcs.firePropertyChange(EMAIL, oldMail, email);
 	}
+	
+	
+	//GETTERS
+	
+	/**
+	 * @return String with this persons first name
+	 */
+	public String getFirstName() {
+		return new String(firstName);
+	}
 
+	/**
+	 * @return String with this persons last name
+	 */
+	public String getLastName() {
+		return new String(lastName);
+	}
 
+	/**
+	 * @return String with this persons email
+	 */
+	public String getEmail() {
+		return new String(email);
+	}
+	
+	/**
+	 * This function is usefull to show info about a meeting
+	 * @param start The time you start looking for appointments
+	 * @param end The time you End looking for appointments
+	 * @return ArrayList with the appointments for this person in the time period
+	 */
 	public ArrayList<Appointment> getAppointments(Time start, Time end) {
 		ArrayList<Appointment> returnAppointments = new ArrayList<Appointment>();
 		for(int i = 0; i < appointments.size(); ++i) {
@@ -81,6 +97,9 @@ public class Person {
 		}
 		return returnAppointments;
 	}
+	
+	
+	//ADDERS lol
 	
 	public void addAppointment(Appointment app) {
 		appointments.add(app);
