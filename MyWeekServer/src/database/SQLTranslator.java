@@ -258,6 +258,7 @@ public class SQLTranslator {
 	/*
 	 * Legge til:
 	 * getMeetingAnswers(Meeting) - Should return answers that belongs to the meeting
+	 * getPersonsAppointments(Person)
 	 */
 	
 	/**
@@ -300,6 +301,49 @@ public class SQLTranslator {
 			return false;
 		}
 	} 
+	
+	/**
+	 * Get a persons answer to a meeting from the database
+	 * @param meetingID The ID of the meeting
+	 * @param email The persons email
+	 * @param c The connection to the database.
+	 * @return True if the addition was successful, false if an exception is met
+	 * during execution.
+	 */
+	public static Boolean getMeetingAnswer(int meetingID, String email, Connection c) {
+		StringBuilder query = new StringBuilder();
+		
+		query.append("SELECT answer FROM MeetingAnswer WHERE app_id=");
+		query.append(meetingID);
+		query.append(" AND email='");
+		query.append(email);
+		query.append("' ");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery(query.toString());
+			Boolean answer = null;
+			String answerStr = null;
+			if(rs.next()) {
+				answerStr = rs.getString(1);
+				if(answerStr.equals("1"))
+				{
+					answer = true;
+				}
+				else if(answerStr.equals("0"))
+				{
+					answer = false;
+				}
+			}
+			rs.close();
+			return answer;
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}
+		
+		return null;
+	}
 	
 	/**
 	 * Checks if the email and password are correct and belongs to a user.
@@ -610,7 +654,7 @@ public class SQLTranslator {
 		
 		Person registeredBy = getPerson(created_by, c);
 		
-		//*****SLUTT PÅ KOPIERING FRA getAppointment*****
+		//*****SLUTT PAA KOPIERING FRA getAppointment*****
 		
 		//SELECT email FROM PersonAppointment WHERE app_id=[id]
 		
