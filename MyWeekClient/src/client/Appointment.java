@@ -1,6 +1,8 @@
 package client;
 
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import client.Person;
 import client.Room;
@@ -16,6 +18,7 @@ public class Appointment {
 	private Room room;
 	private String name, descr, roomDescr;
 	private Person registeredBy;
+	private ArrayList<Alarm> alarms;
 	
 	/**
 	 * @param id The id of the appointment. This is the only place this is set, only
@@ -38,6 +41,7 @@ public class Appointment {
 		
 		this.roomDescr = null; //This might never ever be set
 		this.room = null; //This one as well
+		this.alarms = new ArrayList<Alarm>();
 		
 	}
 	
@@ -157,7 +161,7 @@ public class Appointment {
 	}
 	
 	/**
-	 * This function is usefull in Room.java
+	 * This function is usefull in Room.java and to show info about a meeting
 	 * @return String of the time format for when the meeting is planned: xx:xx-xx:xx
 	 */
 	public String getTimeFormat(){
@@ -165,4 +169,24 @@ public class Appointment {
 		timeFormat += "-" + end.toString().substring(0, 5); //-xx:xx
 		return timeFormat;
 	}
+	
+	/**
+	 * This function is usefull to show info about a meeting
+	 * @return String of the time format for when the meeting is planned: xx/xx/xxxx
+	 */
+	public String getDateFormat(){
+		Calendar c = Calendar.getInstance();
+    	c.setTimeInMillis(start.getTime());
+    	
+		String dateFormat = c.get(Calendar.DATE) + "/" + 
+							(c.get(Calendar.MONTH) + 1) + "/" +
+							c.get(Calendar.YEAR);
+		return dateFormat;
+	}
+	
+	public void addAlarm(Alarm a){
+		alarms.add(a);
+	}
+	
+	
 }

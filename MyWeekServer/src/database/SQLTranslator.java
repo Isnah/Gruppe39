@@ -408,8 +408,8 @@ public class SQLTranslator {
 		CREATE TABLE Appointment(
 		id			int NOT NULL AUTO_INCREMENT,
 		name		varchar(50),
-		start		Time NOT NULL,
-		end_time	Time NOT NULL,
+		start		Timestamp NOT NULL,
+		end_time	Timestamp NOT NULL,
 		descr		varchar(255),
 		room_descr	varchar(255),
 		room_id		int,
@@ -421,11 +421,11 @@ public class SQLTranslator {
 		
 		//public Appointment(int id, Time start, Time end, String name, String descr, Person registeredBy)
 		
+		
+		
 		//SELECT start FROM Appointment WHERE id=[id];
 		
-		
-		
-		Time start;
+		Timestamp start;
 		
 		StringBuilder query1 = new StringBuilder(); 
 		query1.append("SELECT start FROM Appointment WHERE id=");
@@ -434,22 +434,97 @@ public class SQLTranslator {
 		try {
 			Statement s = c.createStatement();
 			ResultSet r = s.executeQuery(query1.toString());
-			//Les: http://docs.oracle.com/javase/1.4.2/docs/api/java/sql/ResultSet.html
-			start = r.getTime(1);
-			start.s
-			
+			start = r.getTimestamp(1);
+				
 		} catch (SQLException ex) {
 			System.err.println("SQLException while adding personappointment");
 			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}
 		
-		Time end;
-		String name;
-		String descr;
-		Person registeredBy;
 		
-		Appointment appointment = new Appointment(idInt, start, end, name, descr, registeredBy);
+		
+		//SELECT end_time FROM Appointment WHERE id=[id];
+		
+		Timestamp end;
+		
+		StringBuilder query2 = new StringBuilder(); 
+		query2.append("SELECT end_time FROM Appointment WHERE id=");
+		query2.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query2.toString());
+			end = r.getTimestamp(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}		
+		
+		
+		
+		//SELECT name FROM Appointment WHERE id=[id];
+		
+		String name;
+		
+		StringBuilder query3 = new StringBuilder(); 
+		query3.append("SELECT name FROM Appointment WHERE id=");
+		query3.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query3.toString());
+			name = r.getString(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}			
+		
+		
+		//SELECT descr FROM Appointment WHERE id=[id];
+		
+		String descr;
+		
+		StringBuilder query4 = new StringBuilder(); 
+		query4.append("SELECT name FROM Appointment WHERE id=");
+		query4.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query4.toString());
+			descr = r.getString(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}			
+		
+		
+		String created_by;
+		
+		StringBuilder query5 = new StringBuilder(); 
+		query5.append("SELECT name FROM Appointment WHERE id=");
+		query5.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query5.toString());
+			created_by = r.getString(1);
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}		
+		
+		Person registeredBy = getPerson(created_by, c);
+		
+		return new Appointment(id, start, end, name, descr, registeredBy);
 		
 	}
 	
@@ -457,7 +532,6 @@ public class SQLTranslator {
 	 * Ikke enda implementerte metoder:
 	 * 
 	 * addGroup
-	 * getAppointment(id)
 	 * getMeeting(id)
 	 * 
 	 */
