@@ -1,12 +1,14 @@
 package model;
 
-import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import model.appointment.Appointment;
 import model.appointment.Meeting;
 import nu.xom.Document;
 import nu.xom.Element;
+import nu.xom.Elements;
 
 public class XMLSerializer {
 	
@@ -267,8 +269,126 @@ public class XMLSerializer {
 	 * @param xmlPersonElement
 	 * @return
 	 */
-	public static Person assemblePerson(Element xmlPersonElement) {
+	public static Person assembleSimplePerson(Element xmlPersonElement) {
 		return new Person("fake@fake.fake", "fakeson", "fake");
+	}
+	
+	/**
+	 * <b>Not complete. Do not use!</b> Currently only here to avoid errors in
+	 * asemble meeting.
+	 * @param xmlGroupElement
+	 * @return
+	 */
+	public static Group assembleGroup(Element xmlGroupElement) {
+		return new Group(1337, "ze groupies");
+	}
+	
+	public static Meeting assembleMeeting(Element xmlMeetingElement) {
+		int id;
+		Timestamp start, end;
+		String name, descr, roomDescr;
+		Person registeredBy;
+		Room room;
+		ArrayList<Person> attendees;
+		ArrayList<Group> groupAttendees;
+		
+		
+		Element element = xmlMeetingElement.getFirstChildElement("id");
+		if(element == null) {
+			System.err.println("Malformed xml element. No id while assembling meeting");
+			return null;
+		}
+		id = Integer.parseInt(element.getValue());
+		
+		element = xmlMeetingElement.getFirstChildElement("start");
+		if(element == null) {
+			System.err.println("Malformed xml element. No start while assembling");
+			return null;
+		}
+		start = new Timestamp(Long.parseLong(element.getValue()));
+		
+		element = xmlMeetingElement.getFirstChildElement("end");
+		if(element == null) {
+			System.err.println("Malformed xml element. No end while assembling meeting");
+			return null;
+		}
+		end = new Timestamp(Long.parseLong(element.getValue()));
+		
+		element = xmlMeetingElement.getFirstChildElement("name");
+		if(element == null) {
+			System.err.println("Malformed xml element. No name while assembling meeting");
+			return null;
+		}
+		name = element.getValue();
+		
+		element = xmlMeetingElement.getFirstChildElement("description");
+		if(element == null) {
+			System.err.println("Malformend xml element. No description while assembling meeting");
+			return null;
+		}
+		descr = element.getValue();
+		
+		element = xmlMeetingElement.getFirstChildElement("registered_by");
+		if(element == null) {
+			System.err.println("Malformed xml element. No registered_by while assembling person");
+			return null;
+		}
+		element = element.getFirstChildElement("person");
+		if(element == null) {
+			System.err.println("Malformed xml element. No person under registered_by while assembling meeting");
+			return null;
+		}
+		registeredBy = assembleSimplePerson(element);
+		
+		boolean hasRoomDescr = true;
+		element = xmlMeetingElement.getFirstChildElement("room_description");
+		if(element == null) {
+			hasRoomDescr = false;
+			roomDescr = null;
+		} else {
+			roomDescr = element.getValue();
+		}
+		
+		element = xmlMeetingElement.getFirstChildElement("room");
+		if(element == null) {
+			if(!hasRoomDescr) {
+				System.err.println("Malformed xml element. Neither room_description nor room while assembling meeting");
+				return null;
+			}
+			room = null;
+		} else {
+			room = assembleRoom(element);
+		}
+		
+		element = xmlMeetingElement.getFirstChildElement("attendees");
+		if(element == null) {
+			System.err.println("Malformed xml element. No attendees tag while assembling meeting.");
+			return null;
+		}
+		
+		attendees = new ArrayList<Person>();
+		Element personAtt = element.getFirstChildElement("people_attending");
+		Elements people = personAtt.getChildElements();
+		for(int i = 0; i < people.size(); ++i) {
+			personAtt = people.get(i);
+			Person per = assembleSimplePerson(personAtt);
+			attendees.add(per);
+		}
+		
+		groupAttendees = new ArrayList<Group>();
+		Element grpAtt = element.getFirstChildElement("groups_attending");
+		Elements groups = grpAtt.getChildElements();
+		for(int i = 0; i < groups.size(); ++i) {
+			grpAtt = groups.get(i);
+			Group grp = assembleGroup(grpAtt);
+			groupAttendees.add(grp);
+		}
+		
+		Meeting meeting = new Meeting(id, start, end, name, descr, registeredBy, attendees, groupAttendees);
+		if(room != null) meeting.setRoom(room);
+		if(roomDescr != null) meeting.setRoomDescr(roomDescr);
+		
+		return meeting;
 	}
 	
 	
@@ -280,7 +400,7 @@ public class XMLSerializer {
 	 */
 	public static Appointment assembleAppointment(Element xmlAppElement) {
 		int id;
-		Time start, end;
+		Timestamp start, end;
 		Room room;
 		Person registeredBy;
 		String name, descr, roomDescr;
@@ -297,14 +417,14 @@ public class XMLSerializer {
 			System.err.println("Malformed xml element. No start while assembling appointment.");
 			return null;
 		}
-		start = new Time(Long.parseLong(element.getValue()));
+		start = new Timestamp(Long.parseLong(element.getValue()));
 		
 		element = xmlAppElement.getFirstChildElement("end");
 		if(element == null) {
 			System.err.println("Malformed xml element. No end while assembling appointment.");
 			return null;
 		}
-		end = new Time(Long.parseLong(element.getValue()));
+		end = new Timestamp(Long.parseLong(element.getValue()));
 		
 		element = xmlAppElement.getFirstChildElement("name");
 		if(element == null) {
@@ -330,7 +450,7 @@ public class XMLSerializer {
 			System.err.println("Malformed xml element. No person under registered_by while assembling appointment");
 			return null;
 		}
-		registeredBy = assemblePerson(element);
+		registeredBy = assembleSimplePerson(element);
 		
 		
 		boolean hasRoomDescr = true;
