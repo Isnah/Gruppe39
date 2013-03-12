@@ -6,6 +6,8 @@ import java.util.Calendar;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+
+import javax.swing.DefaultListModel;
 //import java.beans.PropertyChangeEvent;
 
 import client.Person;
@@ -23,7 +25,7 @@ public class Appointment {
 	private Room room;
 	private String name, descr, roomDescr;
 	private Person registeredBy;
-	private ArrayList<Alarm> alarms;
+	private DefaultListModel<Alarm> alarms;
 	protected PropertyChangeSupport pcs;
 	
 	public final static String START = "start";
@@ -56,7 +58,7 @@ public class Appointment {
 		
 		this.roomDescr = null; //This might never ever be set
 		this.room = null; //This one as well
-		this.alarms = new ArrayList<Alarm>();
+		this.alarms = new DefaultListModel<Alarm>();
 		
 		pcs = new PropertyChangeSupport(this);
 	}
@@ -195,22 +197,22 @@ public class Appointment {
 		return id;
 	}
 	
-	public ArrayList<Alarm> getAlarmList(){
-		return new ArrayList<Alarm>(alarms);
+	public DefaultListModel<Alarm> getAlarmList(){
+		return alarms;
 	}
 	
 	public void addAlarm(Alarm a){
-		ArrayList<Alarm> oldAlarms = new ArrayList<Alarm>(alarms);
-		alarms.add(a);
+		//ArrayList<Alarm> oldAlarms = new DefaultListModel<Alarm>(alarms);
+		alarms.addElement(a);
 		
-		pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
+		//pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
 	}
 	
 	public void removeAlarm(Alarm a){
-		ArrayList<Alarm> oldAlarms = new ArrayList<Alarm>(alarms);
-		if (alarms.contains(a)) alarms.remove(a);
+		//ArrayList<Alarm> oldAlarms = new DefaultListModel<Alarm>(alarms);
+		if (alarms.contains(a)) alarms.removeElement(a);
 		
-		pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
+		//pcs.firePropertyChange(ALARMS, oldAlarms, alarms);
 	}
 	
 	/**

@@ -22,8 +22,6 @@ public class Person {
 	
 	public final static String NAME = "name";
 	public final static String EMAIL = "email";
-	public final static String DESCR = "descr";
-	public final static String ROOM = "room";
 	
 	
 	public Person(String email, String lastName, String firstName) {
