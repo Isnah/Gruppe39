@@ -14,6 +14,14 @@ import nu.xom.Elements;
 
 public class XMLSerializer {
 	
+	public static String getType(Document doc) {
+		Element root = doc.getRootElement();
+		
+		if(root.getLocalName().equals("login")) return "login";
+		else if(root.getLocalName().equals("appointmet")) return "appointment";
+		return "not_valid";
+	}
+	
 	/**
 	 * Builds all information about a person into an xom document.
 	 * @param person
@@ -46,7 +54,7 @@ public class XMLSerializer {
 		return new Document(root);
 	}
 	
-	public LoginCredentials assembleLogin(Document loginDoc) {
+	public static LoginCredentials assembleLogin(Document loginDoc) {
 		String user, password;
 		
 		Element root = loginDoc.getRootElement();
@@ -303,6 +311,9 @@ public class XMLSerializer {
 		Element name = new Element("name");
 		name.appendChild(aGroup.getName());
 		
+		Element email = new Element("email");
+		email.appendChild(aGroup.getEmail());
+		
 		group.appendChild(id);
 		group.appendChild(name);
 		
@@ -328,10 +339,10 @@ public class XMLSerializer {
 		
 		for(int i = 0; i < appointments.size(); ++i) {
 			Element app = appointments.get(i);
-			if(app.getLocalName() == "meeting") {
+			if(app.getLocalName().equals("meeting")) {
 				Meeting meeting = assembleMeeting(app);
 				person.addAppointment(meeting);
-			} else if(app.getLocalName() == "appointment") {
+			} else if(app.getLocalName().equals("appointment")) {
 				Appointment appointment = assembleAppointment(app);
 				person.addAppointment(appointment);
 			}
@@ -384,7 +395,7 @@ public class XMLSerializer {
 	 */
 	public static Group assembleSimpleGroup(Element xmlGroupElement) {
 		int id;
-		String name;
+		String name, email;
 		
 		Element element = xmlGroupElement.getFirstChildElement("id");
 		if(element == null) {
@@ -400,7 +411,14 @@ public class XMLSerializer {
 		}
 		name = element.getValue();
 		
-		return new Group(id, name);
+		element = xmlGroupElement.getFirstChildElement("email");
+		if(element == null) {
+			System.err.println("Malformed xml element. No email in assemble simple group");
+			return null;
+		}
+		email = element.getValue();
+		
+		return new Group(id, name, email);
 	}
 	
 	/**
@@ -668,5 +686,43 @@ public class XMLSerializer {
 		 */
 		
 		return new Room(id, space, name);
+	}
+	
+	public static Element getAppsByIdXml(int[] ids) {
+		Element root = new Element("get");
+		
+		for(int i = 0; i < ids.length; ++i) {
+			Element app = new Element("app_id");
+			app.appendChild(Integer.toString(ids[i]));
+			
+			root.appendChild(root);
+		}
+		
+		return root;
+	}
+	
+	public static Element getPersonByEmailXml(String[] emails) {
+		Element root = new Element("get");
+		for(int i = 0; i < emails.length; ++i) {
+			Element person = new Element("person_email");
+			person.appendChild(emails[i]);
+			
+			root.appendChild(person);
+		}
+		
+		return root;
+	}
+	
+	public static Element getGroupByIdXml(int[] ids) {
+		Element root = new Element("get");
+		
+		for(int i = 0; i < ids.length; ++i) {
+			Element grp = new Element("group_id");
+			grp.appendChild(Integer.toString(ids[i]));
+			
+			root.appendChild(grp);
+		}
+		
+		return root;
 	}
 }
