@@ -258,6 +258,7 @@ public class SQLTranslator {
 	/*
 	 * Legge til:
 	 * getMeetingAnswers(Meeting) - Should return answers that belongs to the meeting
+	 * getPersonsAppointments(Person)
 	 */
 	
 	/**
@@ -302,6 +303,49 @@ public class SQLTranslator {
 	} 
 	
 	/**
+	 * Get a persons answer to a meeting from the database
+	 * @param meetingID The ID of the meeting
+	 * @param email The persons email
+	 * @param c The connection to the database.
+	 * @return True if the addition was successful, false if an exception is met
+	 * during execution.
+	 */
+	public static Boolean getMeetingAnswer(int meetingID, String email, Connection c) {
+		StringBuilder query = new StringBuilder();
+		
+		query.append("SELECT answer FROM MeetingAnswer WHERE app_id=");
+		query.append(meetingID);
+		query.append(" AND email='");
+		query.append(email);
+		query.append("' ");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery(query.toString());
+			Boolean answer = null;
+			String answerStr = null;
+			if(rs.next()) {
+				answerStr = rs.getString(1);
+				if(answerStr.equals("1"))
+				{
+					answer = true;
+				}
+				else if(answerStr.equals("0"))
+				{
+					answer = false;
+				}
+			}
+			rs.close();
+			return answer;
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Checks if the email and password are correct and belongs to a user.
 	 * @param email 
 	 * @param password 
@@ -333,175 +377,67 @@ public class SQLTranslator {
 		return false;
 	}
 	
-	public static Person getPerson(String email, Connection c) {
+public static Person getPerson(String email, Connection c) {
 		
-		//SELECT COUNT(*) FROM Person WHERE email=[email];
+		//SELECT first_name, last_name FROM Person WHERE email=[email];
 		
-		StringBuilder query1 = new StringBuilder(); 
-		query1.append("SELECT COUNT(*) FROM Person WHERE email=");
-		query1.append(email);
+		StringBuilder query = new StringBuilder(); 
+		query.append("SELECT first_name, last_name FROM Person WHERE email=");
+		query.append(email);
 		
-		int antPersoner;
-		
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query1.toString());
-			//Les: http://docs.oracle.com/javase/1.4.2/docs/api/java/sql/ResultSet.html
-			antPersoner = r.getInt(1);
-			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}
-		
-		if(antPersoner!=1){
-			System.err.println("Message: Noe er galt. Sjekk getPerson(...)");
-		}
-		
-		//SELECT first_name FROM Person WHERE email=[email];
-		
-		StringBuilder query2 = new StringBuilder(); 
-		query2.append("SELECT first_name FROM Person WHERE email=");
-		query2.append(email);
-		
-		String firstname;
+		String firstname, lastname;
 		
 		try {
 			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query2.toString());
+			ResultSet r = s.executeQuery(query.toString());
 			firstname = r.getString(1);
+			lastname = r.getString(2);
 			
 		} catch (SQLException ex) {
 			System.err.println("SQLException while adding personappointment");
 			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}	
+				
+		return new Person(email, lastname, firstname);
 		
-		//SELECT last_name FROM Person WHERE email=[email];
-		
-		String lastname;
-		
-		StringBuilder query3 = new StringBuilder(); 
-		query3.append("SELECT last_name FROM Person WHERE email=");
-		query3.append(email);	
-		
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query3.toString());
-			lastname = r.getString(1);
-			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}	
-		
-		Person person = new Person(email, lastname, firstname);
-		
-		return person;
-		
+	}
+	
+	public static Group getGroup(int id, Connection c){
+		return null;
+		//return new Group(id, name);
 	}
 	
 	public static Appointment getAppointment(int id, Connection c) {
 				
 		//SELECT start FROM Appointment WHERE id=[id];
 		
-		Timestamp start;
-		
-		StringBuilder query1 = new StringBuilder(); 
-		query1.append("SELECT start FROM Appointment WHERE id=");
+		StringBuilder query1 = new StringBuilder();
+		query1.append("SELECT start, end_time, name, descr, created_by FROM Appointment WHERE id=");
 		query1.append(id);
+		
+		Timestamp start;
+		Timestamp end;
+		String name;
+		String descr;
+		String created_by;
 		
 		try {
 			Statement s = c.createStatement();
 			ResultSet r = s.executeQuery(query1.toString());
+			r.next();
 			start = r.getTimestamp(1);
+			end = r.getTimestamp(2);
+			name = r.getString(3);
+			descr = r.getString(4);
+			created_by = r.getString(5);
 				
 		} catch (SQLException ex) {
 			System.err.println("SQLException while adding personappointment");
 			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}
-		
-		//SELECT end_time FROM Appointment WHERE id=[id];
-		
-		Timestamp end;
-		
-		StringBuilder query2 = new StringBuilder(); 
-		query2.append("SELECT end_time FROM Appointment WHERE id=");
-		query2.append(id);
-		
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query2.toString());
-			end = r.getTimestamp(1);
 			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}		
-		
-		
-		
-		//SELECT name FROM Appointment WHERE id=[id];
-		
-		String name;
-		
-		StringBuilder query3 = new StringBuilder(); 
-		query3.append("SELECT name FROM Appointment WHERE id=");
-		query3.append(id);
-		
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query3.toString());
-			name = r.getString(1);
-			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}			
-		
-		
-		//SELECT descr FROM Appointment WHERE id=[id];
-		
-		String descr;
-		
-		StringBuilder query4 = new StringBuilder(); 
-		query4.append("SELECT name FROM Appointment WHERE id=");
-		query4.append(id);
-		
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query4.toString());
-			descr = r.getString(1);
-			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}			
-		
-		
-		String created_by;
-		
-		StringBuilder query5 = new StringBuilder(); 
-		query5.append("SELECT name FROM Appointment WHERE id=");
-		query5.append(id);
-		
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query5.toString());
-			created_by = r.getString(1);
-			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}		
-		
 		Person registeredBy = getPerson(created_by, c);
 		
 		return new Appointment(id, start, end, name, descr, registeredBy);
@@ -510,119 +446,52 @@ public class SQLTranslator {
 	
 	public static Meeting getMeeting(int id, Connection c){
 		
+		//SELECT start, end_time, name, descr, created_by FROM Appointment WHERE id=[id];
 		
-		//*****KOPIERT FRA getAppointment*****
+		StringBuilder query1 = new StringBuilder();
+		query1.append("SELECT start, end_time, name, descr, created_by FROM Appointment WHERE id=");
+		query1.append(id);
 		
 		Timestamp start;
-		
-		StringBuilder query1 = new StringBuilder(); 
-		query1.append("SELECT start FROM Appointment WHERE id=");
-		query1.append(id);
+		Timestamp end;
+		String name;
+		String descr;
+		String created_by;
 		
 		try {
 			Statement s = c.createStatement();
 			ResultSet r = s.executeQuery(query1.toString());
+			r.next();
 			start = r.getTimestamp(1);
+			end = r.getTimestamp(2);
+			name = r.getString(3);
+			descr = r.getString(4);
+			created_by = r.getString(5);
 				
 		} catch (SQLException ex) {
 			System.err.println("SQLException while adding personappointment");
 			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}
+			
+		Person registeredBy = getPerson(created_by, c);
 		
-		//SELECT end_time FROM Appointment WHERE id=[id];
+		//*****SLUTT PAA KOPIERING FRA getAppointment*****
 		
-		Timestamp end;
+		//SELECT email FROM PersonAppointment WHERE app_id=[id]
 		
 		StringBuilder query2 = new StringBuilder(); 
-		query2.append("SELECT end_time FROM Appointment WHERE id=");
+		query2.append("SELECT email FROM PersonAppointment WHERE app_id=");
 		query2.append(id);
+		
+		ArrayList<Person> initialAttendees = new ArrayList<Person>();
 		
 		try {
 			Statement s = c.createStatement();
 			ResultSet r = s.executeQuery(query2.toString());
-			end = r.getTimestamp(1);
-			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}		
-		
-		
-		
-		//SELECT name FROM Appointment WHERE id=[id];
-		
-		String name;
-		
-		StringBuilder query3 = new StringBuilder(); 
-		query3.append("SELECT name FROM Appointment WHERE id=");
-		query3.append(id);
-		
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query3.toString());
-			name = r.getString(1);
-			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}			
-		
-		
-		//SELECT descr FROM Appointment WHERE id=[id];
-		
-		String descr;
-		
-		StringBuilder query4 = new StringBuilder(); 
-		query4.append("SELECT name FROM Appointment WHERE id=");
-		query4.append(id);
-		
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query4.toString());
-			descr = r.getString(1);
-			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}			
-		
-		
-		String created_by;
-		
-		StringBuilder query5 = new StringBuilder(); 
-		query5.append("SELECT name FROM Appointment WHERE id=");
-		query5.append(id);
-		
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query5.toString());
-			created_by = r.getString(1);
-			
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}		
-		
-		Person registeredBy = getPerson(created_by, c);
-		
-		//*****SLUTT PÅ KOPIERING FRA getAppointment*****
-		
-		//SELECT email FROM PersonAppointment WHERE app_id=[id]
-		
-		StringBuilder query6 = new StringBuilder(); 
-		query6.append("SELECT email FROM PersonAppointment WHERE app_id=");
-		query6.append(id);
-		
-		ResultSet personer;
-		
-		try {
-			Statement s = c.createStatement();
-			personer = s.executeQuery(query6.toString());
+			while(r.next()){
+				initialAttendees.add(getPerson(r.getString(1), c));
+			}
 			
 		} catch (SQLException ex) {
 			System.err.println("SQLException while adding personappointment");
@@ -630,31 +499,21 @@ public class SQLTranslator {
 			return null;
 		}				
 		
-		ArrayList<Person> initialAttendees = new ArrayList<Person>();
-		
-		for(int i = 1; true; i++){
-			try{
-				Person person = getPerson(personer.getString(i), c);
-				if(person == null){
-					break;
-				}
-				initialAttendees.add(person);
-			} catch (SQLException e){
-					break;
-			}
-		}
 		
 		//SELECT DISTINCT added_by FROM PersonAppointment WHERE app_id=[id]
 		
-		StringBuilder query7 = new StringBuilder(); 
-		query7.append("SELECT DISTINCT added_by FROM PersonAppointment WHERE app_id=");
-		query7.append(id);
+		StringBuilder query3 = new StringBuilder(); 
+		query3.append("SELECT DISTINCT added_by FROM PersonAppointment WHERE app_id=");
+		query3.append(id);
 		
-		ResultSet grupper;
+		ArrayList<Group> initialGroups = new ArrayList<Group>();
 		
 		try {
 			Statement s = c.createStatement();
-			grupper = s.executeQuery(query7.toString());
+			ResultSet r = s.executeQuery(query2.toString());
+			while(r.next()){
+				initialGroups.add(getGroup(r.getInt(1), c));
+			}
 			
 		} catch (SQLException ex) {
 			System.err.println("SQLException while adding personappointment");
@@ -662,27 +521,11 @@ public class SQLTranslator {
 			return null;
 		}	
 		
-		ArrayList<Group> initialGroups = new ArrayList<Group>();
-		
-		for(int i = 1; true; i++){
-			try{
-				Group group = getGroup(grupper.getInt(i), c);
-				if(group == null){
-					break;
-				}
-				initialGroups.add(group);
-			} catch (SQLException e){
-					break;
-			}
-		}		
-		
 		return new Meeting(id, start, end, name, descr, registeredBy, initialAttendees, initialGroups);
 		
 	}
 	
-	public static Group getGroup(int id, Connection c){
-		return null;
-	}
+
 	
 
 	/*
@@ -692,21 +535,5 @@ public class SQLTranslator {
 	 * getMeeting(id)
 	 * 
 	 */
-}
 
-/*SØPPEL:
- * 
- * 	public static boolean hjelpeMetodeGetMeeting1(ResultSet r, int i){
-		String s;
-		try{
-			s = r.getString(i);
-		} catch (Exception e){
-			return false;
-		}
-		
-		if(s != null){
-			return true;
-		}
-		return false;
-	}
-	*/
+}
