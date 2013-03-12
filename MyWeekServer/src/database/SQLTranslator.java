@@ -380,7 +380,7 @@ public class SQLTranslator {
 
 	/**
 	 * 
-	 * @param email
+	 * @param email:  
 	 * @param c
 	 * @return
 	 */
