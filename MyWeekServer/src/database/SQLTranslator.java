@@ -379,9 +379,10 @@ public class SQLTranslator {
 	
 
 	/**
-	 * 
-	 * @param email:  
-	 * @param c
+	 * Method that communicates with database in order to return an object representing
+	 * a person based on the e-mail key.
+	 * @param email: The key to identify a specific person.
+	 * @param c: Connection to database.
 	 * @return
 	 */
 	
