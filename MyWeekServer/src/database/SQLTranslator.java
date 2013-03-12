@@ -437,7 +437,7 @@ public class SQLTranslator {
 		
 		//fetching the person's appointments
 		ArrayList<Appointment> appointments;
-		//...
+		//..
 		
 		return new Person(email, lastname, firstname);
 		
