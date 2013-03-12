@@ -1,6 +1,8 @@
 package database;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -108,11 +110,11 @@ public class SQLTranslator {
 		else if(app.getRoom() != null) query.append("room_id, ");
 		query.append("created_by ) VALUES ( \"");
 		query.append(app.getName());
-		query.append("\", ");
-		query.append(app.getStart());
-		query.append(", ");
-		query.append(app.getEnd());
-		query.append(", \"");
+		query.append("\", \"");
+		query.append(longTimeToDatetime(app.getStart()));
+		query.append("\", \"");
+		query.append(longTimeToDatetime(app.getEnd()));
+		query.append("\", \"");
 		query.append(app.getDescr());
 		query.append("\", ");
 		if(app.getRoomDescr() != null) {
@@ -375,6 +377,28 @@ public class SQLTranslator {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Helper method to convert from long time(used in jdbc) to datetime to use in database
+	 */
+	private static String longTimeToDatetime(long time) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(time);
+	}
+	
+	/**
+	 * Helper method to convert from datetime(used in database) to long time(used in jdbc)
+	 */
+	private static long datetimeToLongTime(String datetime) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			return dateFormat.parse(datetime).getTime();
+		} catch (ParseException e) {
+			System.err.println("ParseException in datetimeToLongTime()");
+			System.err.println("Message: " + e.getMessage());
+		}
+		return 0;
 	}
 	
 
