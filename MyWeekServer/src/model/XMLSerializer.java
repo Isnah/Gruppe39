@@ -265,22 +265,66 @@ public class XMLSerializer {
 	}
 	
 	/**
-	 * <b>Not complete. Do not use!</b> Currently only here to avoid errors in assembleAppointment.
+	 * Assembles a simple person from an xml element. Returns null if the
+	 * element is malformed, along with printing an error message in
+	 * {@link System.err}
 	 * @param xmlPersonElement
 	 * @return
 	 */
 	public static Person assembleSimplePerson(Element xmlPersonElement) {
-		return new Person("fake@fake.fake", "fakeson", "fake");
+		String email, lastName, firstName;
+		
+		Element element = xmlPersonElement.getFirstChildElement("email");
+		if(element == null) {
+			System.err.println("Malformed xml element. No email while assembling simple person");
+			return null;
+		}
+		email = element.getValue();
+		
+		element = xmlPersonElement.getFirstChildElement("first_name");
+		if(element == null) {
+			System.err.println("Malformed xml element. No first_name while assembling simple person");
+			return null;
+		}
+		firstName = element.getValue();
+		
+		element = xmlPersonElement.getFirstChildElement("last_name");
+		if(element == null) {
+			System.err.println("Malformed xml element. No last_name while assembling simple person");
+			return null;
+		}
+		lastName = element.getValue();
+		
+		Person person = new Person(email, lastName, firstName);
+		return person;
 	}
 	
 	/**
-	 * <b>Not complete. Do not use!</b> Currently only here to avoid errors in
-	 * asemble meeting.
+	 * Assembles a group from an xml element made by the simpleGroupToXml()
+	 * or similar. Only returns a group with id and name. Anything else
+	 * will have to be asked for from the database.
 	 * @param xmlGroupElement
 	 * @return
 	 */
-	public static Group assembleGroup(Element xmlGroupElement) {
-		return new Group(1337, "ze groupies");
+	public static Group assembleSimpleGroup(Element xmlGroupElement) {
+		int id;
+		String name;
+		
+		Element element = xmlGroupElement.getFirstChildElement("id");
+		if(element == null) {
+			System.err.println("Malformed xml element. No id in assemble simple group");
+			return null;
+		}
+		id = Integer.parseInt(element.getValue());
+		
+		element = xmlGroupElement.getFirstChildElement("name");
+		if(element == null) {
+			System.err.println("Malformed xml element. No name in assemble simple group");
+			return null;
+		}
+		name = element.getValue();
+		
+		return new Group(id, name);
 	}
 	
 	public static Meeting assembleMeeting(Element xmlMeetingElement) {
@@ -380,7 +424,7 @@ public class XMLSerializer {
 		Elements groups = grpAtt.getChildElements();
 		for(int i = 0; i < groups.size(); ++i) {
 			grpAtt = groups.get(i);
-			Group grp = assembleGroup(grpAtt);
+			Group grp = assembleSimpleGroup(grpAtt);
 			groupAttendees.add(grp);
 		}
 		
@@ -481,7 +525,12 @@ public class XMLSerializer {
 		
 	}
 	
-	
+	/**
+	 * Assembles a room from an xml element. Returns null if the element is
+	 * malformed.
+	 * @param xmlRoomElement
+	 * @return
+	 */
 	public static Room assembleRoom(Element xmlRoomElement) {
 		int id, space;
 		String name;
