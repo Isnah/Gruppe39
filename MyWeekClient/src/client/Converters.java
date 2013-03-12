@@ -29,7 +29,8 @@ public class Converters {
     	Calendar c = c = Calendar.getInstance();
     	c.set(year, (month-1), day, hour, minutes, 0);
     	
-    	return c.getTimeInMillis();
+    	return c.getTimeInMillis(); 
+    	
     	
     }
 }
