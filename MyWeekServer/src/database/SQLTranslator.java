@@ -402,6 +402,57 @@ public class SQLTranslator {
 		
 	}
 	
+	public static Appointment getAppointment(int id, Connection c) {
+		
+		/*
+		CREATE TABLE Appointment(
+		id			int NOT NULL AUTO_INCREMENT,
+		name		varchar(50),
+		start		Time NOT NULL,
+		end_time	Time NOT NULL,
+		descr		varchar(255),
+		room_descr	varchar(255),
+		room_id		int,
+		created_by	varchar(50) NOT NULL,	
+		PRIMARY KEY (id),
+		FOREIGN KEY (room_id) REFERENCES Room(id) ON UPDATE CASCADE,
+		FOREIGN KEY (created_by) REFERENCES Person(email) ON DELETE CASCADE ON UPDATE CASCADE
+		*/
+		
+		//public Appointment(int id, Time start, Time end, String name, String descr, Person registeredBy)
+		
+		//SELECT start FROM Appointment WHERE id=[id];
+		
+		
+		
+		Time start;
+		
+		StringBuilder query1 = new StringBuilder(); 
+		query1.append("SELECT start FROM Appointment WHERE id=");
+		query1.append(id);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query1.toString());
+			//Les: http://docs.oracle.com/javase/1.4.2/docs/api/java/sql/ResultSet.html
+			start = r.getTime(1);
+			start.s
+			
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		
+		Time end;
+		String name;
+		String descr;
+		Person registeredBy;
+		
+		Appointment appointment = new Appointment(idInt, start, end, name, descr, registeredBy);
+		
+	}
+	
 	/*
 	 * Ikke enda implementerte metoder:
 	 * 
