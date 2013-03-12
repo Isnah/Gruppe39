@@ -63,6 +63,10 @@ public class Meeting extends Appointment {
 		return groupAttendees.contains(group);
 	}
 	
+	public boolean isMeeting() {
+		return true;
+	}
+	
 	/**
 	 * 
 	 * @return A {@link java.util.Iterator} of the attendees list.

@@ -151,4 +151,8 @@ public class Appointment {
 		timeFormat += "-" + end.toString().substring(0, 5); //-xx:xx
 		return timeFormat;
 	}
+	
+	public boolean isMeeting() {
+		return false;
+	}
 }

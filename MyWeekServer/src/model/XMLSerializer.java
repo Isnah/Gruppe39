@@ -5,24 +5,52 @@ import java.util.Iterator;
 
 import model.appointment.Appointment;
 import model.appointment.Meeting;
-import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
-import nu.xom.Serializer;
 
 public class XMLSerializer {
 	
 	/**
-	 * 
+	 * Builds all information about a person into an xom document.
 	 * @param person
 	 * @return
 	 */
-	/*public static Document modelToXml(Person person) {
-		Element root = new Element("user");
+	public static Document modelToXml(Person person) {
+		Element root = new Element("model");
 		
-		Iterator<Appointment> i = person.getAppointmentIterator();
+		root.appendChild(completePersonToXml(person));
 		
-	}*/
+		Document doc = new Document(root);
+		
+		return doc;
+	}
+	
+	/**
+	 * Same as {@link simplePersonToXml(Person person)}, exept all appointments
+	 * are entered at the end with all information.
+	 * @param person
+	 * @return
+	 */
+	public static Element completePersonToXml(Person person) {
+		Element personElem = simplePersonToXml(person);
+		
+		Iterator<Appointment> it = person.getAppointmentIterator();
+		
+		Element appointments = new Element("appointments");
+		while(it.hasNext()) {
+			Appointment appointment = it.next();
+			if(appointment.isMeeting()) {
+				Element el = meetingToXml((Meeting)appointment);
+				appointments.appendChild(el);
+			} else {
+				Element el = appointmentToXml(appointment);
+				appointments.appendChild(el);
+			}
+		}
+		personElem.appendChild(appointments);
+		
+		return personElem;
+	}
 	
 	/**
 	 * This is used when you only want the basic information about a person sent.
@@ -119,7 +147,12 @@ public class XMLSerializer {
 		return room;
 	}
 
-	
+	/**
+	 * Same as {@link roomToXml(Room)} except that it also adds the appointment
+	 * id's to the end.
+	 * @param aRoom The room you want to parse into xml.
+	 * @return A {@link nu.xom.Element} for the room.
+	 */
 	public static Element roomToXmlWithAppointmentID(Room aRoom) {
 		Element room = roomToXml(aRoom);
 		
@@ -139,6 +172,11 @@ public class XMLSerializer {
 		return room;
 	}
 	
+	/**
+	 * 
+	 * @param aMeeting
+	 * @return
+	 */
 	public static Element meetingToXml(Meeting aMeeting) {
 		Element meeting = new Element("meeting");
 				
@@ -174,8 +212,7 @@ public class XMLSerializer {
 		}
 		
 		if(aMeeting.getRoom() != null) {
-			Element room = new Element("room");
-			room.appendChild(roomToXml(aMeeting.getRoom()));
+			Element room = roomToXml(aMeeting.getRoom());
 			meeting.appendChild(room);
 		}
 		
@@ -225,6 +262,105 @@ public class XMLSerializer {
 		return group;
 	}
 	
+	/**
+	 * <b>Not complete. Do not use!</b> Currently only here to avoid errors in assembleAppointment.
+	 * @param xmlPersonElement
+	 * @return
+	 */
+	public static Person assemblePerson(Element xmlPersonElement) {
+		return new Person("fake@fake.fake", "fakeson", "fake");
+	}
+	
+	
+	/**
+	 * Assembles a room from a {@link nu.xom.Element}. Be aware that it will return
+	 * null if an error is noticed in the element.
+	 * @param xmlAppElement
+	 * @return 
+	 */
+	public static Appointment assembleAppointment(Element xmlAppElement) {
+		int id;
+		Time start, end;
+		Room room;
+		Person registeredBy;
+		String name, descr, roomDescr;
+		
+		Element element = xmlAppElement.getFirstChildElement("id");
+		if(element == null) {
+			System.err.println("Malformed xml element. No id while assembling appointment.");
+			return null;
+		}
+		id = Integer.parseInt(element.getValue());
+		
+		element = xmlAppElement.getFirstChildElement("start");
+		if(element == null) {
+			System.err.println("Malformed xml element. No start while assembling appointment.");
+			return null;
+		}
+		start = new Time(Long.parseLong(element.getValue()));
+		
+		element = xmlAppElement.getFirstChildElement("end");
+		if(element == null) {
+			System.err.println("Malformed xml element. No end while assembling appointment.");
+			return null;
+		}
+		end = new Time(Long.parseLong(element.getValue()));
+		
+		element = xmlAppElement.getFirstChildElement("name");
+		if(element == null) {
+			System.err.println("Malformed xml element. No name while assembling appointment");
+			return null;
+		}
+		name = element.getValue();
+		
+		element = xmlAppElement.getFirstChildElement("description");
+		if(element == null) {
+			System.err.println("Malformed xml element. No description while assembling appointment");
+			return null;
+		}
+		descr = element.getValue();
+		
+		element = xmlAppElement.getFirstChildElement("registered_by");
+		if(element == null) {
+			System.err.println("Malformed xml element. No registered_by while assembling appointment");
+			return null;
+		}
+		element = element.getFirstChildElement("person");
+		if(element == null) {
+			System.err.println("Malformed xml element. No person under registered_by while assembling appointment");
+			return null;
+		}
+		registeredBy = assemblePerson(element);
+		
+		
+		boolean hasRoomDescr = true;
+		element = xmlAppElement.getFirstChildElement("room_description");
+		if(element == null) {
+			hasRoomDescr = false;
+			roomDescr = null;
+		} else {
+			roomDescr = element.getValue();
+		}
+		
+		element = xmlAppElement.getFirstChildElement("room");
+		if(element == null) {
+			if(!hasRoomDescr) {
+				System.err.println("Malformed xml element. No room or room_descr while assembling appointment");
+				return null;
+			}
+			room = null;
+		} else {
+			room = assembleRoom(element);
+		}
+		
+		Appointment app = new Appointment(id, start, end, name, descr, registeredBy);
+		if(roomDescr != null) app.setRoomDescr(roomDescr);
+		if(room != null) app.setRoom(room);
+		
+		return app;
+		
+	}
+	
 	
 	public static Room assembleRoom(Element xmlRoomElement) {
 		int id, space;
@@ -263,13 +399,19 @@ public class XMLSerializer {
 	
 	/*
 	public static void main(String[] args) {
+		Person user = new Person("kari@nordmann.no", "nordmann", "kari");
 		Person person = new Person("ola@nordmann.no", "nordmann", "ola");
 		Appointment app1 = new Appointment(1, new Time(1), new Time(2), "test1", "tester xml parsing", person);
 		Room room = new Room(1, 5, "testrom");
+		Meeting mtn = new Meeting(2, new Time(3), new Time(4), "meeting test", "a meeting between kari and ola", user, new ArrayList<Person>(), new ArrayList<Group>());
+		mtn.addAttendee(person);
+		room.addAppointment(mtn);
 		room.addAppointment(app1);
+		user.addAppointment(mtn);
 		person.addAppointment(app1);
+		person.addAppointment(mtn);
 		
-		Document doc = testXml(person);
+		Document doc = modelToXml(user);
 		
 		try {
 			Serializer serializer = new Serializer(System.out, "ISO-8859-1");
