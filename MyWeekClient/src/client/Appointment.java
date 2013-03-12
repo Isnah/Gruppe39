@@ -4,8 +4,13 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
+
 import client.Person;
 import client.Room;
+
 
 /**
  * 
@@ -19,6 +24,14 @@ public class Appointment {
 	private String name, descr, roomDescr;
 	private Person registeredBy;
 	private ArrayList<Alarm> alarms;
+	private PropertyChangeSupport pcs;
+	
+	public final static String START = "start";
+	public final static String END = "end";
+	public final static String NAME = "name";
+	public final static String DESCR = "descr";
+	public final static String ROOM = "room";
+	
 	
 	/**
 	 * @param id The id of the appointment. This is the only place this is set, only
@@ -43,6 +56,7 @@ public class Appointment {
 		this.room = null; //This one as well
 		this.alarms = new ArrayList<Alarm>();
 		
+		pcs = new PropertyChangeSupport(this);
 	}
 	
 	/**
@@ -59,8 +73,10 @@ public class Appointment {
 	}
 	
 	public void setStart(Time start) {
+		Time oldStart = this.start;
 		this.start = start;
-		end = new Time(start.getTime() + 1);
+		
+		pcs.firePropertyChange(START, oldStart, start);
 	}
 	
 	/**
@@ -68,8 +84,10 @@ public class Appointment {
 	 * @param start The time in milliseconds from 1/1/1979 00:00:00 GMT
 	 */
 	public void setStart(long start) {
+		Time oldStart = this.start;
 		this.start = new Time(start);
-		end = new Time(start + 1);
+		
+		pcs.firePropertyChange(START, oldStart, this.start);
 	}
 	
 	/**
@@ -81,8 +99,11 @@ public class Appointment {
 	}
 	
 	public void setEnd(Time end) throws Exception {
+		Time oldEnd = this.end;
 		if(end.getTime() < start.getTime()) throw new Exception("INVALID! End earlier than start.");
 		this.end = end;
+		
+		pcs.firePropertyChange(END, oldEnd, end);
 	}
 	
 	/**
@@ -103,7 +124,10 @@ public class Appointment {
 	}
 	
 	public void setName(String name) {
+		String oldName = this.name;
 		this.name = name;
+		
+		pcs.firePropertyChange(NAME, oldName, name);
 	}
 	
 	/**
@@ -115,7 +139,10 @@ public class Appointment {
 	}
 	
 	public void setDescr(String descr) {
+		String oldDescr = this.descr; 
 		this.descr = descr;
+		
+		pcs.firePropertyChange(DESCR, oldDescr, descr);
 	}
 	
 	
@@ -128,11 +155,10 @@ public class Appointment {
 	}
 	
 	public void setRoomDescr(String roomDescr) {
+		String oldRoomDescr = this.roomDescr;
 		this.roomDescr = roomDescr;
-	}
-	
-	public void setRoom(Room room) {
-		this.room = room;
+		
+		pcs.firePropertyChange(ROOM, oldRoomDescr, roomDescr);
 	}
 	
 	/**
@@ -141,6 +167,13 @@ public class Appointment {
 	 */
 	public Room getRoom() {
 		return room;
+	}
+	
+	public void setRoom(Room room) {
+		Room oldRoom = this.room;
+		this.room = room;
+		
+		pcs.firePropertyChange(ROOM, oldRoom, room);
 	}
 	
 	public Person getRegisteredBy() {
