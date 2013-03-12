@@ -1,6 +1,6 @@
 package model.appointment;
 
-import java.sql.Time;
+import java.sql.Timestamp;
 
 import model.Person;
 import model.Room;
@@ -11,7 +11,7 @@ import model.Room;
  */
 public class Appointment {
 	private int id;
-	private Time start, end;
+	private Timestamp start, end;
 	private Room room;
 	private Person registeredBy;
 	private String name, descr, roomDescr;
@@ -27,7 +27,7 @@ public class Appointment {
 	 * @param name The name of the appointment
 	 * @param descr Short description of the appointment
 	 */
-	public Appointment(int id, Time start, Time end, String name, String descr, Person registeredBy) {
+	public Appointment(int id, Timestamp start, Timestamp end, String name, String descr, Person registeredBy) {
 		this.id = id;
 		this.start = start;
 		this.end = end;
@@ -40,9 +40,9 @@ public class Appointment {
 		
 	}
 	
-	public void setStart(Time start) {
+	public void setStart(Timestamp start) {
 		this.start = start;
-		end = new Time(start.getTime() + 1);
+		end = new Timestamp(start.getTime() + 1);
 	}
 	
 	/**
@@ -50,8 +50,8 @@ public class Appointment {
 	 * @param start The time in milliseconds from 1/1/1979 00:00:00 GMT
 	 */
 	public void setStart(long start) {
-		this.start = new Time(start);
-		end = new Time(start + 1);
+		this.start = new Timestamp(start);
+		end = new Timestamp(start + 1);
 	}
 	
 	/**
@@ -62,7 +62,7 @@ public class Appointment {
 		return start.getTime();
 	}
 	
-	public void setEnd(Time end) throws Exception {
+	public void setEnd(Timestamp end) throws Exception {
 		if(end.getTime() < start.getTime()) throw new Exception("INVALID! End earlier than start.");
 		this.end = end;
 	}
