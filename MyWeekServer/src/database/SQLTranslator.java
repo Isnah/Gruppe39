@@ -225,6 +225,8 @@ public class SQLTranslator {
 			}
 		}
 		
+		
+		
 		return true;
 	}
 	
@@ -257,10 +259,42 @@ public class SQLTranslator {
 		}
 	}
 	
+	/**
+	 * Returns the room with id roomID from the database
+	 * @param roomID The ID of the room
+	 * @param c The connection to the database.
+	 * @return the room
+	 */
+	public static Room getRoom(int roomID, Connection c) {
+		StringBuilder query = new StringBuilder();
+		
+		query.append("SELECT id, capacity, name FROM Room WHERE id=");
+		query.append(roomID);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery(query.toString());
+			int space = 0;
+			String name = null;
+			if(rs.next()) {
+				space = rs.getInt(2);
+				name = rs.getString(3);
+				rs.close();
+				return new Room(roomID, space, name); //legge til alle appointments?
+			}
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}
+		
+		return null;
+	}
+	
 	/*
 	 * Legge til:
 	 * getMeetingAnswers(Meeting) - Should return answers that belongs to the meeting
 	 * getPersonsAppointments(Person)
+	 * UpdateAppointmentOrMeeting()
 	 */
 	
 	/**
@@ -346,6 +380,8 @@ public class SQLTranslator {
 		
 		return null;
 	}
+	
+	//UpdateAppointmentOrMeeting()
 	
 	/**
 	 * Checks if the email and password are correct and belongs to a user.
@@ -517,35 +553,50 @@ public class SQLTranslator {
 		//SELECT start FROM Appointment WHERE id=[id];
 		
 		StringBuilder query1 = new StringBuilder();
-		query1.append("SELECT start, end_time, name, descr, created_by FROM Appointment WHERE id=");
+		query1.append("SELECT start, end_time, name, descr, room_descr, room_id, created_by" +
+				"FROM Appointment WHERE id=");
 		query1.append(id);
 		
 		Timestamp start;
 		Timestamp end;
 		String name;
 		String descr;
+		String room_descr;
+		Integer room_id;
 		String created_by;
 		
 		try {
 			Statement s = c.createStatement();
 			ResultSet r = s.executeQuery(query1.toString());
 			r.next();
-			start = r.getTimestamp(1);
-			end = r.getTimestamp(2);
+			start = new Timestamp(datetimeToLongTime(r.getString(1)));
+			end = new Timestamp(datetimeToLongTime(r.getString(2)));
 			name = r.getString(3);
 			descr = r.getString(4);
-			created_by = r.getString(5);
+			room_descr = r.getString(5);
+			if(r.wasNull()) room_descr = null;
+			room_id = r.getInt(6);
+			if(r.wasNull()) room_id = null;
+			created_by = r.getString(7);
 				
 		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
+			System.err.println("SQLException while getting appointment");
 			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}
 			
 		Person registeredBy = getPerson(created_by, c);
 		
-		return new Appointment(id, start, end, name, descr, registeredBy);
-		
+		Appointment app = new Appointment(id, start, end, name, descr, registeredBy);
+		if(room_descr != null)
+		{
+			app.setRoomDescr(room_descr);
+		}
+		if(room_id != null)
+		{
+			app.setRoom(getRoom(room_id, c));
+		}
+		return app;
 	}
 	
 	public static Meeting getMeeting(int id, Connection c){
@@ -553,27 +604,34 @@ public class SQLTranslator {
 		//SELECT start, end_time, name, descr, created_by FROM Appointment WHERE id=[id];
 		
 		StringBuilder query1 = new StringBuilder();
-		query1.append("SELECT start, end_time, name, descr, created_by FROM Appointment WHERE id=");
+		query1.append("SELECT start, end_time, name, descr, room_descr, room_id, created_by" +
+				"FROM Appointment WHERE id=");
 		query1.append(id);
 		
 		Timestamp start;
 		Timestamp end;
 		String name;
 		String descr;
+		String room_descr;
+		Integer room_id;
 		String created_by;
 		
 		try {
 			Statement s = c.createStatement();
 			ResultSet r = s.executeQuery(query1.toString());
 			r.next();
-			start = r.getTimestamp(1);
-			end = r.getTimestamp(2);
+			start = new Timestamp(datetimeToLongTime(r.getString(1)));
+			end = new Timestamp(datetimeToLongTime(r.getString(2)));
 			name = r.getString(3);
 			descr = r.getString(4);
-			created_by = r.getString(5);
+			room_descr = r.getString(5);
+			if(r.wasNull()) room_descr = null;
+			room_id = r.getInt(6);
+			if(r.wasNull()) room_id = null;
+			created_by = r.getString(7);
 				
 		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
+			System.err.println("SQLException while getting meeting");
 			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}
@@ -625,8 +683,17 @@ public class SQLTranslator {
 			return null;
 		}	
 		
-		return new Meeting(id, start, end, name, descr, registeredBy, initialAttendees, initialGroups);
-		
+		Meeting meeting = new Meeting(id, start, end, name, descr, registeredBy,
+				initialAttendees, initialGroups);
+		if(room_descr != null)
+		{
+			meeting.setRoomDescr(room_descr);
+		}
+		if(room_id != null)
+		{
+			meeting.setRoom(getRoom(room_id, c));
+		}
+		return meeting;
 	}
 	
 	
