@@ -24,7 +24,6 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {}
     public Login(Main main) {
-        System.out.println("IT IS DOING SOMETHING!");
         initComponents();
         this.main = main;
         
@@ -152,26 +151,29 @@ public class Login extends javax.swing.JFrame {
      * Called when the "Login" button is pressed.
      */
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        errorPanel.setVisible(true);
-        //TODO: Fix login check.
+        checkLogin();
     }//GEN-LAST:event_loginButtonActionPerformed
     /**
      * Called when pressing enter while focusing the password field.
      */
     private void passwordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFieldKeyPressed
         if (evt.getKeyCode() == 10) {
-            if (checkLogin()) {
-                dispose();
-                new MainWindow().setVisible(true);
-            }
+            checkLogin();
         }
     }//GEN-LAST:event_passwordFieldKeyPressed
 
     /**
      * Login check
      */
-    private boolean checkLogin() {
-        return main.login(usernameField.getText(), passwordField.getPassword());
+    private void checkLogin() {
+        if (main.login(usernameField.getText(), passwordField.getPassword())) {
+                dispose();
+                new MainWindow(main).setVisible(true);
+        }
+        else {
+            errorPanel.setVisible(true);
+        }
+        
     } 
     /**
      * @param args the command line arguments

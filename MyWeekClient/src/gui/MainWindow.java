@@ -4,12 +4,14 @@
  */
 package gui;
 
+import client.Alarm;
 import client.Appointment;
 import client.Converters;
 import client.Main;
-
+import client.Person;
 import java.sql.Time;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
@@ -17,6 +19,9 @@ import javax.swing.SwingUtilities;
  * @author Laxcor
  */
 public class MainWindow extends javax.swing.JFrame {
+    
+    private Main main;
+    private Person person;
     
     private Appointment testApp;
     /**
@@ -26,27 +31,44 @@ public class MainWindow extends javax.swing.JFrame {
 	/**
      * Creates new form MainWindow
      */
-    public MainWindow() {
+    public MainWindow() {}
+    public MainWindow(Main main) {
         
+        //Setting the main and person objects
+        this.main = main;
+        main.setFrame(this);
+        person = main.getPerson();
+        
+        //Setting the fram to a maximized state
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        
+        //NetBeans component init
         initComponents();
         
-        
+        //Fixing general component placement and size
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 revalidate();
             }
         });
+        //Hiding the information panel
         informationPanel.setVisible(false);
         
+        //adding a test appointment
+        addTestApp();
+        
+    }
+    /**
+     * FOR TESTING ONLY
+     */
+    private void addTestApp() {
         //Creating a test appointment
         testApp = new Appointment(0, new Time(1363086894000L), new Time(1363106894000L), "Meeting", "A meeting", null);
         testApp.setRoomDescr("Room 8");
         addAppointment(testApp);
         // End
     }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1269,11 +1291,19 @@ public class MainWindow extends javax.swing.JFrame {
         new Login(new Main()).setVisible(true);
         // END 
     }
+    
+    public void fireAlarm(Alarm alarm) {
+        JOptionPane.showMessageDialog(this, alarm.getMessage(),"Alarm", JOptionPane.INFORMATION_MESSAGE);
+    }
     /**
      * Method to add appointments to the calendar view
+     * @param model 
      */
     public void addAppointment(Appointment model) {
+        //Creating a new appointment panel
         AppointmentView av = new AppointmentView(this, model);
+        
+        //Getting the right day-panel to add the appointment to
         switch (Converters.dayStringFormat(model.getStart())) {
             case "Monday":
                 mondayPanel.add(av);
@@ -1315,6 +1345,7 @@ public class MainWindow extends javax.swing.JFrame {
         informationPanel.setVisible(false);
     }
     
+    //NetBeans event handlers
     private void notificationListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notificationListMouseClicked
         informationPanel.setVisible(true); //TESTING
     }//GEN-LAST:event_notificationListMouseClicked
@@ -1334,7 +1365,8 @@ public class MainWindow extends javax.swing.JFrame {
     private void calendarScrollPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_calendarScrollPaneMouseReleased
         revalidate();
     }//GEN-LAST:event_calendarScrollPaneMouseReleased
-
+    // END NetBeans event handlers.
+    
     /**
      * @param args the command line arguments
      */
