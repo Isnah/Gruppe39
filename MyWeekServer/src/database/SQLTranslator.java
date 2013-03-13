@@ -168,9 +168,9 @@ public class SQLTranslator {
 		query.append("INSERT INTO Appointment VALUES ( name, start, end_time, descr, ");
 		if(mtn.getRoom() != null) query.append("room_id, ");
 		query.append("created_by ) VALUES ( \"");
-		query.append(mtn.getName() + "\", ");
-		query.append(mtn.getStart() + ", ");
-		query.append(mtn.getEnd() + ", \"");
+		query.append(mtn.getName() + "\", \"");
+		query.append(longTimeToDatetime(mtn.getStart()) + "\", \"");
+		query.append(longTimeToDatetime(mtn.getEnd()) + "\", \"");
 		query.append(mtn.getDescr() + "\", ");
 		if(mtn.getRoom() != null) query.append(mtn.getRoom().getID() + ", ");
 		query.append("\"");
@@ -184,6 +184,9 @@ public class SQLTranslator {
 			System.err.println("Message: " + ex.getMessage() );
 			return false;
 		}
+		
+		//list of the emails to the participants that should be added to meetingAnswer
+		ArrayList<String> participants = new ArrayList<String>();
 		
 		for(int i = 0; i < mtn.getAttendees().size(); ++i) {
 			query = new StringBuilder();
@@ -201,6 +204,11 @@ public class SQLTranslator {
 				System.err.println("Current index: " + i);
 				System.err.println("Message: " + ex.getMessage());
 				return false;
+			}
+			
+			if(!participants.contains(mtn.getAttendee(i).getEmail()))
+			{
+				participants.add(mtn.getAttendee(i).getEmail());
 			}
 		}
 		
@@ -222,10 +230,19 @@ public class SQLTranslator {
 					System.err.println("Message: " + ex.getMessage());
 					return false;
 				}
+				
+				if(!participants.contains(mtn.getAttendee(i).getEmail()))
+				{
+					participants.add(mtn.getAttendee(i).getEmail());
+				}
 			}
 		}
 		
-		
+		//adds a meetingAnswer to every participant and sets it to null/"not answered"
+		for(String pEmail : participants)
+		{
+			addMeetingAnswer(mtn.getID(), pEmail, null, c);
+		}
 		
 		return true;
 	}
@@ -240,9 +257,7 @@ public class SQLTranslator {
 	public static boolean addRoom(Room room, Connection c) {
 		StringBuilder query = new StringBuilder();
 		
-		query.append("INSERT INTO Room VALUES ( ");
-		query.append(room.getID());
-		query.append(", ");
+		query.append("INSERT INTO Room capacity, name VALUES ( ");
 		query.append(room.getSpace());
 		query.append(", '");
 		query.append(room.getName());
@@ -301,6 +316,7 @@ public class SQLTranslator {
 	 * Adds a meeting answer related to the person with the email to the database
 	 * @param meetingID The ID of the meeting
 	 * @param email The persons email
+	 * @param answer The persons answer to the meeting
 	 * @param c The connection to the database.
 	 * @return True if the addition was successful, false if an exception is met
 	 * during execution.
