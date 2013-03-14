@@ -16,10 +16,11 @@ public class XMLSerializer {
 	
 	public static String getType(Document doc) {
 		Element root = doc.getRootElement();
-		
-		if(root.getLocalName().equals("login")) return "login";
-		else if(root.getLocalName().equals("appointmet")) return "appointment";
-		return "not_valid";
+		return root.getLocalName();
+	}
+	
+	public static String getType(Element el) {
+		return el.getLocalName();
 	}
 	
 	/**
@@ -113,7 +114,7 @@ public class XMLSerializer {
 	 * @param person The person you wish to parse.
 	 */
 	public static Element simplePersonToXml(Person person) {
-		Element thePerson = new Element("person");
+		Element thePerson = new Element("person_simple");
 		
 		Element firstName = new Element("first_name");
 		firstName.appendChild(person.getFirstName());
@@ -204,11 +205,11 @@ public class XMLSerializer {
 
 	/**
 	 * Same as {@link roomToXml(Room)} except that it also adds the appointment
-	 * id's to the end.
+	 * id's, start, and end.
 	 * @param aRoom The room you want to parse into xml.
 	 * @return A {@link nu.xom.Element} for the room.
 	 */
-	public static Element roomToXmlWithAppointmentID(Room aRoom) {
+	public static Element roomToXmlWithSimpleAppointment(Room aRoom) {
 		Element room = roomToXml(aRoom);
 		
 		Element appointments = new Element("appointments");
@@ -217,14 +218,37 @@ public class XMLSerializer {
 		
 		while(it.hasNext()) {
 			Appointment app = it.next();
-			Element appElem = new Element("appointment_id");
-			appElem.appendChild(Integer.toString(app.getID()));
-			appointments.appendChild(appElem);
+			appointments.appendChild(simpleAppointmentToXml(app));
 		}
 		
 		room.appendChild(appointments);
 		
 		return room;
+	}
+	
+	/**
+	 * Only returns id, start and end of appointments. Used by room to
+	 * give information about when it is not available.
+	 * @param app
+	 * @return
+	 */
+	public static Element simpleAppointmentToXml(Appointment app) {
+		Element root = new Element("appointment_simple");
+		
+		Element id = new Element("id");
+		id.appendChild(Integer.toString(app.getID()));
+		
+		Element start = new Element("start");
+		start.appendChild(Long.toString(app.getStart()));
+		
+		Element end = new Element("end");
+		end.appendChild(Long.toString(app.getEnd()));
+		
+		root.appendChild(id);
+		root.appendChild(start);
+		root.appendChild(end);
+		
+		return root;
 	}
 	
 	/**
@@ -316,6 +340,32 @@ public class XMLSerializer {
 		
 		group.appendChild(id);
 		group.appendChild(name);
+		
+		return group;
+	}
+	
+	public static Element groupToXml(Group aGroup) {
+		Element group = simpleGroupToXml(aGroup);
+		
+		Element members = new Element("members");
+		
+		Iterator<Person> pIt = aGroup.getMembers().iterator();
+		
+		while(pIt.hasNext()) {
+			Person person = pIt.next();
+			
+			members.appendChild(simplePersonToXml(person));
+		}
+		
+		Element subgroups = new Element("subgroups");
+		
+		Iterator<Group> gIt = aGroup.getSubgroups().iterator();
+		
+		while(gIt.hasNext()) {
+			Group grp = gIt.next();
+			
+			subgroups.appendChild(groupToXml(grp));
+		}
 		
 		return group;
 	}
