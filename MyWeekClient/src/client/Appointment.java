@@ -81,12 +81,23 @@ public class Appointment {
 		pcs.firePropertyChange(START, oldStart, this.start);
 	}
 	
-	public void setEnd(Time end) throws Exception {
+	public void setEnd(Time end){
 		Time oldEnd = this.end;
-		if(end.getTime() < start.getTime()) throw new Exception("INVALID! End earlier than start.");
+		if(end.getTime() < start.getTime()) System.out.println("Heya, the end time is ending before the start! lol u fail");;
 		this.end = end;
 		
 		pcs.firePropertyChange(END, oldEnd, end);
+	}
+	
+	/**
+	 * 
+	 * @param end The time in milliseconds from 1/1/1979 00:00:00 GMT
+	 */
+	public void setEnd(long end) {
+		Time oldEnd = this.end;
+		this.end = new Time(end);
+		
+		pcs.firePropertyChange(END, oldEnd, this.end);
 	}
 	
 	public void setName(String name) {
