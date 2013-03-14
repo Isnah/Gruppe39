@@ -28,6 +28,10 @@ public class Person {
 		this.email = email;
 		this.lastName = lastName;
 		this.firstName = firstName;
+		
+		this.appointments = new ArrayList<Appointment>();
+		
+		pcs = new PropertyChangeSupport(this);
 	}
 	
 	

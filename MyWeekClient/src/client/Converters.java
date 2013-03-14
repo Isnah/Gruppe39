@@ -26,6 +26,17 @@ public class Converters {
 		TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
 		return hhmmss;
 	}
+	
+	/**
+     * Converts two ints(h, m) to milliseconds
+     * @param h Hours
+     * @param m Minutes
+     * @return long Milliseconds
+     */
+	public static long HHMMToMilliseconds(int h, int m) {
+		long millis = h*3600000 + m*60000;
+		return millis;
+	}
     
     public long dateAndTimeToMilliseconds(int year, int month, int day, int hour, int minutes){
     	Calendar c = Calendar.getInstance();

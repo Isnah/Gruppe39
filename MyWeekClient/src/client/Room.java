@@ -22,8 +22,14 @@ public class Room {
 		this.id = id;
 		this.space = space;
 		this.name = name;
+		
+		this.appointments = new ArrayList<Appointment>();
 	}
 	
+	
+	public void setAppointments(ArrayList<Appointment> appointments){
+		this.appointments = new ArrayList<Appointment>(appointments);
+	}
 	
 	//GETTERS
 	
