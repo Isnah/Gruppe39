@@ -1,10 +1,9 @@
 package client;
 
-import java.sql.Time;
-import java.util.ArrayList;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.sql.Time;
+import java.util.ArrayList;
 
 
 /**
@@ -18,6 +17,7 @@ public class Person {
 	private String lastName;
 	private String email;
 	private ArrayList<Appointment> appointments;
+        private ArrayList<Notification> notifications;
 	private PropertyChangeSupport pcs;
 	
 	public final static String NAME = "name";
@@ -105,6 +105,9 @@ public class Person {
 	
 	//ADDERS lol
 	
+        public void addNotification(Notification not) {
+            notifications.add(not);
+        }
 	public void addAppointment(Appointment app) {
 		appointments.add(app);
 	} 

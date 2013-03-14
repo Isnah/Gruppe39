@@ -17,7 +17,9 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private MainWindow frame;
     private Meeting model;
     
+    
     private boolean newAppointment = false;
+    private boolean roomReserved = false;
     /**
      * Creates new form AppointmentEditor
      */
@@ -59,6 +61,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
         dateChooser.setDate(new Date(model.getStart()));
         whereField.setText(getRoom());
         if (model.getRoom() != null) {
+            roomReserved = true;
             removeRoomButton.setEnabled(true);
             whereField.setEnabled(false);
         }
@@ -73,10 +76,16 @@ public class AppointmentEditor extends javax.swing.JFrame {
      * 
      */
     private void saveChanges() {
-        // TODO make it save
         model.setName(titleField.getText());
         model.setDescr(descField.getText());
-        
+        model.setStart(dateChooser.getDate().getTime());
+        //model.setEnd(dateChooser.getDate().getTime());
+        if (roomReserved) {
+            model.setRoom(null);
+        }
+        else {
+            model.setRoomDescr(whereField.getText());
+        }
         
         
         
