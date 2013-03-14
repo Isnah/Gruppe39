@@ -194,7 +194,31 @@ public class ServerMain {
 						
 					}
 					else if(type.equals("delete")) {
-						// find out what and delete it
+						Element root = doc.getRootElement();
+						
+						Elements elements = root.getChildElements();
+						
+						for(int i = 0; i < elements.size(); ++i) {
+							Element el = elements.get(i);
+							
+							String elementType = XMLSerializer.getType(el);
+							
+							if(elementType.equals("meeting")) {
+								Meeting mtn = XMLSerializer.assembleMeeting(el);
+								Meeting realMtn = SQLTranslator.getMeeting(mtn.getID(), connection);
+								
+								Person registeredBy = realMtn.getRegisteredBy();
+								
+								boolean registeredByUser = registeredBy.getEmail().equals(credentials.getUser());
+								
+								if(registeredByUser) {
+									SQLTranslator.deleteAppointmentOrMeeting(mtn);
+								} else {
+									out.writeUTF("meeting_deletion_failed_wrong_user");
+								}
+							}
+						}
+						
 					} else {
 						out.writeUTF("invalid_request");
 					}

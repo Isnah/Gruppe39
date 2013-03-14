@@ -8,6 +8,7 @@ import server.helpers.LoginCredentials;
 
 import model.appointment.Appointment;
 import model.appointment.Meeting;
+import model.notifications.Notification;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -368,6 +369,29 @@ public class XMLSerializer {
 		}
 		
 		return group;
+	}
+	
+	public Document notificationToXml(Notification notification) {
+		Element not = new Element("notification");
+		
+		Element type = new Element("type");
+		if(notification.isCancelled()) type.appendChild("cancelled");
+		else if(notification.isInvitation()) type.appendChild("invitation");
+		else type.appendChild("other");
+		
+		Element appID = new Element("app_id");
+		appID.appendChild(Integer.toString(notification.getAppID()));
+		
+		Element message = new Element("message");
+		message.appendChild(notification.getMessage());
+		
+		not.appendChild(type);
+		not.appendChild(appID);
+		not.appendChild(message);
+		
+		Document doc = new Document(not);
+		
+		return doc;
 	}
 	
 	/**
@@ -736,6 +760,43 @@ public class XMLSerializer {
 		 */
 		
 		return new Room(id, space, name);
+	}
+	
+	public static Notification assembleNotification(Element xmlNotificationElement) {
+		if(xmlNotificationElement.getLocalName() != "notification") {
+			System.err.println("Malformed xml element. Not a notification");
+			return null;
+		}
+		
+		int appID;
+		String message;
+		boolean cancelled = false;
+		boolean invitation = false;
+		
+		Element el = xmlNotificationElement.getFirstChildElement("app_id");
+		if(el == null) {
+			System.err.println("Malformed xml element. No app_id while assembling notification");
+			return null;
+		}
+		appID = Integer.parseInt(el.getValue());
+		
+		el = xmlNotificationElement.getFirstChildElement("type");
+		if(el == null) {
+			System.err.println("Malformed xml element. No type while assembling notification");
+			return null;
+		}
+		String value = el.getValue();
+		if(value.equals("cancelled")) cancelled = true;
+		else if(value.equals("invitation")) invitation = true;
+		
+		el = xmlNotificationElement.getFirstChildElement("message");
+		if(el == null) {
+			System.err.println("Malformed xml element. No message while assembling notification");
+			return null;
+		}
+		message = el.getValue();
+		
+		Notification notification = new Notification(appID, invitation, cancelled, message);
 	}
 	
 	public static Element getAppsByIdXml(int[] ids) {
