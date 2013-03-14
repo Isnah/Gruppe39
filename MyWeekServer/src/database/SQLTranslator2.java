@@ -4,11 +4,16 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import model.Alarm;
 import model.Group;
 import model.Person;
+import model.Room;
+import model.appointment.Appointment;
 
 /*
  * Ikke enda implementerte metoder:
@@ -18,9 +23,6 @@ import model.Person;
  */
 
 public class SQLTranslator2 {
-
-
-
 
 	public static ArrayList<Person> getGroupMembers(int groupId, Connection c){
 		ArrayList<String> ids = getIdsGroupMembers(groupId, c);
@@ -99,6 +101,67 @@ public class SQLTranslator2 {
 
 	}
 	
+	public static Room getRoom(int roomID, Connection c) {
+		
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+		
+		//SELECT id FROM Appointment WHERE room_id=[roomID];
+		
+		StringBuilder query1 = new StringBuilder();
+		query1.append("SELECT id FROM Appointment WHERE room_id=");
+		query1.append(roomID);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query1.toString());
+			int id;
+			while(r.next()) {
+				id = r.getInt(1);
+				appointments.add(getAppointment(id, c));
+			}
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}	
+		
+		int space;
+		String name;
+		
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT id, capacity, name FROM Room WHERE id=");
+		query.append(roomID);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			if(r.next()) {
+				space = r.getInt(2);
+				name = r.getString(3);
+				r.close();
+				return new Room(roomID, space, name, appointments);
+			}
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}
+		
+		return null;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//KUN FOR Å UNNGÅ FEILMELDING!:
 	
 	public static Person getPerson(String email, Connection c) {
@@ -127,6 +190,68 @@ public class SQLTranslator2 {
 
 		return new Person(email, lastname, firstname);
 
+	}
+	
+	public static Appointment getAppointment(int id, Connection c) {
+		
+		//SELECT start FROM Appointment WHERE id=[id];
+		
+		StringBuilder query1 = new StringBuilder();
+		query1.append("SELECT start, end_time, name, descr, room_descr, room_id, created_by" +
+				"FROM Appointment WHERE id=");
+		query1.append(id);
+		
+		Timestamp start;
+		Timestamp end;
+		String name;
+		String descr;
+		String room_descr;
+		Integer room_id;
+		String created_by;
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query1.toString());
+			r.next();
+			start = new Timestamp(datetimeToLongTime(r.getString(1)));
+			end = new Timestamp(datetimeToLongTime(r.getString(2)));
+			name = r.getString(3);
+			descr = r.getString(4);
+			room_descr = r.getString(5);
+			if(r.wasNull()) room_descr = null;
+			room_id = r.getInt(6);
+			if(r.wasNull()) room_id = null;
+			created_by = r.getString(7);
+				
+		} catch (SQLException ex) {
+			System.err.println("SQLException while getting appointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+			
+		Person registeredBy = getPerson(created_by, c);
+		
+		Appointment app = new Appointment(id, start, end, name, descr, registeredBy);
+		if(room_descr != null)
+		{
+			app.setRoomDescr(room_descr);
+		}
+		if(room_id != null)
+		{
+			app.setRoom(getRoom(room_id, c));
+		}
+		return app;
+	}
+	
+	private static long datetimeToLongTime(String datetime) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			return dateFormat.parse(datetime).getTime();
+		} catch (ParseException e) {
+			System.err.println("ParseException in datetimeToLongTime()");
+			System.err.println("Message: " + e.getMessage());
+		}
+		return 0;
 	}
 
 }
