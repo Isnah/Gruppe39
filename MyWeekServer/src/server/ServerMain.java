@@ -68,29 +68,29 @@ public class ServerMain {
 		
 		public void run() {
 			try {
-				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+				DataInputStream in = new DataInputStream(socket.getInputStream());
+				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 				while(true) {
 					Builder builder = new Builder();
-					Document doc = builder.build(in); // TODO: Look here if the input is not getting through. Might not be a good way of doing things
+					String input = in.readUTF();
+					Document doc = builder.build(input, null);
 					String type = XMLSerializer.getType(doc);
 					
 					if(type.equals("login")) {
 						credentials = XMLSerializer.assembleLogin(doc);
 						valid = SQLTranslator.isValidEmailAndPassword(credentials.getUser(), credentials.getPassword(), connection);
 						if(!valid){
-							// return information to that effect
-							break;
+							out.writeUTF("invalid_login");
 						}
 						Person userPerson = SQLTranslator.getPersonWithAppointments(credentials.getUser(), connection);
 						
 						Document returnDoc = XMLSerializer.modelToXml(userPerson);
 						
-						out.write(returnDoc.toXML());
+						out.writeUTF(returnDoc.toXML());
 						
 						// TODO: Get all info about the logged in user from the database and send it
 					} else if(!valid) {
-						break;
+						out.writeUTF("access_error_no_login");
 					} else if(type.equals("get")) {
 						Element root = doc.getRootElement();
 						Elements getElem = root.getChildElements();
@@ -126,11 +126,45 @@ public class ServerMain {
 						
 						Document retDoc = new Document(ret);
 						
-						out.write(retDoc.toXML());
+						out.writeUTF(retDoc.toXML());
 						
 					} else if(type.equals("update")) {
 						Element root = doc.getRootElement();
-						// find out what we need to update
+						
+						Elements elements = root.getChildElements();
+						
+						for(int i = 0; i < elements.size(); ++i) {
+							
+							Element el = elements.get(i);
+							
+							if(XMLSerializer.getType(el).equals("Meeting")) {
+								Meeting mtn = XMLSerializer.assembleMeeting(el);
+								
+								boolean wasRegisteredByUser;
+								
+								Meeting realMtn = SQLTranslator.getMeeting(mtn.getID(), connection);
+								Person registeredBy = realMtn.getRegisteredBy();
+								
+								wasRegisteredByUser = registeredBy.getEmail().equals(credentials.getUser());
+								
+								if(wasRegisteredByUser) {
+									SQLTranslator.updateAppointmentOrMeeting(mtn);
+									out.writeUTF("meeting_update_ok");
+								} else {
+									out.writeUTF("meeting_update_failed_wrong_user");
+								}
+								
+								
+								
+							} else if(XMLSerializer.getType(el).equals("Appointment")) {
+								/*
+								 *  TODO: Consensus is that appointments will not be used as anything
+								 *  other than meeting, so this will not be in use for now
+								 */
+							}
+							
+							
+						}
 					} else if(type.equals("new")) {
 						Element root = doc.getRootElement();
 						Elements elements = root.getChildElements();
@@ -146,23 +180,23 @@ public class ServerMain {
 								Meeting meeting = XMLSerializer.assembleMeeting(el);
 								
 								if(meeting == null) {
-									out.write("Malformed xml sent. Not able to assemble meeting.");
+									out.writeUTF("Malformed xml sent. Not able to assemble meeting.");
 									break;
 								}
 								
 								SQLTranslator.addMeeting(meeting, connection);
 								
-								out.write("Meeting added");
+								out.writeUTF("Meeting added");
 							} else {
-								out.write("Add statement not recognized");
+								out.writeUTF("Add statement not recognized");
 							}
 						}
 						
-					} else {
-						out.write("invalid_request");
 					}
-					if(!valid) {
-						out.write("Invalid user or password");
+					else if(type.equals("delete")) {
+						// find out what and delete it
+					} else {
+						out.writeUTF("invalid_request");
 					}
 				}
 			} catch(IOException ex) {
@@ -173,7 +207,7 @@ public class ServerMain {
 				System.err.println("Message: " + ex.getMessage());
 			}
 			
-			//connectThreads.remove(this);
+			connectThreads.remove(this);
 		}
 	}
 }
