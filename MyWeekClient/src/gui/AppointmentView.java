@@ -4,7 +4,7 @@
  */
 package gui;
 
-import client.Appointment;
+import client.Meeting;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
@@ -18,13 +18,13 @@ import javax.swing.SwingUtilities;
 public class AppointmentView extends javax.swing.JPanel implements PropertyChangeListener, MouseListener {
     
     private MainWindow frame;
-    private Appointment model;
+    private Meeting model;
     
     
     /**
      * Creates new form AppointmentView
      */
-    public AppointmentView(MainWindow frame,Appointment model) {
+    public AppointmentView(MainWindow frame,Meeting model) {
         initComponents();
         
         this.frame = frame;
@@ -58,24 +58,25 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         y = 40*startH; //*antall timer fra 00:00 til start
         width = 110;
         height = 38*durationH; // *antall timer
+                System.out.println("working");
         setBounds(x, y, width, height);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
-            case Appointment.NAME:
+            case Meeting.NAME:
                 appointmentName.setText(model.getName());
                 break;
-            case Appointment.START:
+            case Meeting.START:
                 appointmentTime.setText(model.getTimeFormat());
                 setPosition();
                 break;
-            case Appointment.END:
+            case Meeting.END:
                 appointmentTime.setText(model.getTimeFormat());
                 setPosition();
                 break;
-            case Appointment.ROOM:
+            case Meeting.ROOM:
                 appointmentRoom.setText(getRoom());
                 break;
             default:

@@ -47,8 +47,8 @@ public class Main {
      * Used by the main window to get its model
      * @return 
      */
-    public Person getPerson() {
-        return person;
+    public String getPersonName() {
+        return person.getFirstName() + " " + person.getLastName();
     }
     
     /**
@@ -58,6 +58,9 @@ public class Main {
         // TODO This needs a connection
     }
     
+    public Main() {
+        person = new Person("awesome@man.com", "Man", "Awesome");
+    }
     /**
      * The main method for the application.
      * @param args 

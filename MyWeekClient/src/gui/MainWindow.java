@@ -8,8 +8,9 @@ import client.Alarm;
 import client.Appointment;
 import client.Converters;
 import client.Main;
-import client.Person;
+import client.Meeting;
 import java.sql.Time;
+import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -21,9 +22,8 @@ import javax.swing.SwingUtilities;
 public class MainWindow extends javax.swing.JFrame {
     
     private Main main;
-    private Person person;
     
-    private Appointment testApp;
+    private Meeting testApp;
     /**
 	 * 
 	 */
@@ -36,8 +36,7 @@ public class MainWindow extends javax.swing.JFrame {
         
         //Setting the main and person objects
         this.main = main;
-        main.setFrame(this);
-        person = main.getPerson();
+        this.main.setFrame(this);
         
         //Setting the fram to a maximized state
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -54,7 +53,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         //Hiding the information panel
         informationPanel.setVisible(false);
-        
+        usernameLabel.setText(this.main.getPersonName());
         //adding a test appointment
         addTestApp();
         
@@ -64,8 +63,9 @@ public class MainWindow extends javax.swing.JFrame {
      */
     private void addTestApp() {
         //Creating a test appointment
-        testApp = new Appointment(0, new Time(1363086894000L), new Time(1363106894000L), "Meeting", "A meeting", null);
+        testApp = new Meeting(0, new Time(new Date().getTime()), new Time(new Date().getTime()+100000000), "Meeting", "A meeting", null, null, null);
         testApp.setRoomDescr("Room 8");
+        System.out.println(new Date().getTime());
         addAppointment(testApp);
         // End
     }
@@ -193,7 +193,7 @@ public class MainWindow extends javax.swing.JFrame {
         logoLabel.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
         logoLabel.setText("myWeek");
 
-        welcomeLabel.setText("Welcome ");
+        welcomeLabel.setText("Welcome, ");
 
         usernameLabel.setText("<<INSERT USERNAME>>");
 
@@ -211,17 +211,17 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(logoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(logoPanelLayout.createSequentialGroup()
-                        .addComponent(logoLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logoPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addGroup(logoPanelLayout.createSequentialGroup()
                         .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logoPanelLayout.createSequentialGroup()
+                            .addComponent(logoLabel)
+                            .addGroup(logoPanelLayout.createSequentialGroup()
                                 .addComponent(welcomeLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(usernameLabel))
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                .addComponent(usernameLabel)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         logoPanelLayout.setVerticalGroup(
@@ -229,9 +229,9 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(logoPanelLayout.createSequentialGroup()
                 .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(welcomeLabel)
-                    .addComponent(usernameLabel, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(usernameLabel)
+                    .addComponent(welcomeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(22, 22, 22))
@@ -1231,9 +1231,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(informationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(calendarScrollPane)
-                    .addGroup(centerPanelLayout.createSequentialGroup()
-                        .addComponent(dayAndDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)))
+                    .addComponent(dayAndDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         centerPanelLayout.setVerticalGroup(
@@ -1279,7 +1277,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-     
+    
     /**
      * The method used to disconnect from the server and return the user to the login window.
      */
@@ -1292,14 +1290,19 @@ public class MainWindow extends javax.swing.JFrame {
         // END 
     }
     
+    /**
+     * Method used by the main program to fire alarms
+     * @param alarm 
+     */
     public void fireAlarm(Alarm alarm) {
         JOptionPane.showMessageDialog(this, alarm.getMessage(),"Alarm", JOptionPane.INFORMATION_MESSAGE);
     }
+    
     /**
      * Method to add appointments to the calendar view
      * @param model 
      */
-    public void addAppointment(Appointment model) {
+    public void addAppointment(Meeting model) {
         //Creating a new appointment panel
         AppointmentView av = new AppointmentView(this, model);
         
@@ -1333,7 +1336,7 @@ public class MainWindow extends javax.swing.JFrame {
      * Showing the information panel with a new model
      * @param model 
      */
-    public void showInformationPanel(Appointment model) {
+    public void showInformationPanel(Meeting model) {
         informationPanel.setModel(model);
         informationPanel.hideConfirmation();
         informationPanel.setVisible(true);
@@ -1347,11 +1350,11 @@ public class MainWindow extends javax.swing.JFrame {
     
     //NetBeans event handlers
     private void notificationListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notificationListMouseClicked
-        informationPanel.setVisible(true); //TESTING
+        // TODO add notification support
     }//GEN-LAST:event_notificationListMouseClicked
 
     private void newAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newAppointmentButtonActionPerformed
-        new AppointmentEditor().setVisible(true);
+        new AppointmentEditor(this).setVisible(true);
     }//GEN-LAST:event_newAppointmentButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -1367,40 +1370,6 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_calendarScrollPaneMouseReleased
     // END NetBeans event handlers.
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainWindow().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addOtherPersonButton;
     private javax.swing.JPanel calendarPanel;
