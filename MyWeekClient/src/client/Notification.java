@@ -9,6 +9,16 @@ package client;
  * @author Laxcor
  */
 class Notification {
-    private boolean invitation;
+    private boolean invitation = false;
+    private boolean canceled = false;
     private int meetingID;
+    private String message;
+    
+    public Notification(int id, boolean invitation) {
+        this.invitation = invitation;
+        this.meetingID = id;
+    }
+    public Notification(String msg) {
+        canceled = true;
+    }
 }

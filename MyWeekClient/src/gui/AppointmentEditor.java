@@ -5,8 +5,11 @@
 package gui;
 
 import client.Meeting;
+import client.Converters;
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -78,8 +81,18 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private void saveChanges() {
         model.setName(titleField.getText());
         model.setDescr(descField.getText());
-        model.setStart(dateChooser.getDate().getTime());
-        //model.setEnd(dateChooser.getDate().getTime());
+        
+        GregorianCalendar date = (GregorianCalendar)dateChooser.getCalendar();
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MILLISECOND, 0);
+        
+        model.setStart(date.getTimeInMillis() + Converters.HHMMToMilliseconds(getHHFrom(), getMMFrom()));
+        model.setEnd(date.getTimeInMillis() + Converters.HHMMToMilliseconds(getHHTo(), getMMTo()));
+        
+        
+        
         if (roomReserved) {
             model.setRoom(null);
         }
@@ -93,6 +106,19 @@ public class AppointmentEditor extends javax.swing.JFrame {
             frame.addAppointment(model);
         }
         dispose();
+    }
+    
+    private int getHHFrom() {
+        return Integer.parseInt(timeFromHH.getText());
+    }
+    private int getMMFrom() {
+        return Integer.parseInt(timeFromMM.getText());
+    }
+    private int getHHTo() {
+        return Integer.parseInt(timeToHH.getText());
+    }
+    private int getMMTo() {
+        return Integer.parseInt(timeToMM.getText());
     }
     private String getRoom() {
         if (model.getRoom() != null) {
