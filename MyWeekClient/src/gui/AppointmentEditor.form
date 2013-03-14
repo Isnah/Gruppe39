@@ -87,7 +87,7 @@
                           </Group>
                           <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="timePanel" alignment="0" max="32767" attributes="0"/>
+                              <Component id="timePanel" alignment="0" max="-2" attributes="0"/>
                               <Component id="jScrollPane4" alignment="0" max="32767" attributes="0"/>
                               <Component id="titleField" alignment="0" max="32767" attributes="0"/>
                               <Component id="dateChooser" alignment="0" max="32767" attributes="0"/>
@@ -194,7 +194,7 @@
                       <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="timeFromMM" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                      <EmptySpace pref="34" max="32767" attributes="0"/>
                       <Component id="timeToLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="timeToHH" min="-2" max="-2" attributes="0"/>
@@ -202,7 +202,6 @@
                       <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="timeToMM" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="35" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -234,7 +233,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="timeToLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="to"/>
+                <Property name="text" type="java.lang.String" value="To"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">

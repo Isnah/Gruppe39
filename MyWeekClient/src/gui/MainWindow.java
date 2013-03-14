@@ -5,12 +5,9 @@
 package gui;
 
 import client.Alarm;
-import client.Appointment;
 import client.Converters;
 import client.Main;
 import client.Meeting;
-import java.sql.Time;
-import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -22,8 +19,6 @@ import javax.swing.SwingUtilities;
 public class MainWindow extends javax.swing.JFrame {
     
     private Main main;
-    
-    private Meeting testApp;
     /**
 	 * 
 	 */
@@ -51,23 +46,9 @@ public class MainWindow extends javax.swing.JFrame {
                 revalidate();
             }
         });
-        //Hiding the information panel
         informationPanel.setVisible(false);
         usernameLabel.setText(this.main.getPersonName());
-        //adding a test appointment
-        addTestApp();
         
-    }
-    /**
-     * FOR TESTING ONLY
-     */
-    private void addTestApp() {
-        //Creating a test appointment
-        testApp = new Meeting(0, new Time(new Date().getTime()), new Time(new Date().getTime()+100000000), "Meeting", "A meeting", null, null, null);
-        testApp.setRoomDescr("Room 8");
-        System.out.println(new Date().getTime());
-        addAppointment(testApp);
-        // End
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1282,12 +1263,9 @@ public class MainWindow extends javax.swing.JFrame {
      * The method used to disconnect from the server and return the user to the login window.
      */
     private void logout() {
-        // TODO Enter the right mothod-call
-        
-        //For testing purposes:
+        main.logout();
         dispose();
         new Login(new Main()).setVisible(true);
-        // END 
     }
     
     /**
@@ -1302,9 +1280,10 @@ public class MainWindow extends javax.swing.JFrame {
      * Method to add appointments to the calendar view
      * @param model 
      */
+    public void newAppointment(Meeting model) {
+        main.newAppointment(model);
+    }
     public void addAppointment(Meeting model) {
-        //TODO add to the appointment list
-        
         //Creating a new appointment panel
         AppointmentView av = new AppointmentView(this, model);
         
