@@ -196,7 +196,7 @@ public class SQLTranslator {
 			 * this case.
 			 */
 			query.append("INSERT INTO PersonAppointment ( app_id, email ) VALUES ( LAST_INSERT_ID(), \"");
-			query.append(mtn.getAttendee(i).getEmail());
+			query.append(mtn.getAttendee(i).getEmail() + "\")");
 			
 			try {
 				Statement s = c.createStatement();
@@ -283,39 +283,43 @@ public class SQLTranslator {
 	 * @return the room
 	 */
 	public static Room getRoom(int roomID, Connection c) {
-		StringBuilder query = new StringBuilder();
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		
+		//SELECT id FROM Appointment WHERE room_id=[roomID];
+		
+		StringBuilder query1 = new StringBuilder();
+		query1.append("SELECT id FROM Appointment WHERE room_id=");
+		query1.append(roomID);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query1.toString());
+			int id;
+			while(r.next()) {
+				id = r.getInt(1);
+				appointments.add(getAppointment(id, c));
+			}
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}	
+		
+		int space;
+		String name;
+		
+		StringBuilder query = new StringBuilder();
 		query.append("SELECT id, capacity, name FROM Room WHERE id=");
 		query.append(roomID);
 		
 		try {
 			Statement s = c.createStatement();
-			ResultSet rs = s.executeQuery(query.toString());
-			int space = 0;
-			String name = null;
-			Room room = new Room(roomID, space, name); //legge til alle appointments?
-			if(rs.next()) {
-				space = rs.getInt(2);
-				name = rs.getString(3);
-				rs.close();
-				 
+			ResultSet r = s.executeQuery(query.toString());
+			if(r.next()) {
+				space = r.getInt(2);
+				name = r.getString(3);
+				r.close();
+				return new Room(roomID, space, name, appointments);
 			}
-			//TODO: Add all appointments
-			query = new StringBuilder();
-			
-			query.append("SELECT DISTINCT id FROM Appointment WHERE room_id=");
-			query.append(roomID);
-			
-			s = c.createStatement();
-			rs = s.executeQuery(query.toString());
-			int app_id;
-			while(rs.next()) {
-				app_id = rs.getInt(1);
-				room.addAppointment(getAppointment(app_id, c));
-				rs.close();
-			}
-			
-			return room;
 		} catch (SQLException ex) {
 			System.err.println("SQL exception in getMeetingAnswer()");
 			System.err.println("Message: " + ex.getMessage());
@@ -540,11 +544,9 @@ public class SQLTranslator {
 			//adding present attendees
 			for(int i = 0; i < mtn.getAttendees().size(); ++i) {
 				query = new StringBuilder();
-				/* TODO: Very unsure about next command. LAST_INSERT_ID() will work in
-				 * this case.
-				 */
-				query.append("INSERT INTO PersonAppointment ( app_id, email ) VALUES ( LAST_INSERT_ID(), \"");
-				query.append(mtn.getAttendee(i).getEmail());
+				query.append("INSERT INTO PersonAppointment ( app_id, email ) VALUES ( ");
+				query.append(mtn.getID() + ", \"");
+				query.append(mtn.getAttendee(i).getEmail() + "\")");
 				
 				try {
 					Statement s = c.createStatement();
@@ -567,8 +569,9 @@ public class SQLTranslator {
 				for(int j = 0; j < grp.getMembers().size(); ++j) {
 					query = new StringBuilder();
 					
-					query.append("INSERT INTO PersonAppointment ( app_id, email, added_by ) VALUES ( LAST_INSERT_ID(), ");
-					query.append("\" " + grp.getMembers().get(j).getEmail() + "\", ");
+					query.append("INSERT INTO PersonAppointment ( app_id, email, added_by ) VALUES ( ");
+					query.append(mtn.getID() + ", \"");
+					query.append(grp.getMembers().get(j).getEmail() + "\", ");
 					query.append(grp.getID() + " );");
 					
 					try {
@@ -595,17 +598,15 @@ public class SQLTranslator {
 				{//participant is removed, delete meetingAnswer
 					deleteMeetingAnswer(mtn.getID(), pEmail, c);
 				}
-			}
-			
-			//list of the emails to the new participants that should be added to meetingAnswer
-			//present - former ?
-			ArrayList<String> newParticipants = new ArrayList<String>();
-			
+			}			
 			
 			//adds a meetingAnswer to every new participant and sets it to null/"not answered"
 			for(String pEmail : participants)
 			{
-				addMeetingAnswer(mtn.getID(), pEmail, null, c);
+				if(!formerParticipants.contains(pEmail))
+				{//participant is new, add meetingAnswer
+					addMeetingAnswer(mtn.getID(), pEmail, null, c);
+				}
 			}
 		}
 		
