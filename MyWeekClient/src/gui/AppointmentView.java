@@ -51,18 +51,18 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         }
     }
     private void setPosition() {
-        int x, width, height, durationH, startH, startM;
-        float y;
+        int x, width, durationH, startH, startM;
+        float y, durationM, height;
         startH = Integer.parseInt(model.getTimeFormat().substring(0, 2));
         startM = Integer.parseInt(model.getTimeFormat().substring(3, 5));
-        System.out.println(startM);
         durationH = Integer.parseInt(model.getTimeFormat().substring(6, 8)) - startH;
+        durationM = Integer.parseInt(model.getTimeFormat().substring(9, 11)) - startM;
         x = 2;
-        y = 38*startH + (38f/60)*startM; //*antall timer fra 00:00 til start
+        y = 38*startH + (38f/60)*startM; //*antall timer og minutter fra 00:00 til start
         width = 110;
-        height = 38*durationH; // *antall timer
+        height = 38*durationH + (38f/60)*durationM; // *antall timer
                 System.out.println("working");
-        setBounds(x, (int)y, width, height);
+        setBounds(x, (int)y, width, (int)height);
     }
 
     @Override
