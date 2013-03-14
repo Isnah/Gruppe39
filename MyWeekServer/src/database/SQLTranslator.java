@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import javax.print.attribute.standard.PresentationDirection;
+
 import model.*;
 import model.appointment.Appointment;
 import model.appointment.Meeting;
@@ -291,12 +293,29 @@ public class SQLTranslator {
 			ResultSet rs = s.executeQuery(query.toString());
 			int space = 0;
 			String name = null;
+			Room room = new Room(roomID, space, name); //legge til alle appointments?
 			if(rs.next()) {
 				space = rs.getInt(2);
 				name = rs.getString(3);
 				rs.close();
-				return new Room(roomID, space, name); //legge til alle appointments?
+				 
 			}
+			//TODO: Add all appointments
+			query = new StringBuilder();
+			
+			query.append("SELECT DISTINCT id FROM Appointment WHERE room_id=");
+			query.append(roomID);
+			
+			s = c.createStatement();
+			rs = s.executeQuery(query.toString());
+			int app_id;
+			while(rs.next()) {
+				app_id = rs.getInt(1);
+				room.addAppointment(getAppointment(app_id, c));
+				rs.close();
+			}
+			
+			return room;
 		} catch (SQLException ex) {
 			System.err.println("SQL exception in getMeetingAnswer()");
 			System.err.println("Message: " + ex.getMessage());
@@ -306,10 +325,16 @@ public class SQLTranslator {
 	}
 	
 	/*
+	 * TODO
 	 * Legge til:
 	 * getMeetingAnswers(Meeting) - Should return answers that belongs to the meeting
-	 * getPersonsAppointments(Person)
+	 * getMeetingAnswers(String email) - 
+	 * getPersonsAppointments(Person) //dekket av getPersonWithAppointments()
 	 * UpdateAppointmentOrMeeting()
+	 * getCancelNotification()
+	 * deleteAppointmentOrMeeting() //opprette CancelNotifications her
+	 * updateMeetingAnswer()
+	 * LEGGE TIL TRE ATTENDEE-LISTER I GET MEETING
 	 */
 	
 	/**
@@ -352,7 +377,50 @@ public class SQLTranslator {
 			System.err.println("Message: " + ex.getMessage());
 			return false;
 		}
-	} 
+	}
+	
+	/**
+	 * Deletes a meeting answer related to the person with the email to the database
+	 * @param meetingID The ID of the meeting
+	 * @param email The persons email
+	 * @param answer The persons answer to the meeting
+	 * @param c The connection to the database.
+	 * @return True if the addition was successful, false if an exception is met
+	 * during execution.
+	 */
+	//TODO
+	public static boolean deleteMeetingAnswer(int meetingID, String email, Connection c) {
+		StringBuilder query = new StringBuilder();
+		
+		query.append("INSERT INTO MeetingAnswer VALUES ( ");
+		query.append(meetingID);
+		query.append(", '");
+		query.append(email);
+		query.append("', ");
+		if(answer == null)
+		{
+			query.append("NULL");
+		}
+		else if(answer)
+		{
+			query.append("1");
+		}
+		else
+		{
+			query.append("0");
+		}
+		query.append(" )");
+		
+		try {
+			Statement s = c.createStatement();
+			s.executeUpdate(query.toString());
+			return true;
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in room addition");
+			System.err.println("Message: " + ex.getMessage());
+			return false;
+		}
+	}
 	
 	/**
 	 * Get a persons answer to a meeting from the database
@@ -397,7 +465,152 @@ public class SQLTranslator {
 		return null;
 	}
 	
-	//UpdateAppointmentOrMeeting()
+	/**
+	 * Updates an appointment or a meeting
+	 * @param app The appointment or meeting
+	 * @param c
+	 * @return true if successful, false otherwise
+	 */
+	public static boolean updateAppointmentOrMeeting(Appointment app, Connection c) {
+		StringBuilder query = new StringBuilder();
+		
+		query.append("UPDATE Appointment SET name='");
+		query.append(app.getName() + "', start='");
+		query.append(longTimeToDatetime(app.getStart()) + "', end_time='");
+		query.append(longTimeToDatetime(app.getEnd()) + "', descr='");
+		query.append(app.getDescr() + "', ");
+		if(app.getRoomDescr() != null) {
+			query.append("room_descr='");
+			query.append(app.getRoomDescr());
+			query.append("', ");
+		}
+		if(app.getRoom() != null) query.append("room_id=" + app.getRoom().getID());
+		query.append(" WHERE ");
+		query.append("id=");
+		query.append(app.getID());
+		
+		try {
+			Statement s = c.createStatement();
+			s.executeUpdate(query.toString());
+		} catch (SQLException ex) {
+			System.err.println("SQLException while updating appointment or meeting");
+			System.err.println("Message: " + ex.getMessage() );
+			return false;
+		}
+		
+		if(app instanceof Meeting)
+		{
+			Meeting mtn = (Meeting)app;
+			
+			//list of the emails to the former participants
+			ArrayList<String> formerParticipants = new ArrayList<String>();
+			query = new StringBuilder();
+			query.append("SELECT DISTINCT email FROM PersonAppointment WHERE app_id=");
+			query.append(mtn.getID());
+			try {
+				Statement s = c.createStatement();
+				ResultSet rs = s.executeQuery(query.toString());
+				while(rs.next()) {
+					formerParticipants.add(rs.getString(1));
+				}
+				rs.close();
+			} catch (SQLException ex) {
+				System.err.println("SQL exception while updating appointment or meeting");
+				System.err.println("Message: " + ex.getMessage());
+				return false;
+			}
+			
+			//first delete all former attendees from the meeting and then add the present attendees
+			query = new StringBuilder();
+			
+			query.append("DELETE FROM PersonAppointment WHERE app_id=");
+			query.append(mtn.getID());
+			
+			try {
+				Statement s = c.createStatement();
+				s.executeUpdate(query.toString());
+			} catch (SQLException ex) {
+				System.err.println("SQL exception while updating appointment or meeting");
+				System.err.println("Message: " + ex.getMessage());
+				return false;
+			}			
+			
+			//list of the emails to the present participants
+			ArrayList<String> participants = new ArrayList<String>();
+			//adding present attendees
+			for(int i = 0; i < mtn.getAttendees().size(); ++i) {
+				query = new StringBuilder();
+				/* TODO: Very unsure about next command. LAST_INSERT_ID() will work in
+				 * this case.
+				 */
+				query.append("INSERT INTO PersonAppointment ( app_id, email ) VALUES ( LAST_INSERT_ID(), \"");
+				query.append(mtn.getAttendee(i).getEmail());
+				
+				try {
+					Statement s = c.createStatement();
+					s.executeUpdate(query.toString());
+				} catch (SQLException ex) {
+					System.err.println("SQLExeption in adding meeting while adding personAppointments");
+					System.err.println("Current index: " + i);
+					System.err.println("Message: " + ex.getMessage());
+					return false;
+				}
+				
+				if(!participants.contains(mtn.getAttendee(i).getEmail()))
+				{
+					participants.add(mtn.getAttendee(i).getEmail());
+				}
+			}
+			
+			for(int i = 0; i < mtn.getGroupAttendees().size(); ++i) {
+				Group grp = mtn.getGroupAttendee(i);
+				for(int j = 0; j < grp.getMembers().size(); ++j) {
+					query = new StringBuilder();
+					
+					query.append("INSERT INTO PersonAppointment ( app_id, email, added_by ) VALUES ( LAST_INSERT_ID(), ");
+					query.append("\" " + grp.getMembers().get(j).getEmail() + "\", ");
+					query.append(grp.getID() + " );");
+					
+					try {
+						Statement s = c.createStatement();
+						s.executeUpdate(query.toString());
+					} catch (SQLException ex) {
+						System.err.println("SQLException in addMeeting while adding members of groups");
+						System.err.println("i: " + i + ", j: " + j);
+						System.err.println("Message: " + ex.getMessage());
+						return false;
+					}
+					
+					if(!participants.contains(mtn.getAttendee(i).getEmail()))
+					{
+						participants.add(mtn.getAttendee(i).getEmail());
+					}
+				}
+			}
+			
+			//delete the meetingAnswers belonging to the removed participants
+			for(String pEmail : formerParticipants)
+			{
+				if(!participants.contains(pEmail))
+				{//participant is removed, delete meetingAnswer
+					deleteMeetingAnswer(mtn.getID(), pEmail, c);
+				}
+			}
+			
+			//list of the emails to the new participants that should be added to meetingAnswer
+			//present - former ?
+			ArrayList<String> newParticipants = new ArrayList<String>();
+			
+			
+			//adds a meetingAnswer to every new participant and sets it to null/"not answered"
+			for(String pEmail : participants)
+			{
+				addMeetingAnswer(mtn.getID(), pEmail, null, c);
+			}
+		}
+		
+		return true;
+	}
 	
 	/**
 	 * Checks if the email and password are correct and belongs to a user.
@@ -488,6 +701,7 @@ public class SQLTranslator {
 		}	
 		
 		//fetching the person's appointments
+		//NB: The appointments(meetings) should contain simple persons without appointments
 		ArrayList<Appointment> appointments;
 		//..
 		
@@ -542,7 +756,7 @@ public class SQLTranslator {
 		//SELECT name, email WHERE id=[id]
 		
 		StringBuilder query = new StringBuilder();
-		query.append("SELECT name, email WHERE id=");
+		query.append("SELECT name, email FROM Group WHERE id=");
 		query.append(id);
 		
 		String name;
