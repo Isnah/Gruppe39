@@ -10,7 +10,6 @@ import client.Meeting;
 import client.Person;
 import java.sql.Time;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -25,25 +24,22 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private MainWindow frame;
     private Meeting model;
     
-    private ArrayList<Group> invitedGroups;
-    private ArrayList<Group> notInvitedGroups;
-    private ArrayList<Person> invitedPersons;
-    private ArrayList<Person> notInvitedPersons;
-    private DefaultListModel<String> notInvited;
-    private DefaultListModel<String> invited;
+    private DefaultListModel<ListUnit> notInvited;
+    private DefaultListModel<ListUnit> invited;
     
     private boolean newAppointment = false;
     private boolean roomReserved = false;
+    private Time oldStart, oldEnd;
     private NumberFormat f;
     /**
      * Creates new form AppointmentEditor
      */
     public AppointmentEditor(MainWindow frame) {
         newAppointment = true;
-        init(frame);
         model = new Meeting(0 /* TODO get correct ID*/, new Time(new Date().getTime()), 
                                 new Time(new Date().getTime()), "", "", null, null, null);
         model.setRoomDescr("Type in a description...");
+        init(frame);
         update();
     }
     
@@ -52,8 +48,8 @@ public class AppointmentEditor extends javax.swing.JFrame {
      * @param model 
      */
     public AppointmentEditor(MainWindow frame, Meeting model) {
-        init(frame);
         this.model = model;
+        init(frame);
         update();
     }
     
@@ -72,6 +68,46 @@ public class AppointmentEditor extends javax.swing.JFrame {
         dateChooser.setSelectableDateRange(new Date(), null);
         roomTable.setEnabled(false);
         
+        oldStart = new Time(model.getStart());
+        oldEnd = new Time(model.getEnd());
+        
+        invited = new DefaultListModel<>();
+        for (Person person : model.getAttendees()) {
+            invited.addElement(new ListUnit(person.getId(), person.getFirstName() + " " + person.getLastName(), false));
+        }
+        for (Group group : model.getGroupAttendees()) {
+            invited.addElement(new ListUnit(group.getId(), group.getName(), true));
+        }
+        //TESTING STUFFS
+        invited.addElement(new ListUnit(1,"Ola", false));
+        invited.addElement(new ListUnit(2,"Knut", false));
+        invited.addElement(new ListUnit(3,"Are", false));
+        invited.addElement(new ListUnit(4,"Odin", false));
+        invited.addElement(new ListUnit(5,"Tor", false));
+        invited.addElement(new ListUnit(1, "39", true));
+        //END TESTING STUFFS
+        
+        invitedList.setModel(invited);
+        
+        //TESTING AGAIN
+        notInvited = new DefaultListModel<>();
+        for (Person person : model.getAttendees()) {
+            notInvited.addElement(new ListUnit(person.getId(), person.getFirstName() + " " + person.getLastName(), false));
+        }
+        for (Group group : model.getGroupAttendees()) {
+            notInvited.addElement(new ListUnit(group.getId(), group.getName(), true));
+        }
+        //TESTING STUFFS
+        notInvited.addElement(new ListUnit(1,"Per", false));
+        notInvited.addElement(new ListUnit(2,"Olaf", false));
+        notInvited.addElement(new ListUnit(3,"Bernt", false));
+        notInvited.addElement(new ListUnit(4,"Kari", false));
+        notInvited.addElement(new ListUnit(5,"Oda", false));
+        notInvited.addElement(new ListUnit(1, "38", true));
+        //END TESTING STUFFS
+        
+        notInvitedList.setModel(notInvited);
+        //END TESTING AGAIN
     }
     /**
      * Updates all the fields
@@ -115,7 +151,6 @@ public class AppointmentEditor extends javax.swing.JFrame {
         model.setEnd(date.getTimeInMillis() + Converters.HHMMToMilliseconds(getHHTo(), getMMTo()));
         
         
-        
         if (roomReserved) {
             model.setRoom(null);
         }
@@ -123,10 +158,16 @@ public class AppointmentEditor extends javax.swing.JFrame {
             model.setRoomDescr(whereField.getText());
         }
         
-        
-        
         if (newAppointment) {
             frame.newAppointment(model);
+            frame.showInformationPanel(model);
+        }
+        else {
+            if (oldStart.getTime() != model.getStart() && oldEnd.getTime() != model.getEnd()) {
+                frame.deleteAppointment(model);
+                frame.newAppointment(model);
+            }
+            frame.editAppointment(model);
         }
         dispose();
     }
@@ -327,7 +368,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
                         .addGap(76, 76, 76)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(whereField, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                                .addComponent(whereField)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(removeRoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(reserveRoomButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -380,9 +421,19 @@ public class AppointmentEditor extends javax.swing.JFrame {
 
         addButton.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
         addButton.setText("Add --->");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
 
         removeButton.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
         removeButton.setText("<--- Remove");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
 
         notInvitedList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -589,6 +640,21 @@ public class AppointmentEditor extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_timeToMMStateChanged
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        if (notInvitedList.getSelectedIndex() != -1) {
+            invited.addElement(notInvited.getElementAt(notInvitedList.getSelectedIndex()));
+            notInvited.removeElementAt(notInvitedList.getSelectedIndex());
+        }
+        
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        if (invitedList.getSelectedIndex() != -1){
+        notInvited.addElement(invited.getElementAt(invitedList.getSelectedIndex()));
+        invited.removeElementAt(invitedList.getSelectedIndex());
+        }
+    }//GEN-LAST:event_removeButtonActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;

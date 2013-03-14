@@ -4,9 +4,15 @@
  */
 package gui;
 
+import client.Alarm;
+import client.Converters;
+import client.Group;
 import client.Meeting;
+import client.Person;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Time;
+import javax.swing.DefaultListModel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -17,6 +23,7 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
 
     private MainWindow frame;
     private Meeting model;
+    private DefaultListModel<ListUnit> participants;
     /**
      * Creates new form InformationPanel
      */
@@ -38,6 +45,8 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
     public void setModel(Meeting model) {
         this.model = model;
         model.addPropertyChangeListener(this);
+        alarmList.setModel(model.getAlarmList());
+        initParticipants();
         update();
     }
     private void update() {
@@ -48,6 +57,28 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
         location.setText(getRoom());
         alarmList.setModel(model.getAlarmList());
     }
+    
+    private void initParticipants() {
+        participants = new DefaultListModel<>();
+        for (Person person : model.getAttendees()) {
+            participants.addElement(new ListUnit(person.getId(), person.getFirstName() + " " + person.getLastName(), false));
+        }
+        for (Group group : model.getGroupAttendees()) {
+            participants.addElement(new ListUnit(group.getId(), group.getName(), true));
+        }
+        
+        //TESTING STUFFS
+        participants.addElement(new ListUnit(1,"Ola", false));
+        participants.addElement(new ListUnit(2,"Knut", false));
+        participants.addElement(new ListUnit(3,"Are", false));
+        participants.addElement(new ListUnit(4,"Odin", false));
+        participants.addElement(new ListUnit(5,"Tor", false));
+        participants.addElement(new ListUnit(1, "39", true));
+        //END TESTING STUFFS
+        
+        participantList.setModel(participants);
+    }
+    
     private String getRoom() {
         if (model.getRoom() != null) {
             return model.getRoom().getName();
@@ -83,6 +114,8 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
             case Meeting.ROOM:
                 location.setText(getRoom());
                 break;
+            case Meeting.LISTS:
+                initParticipants();
             default:
         }
         repaint();
@@ -118,10 +151,10 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
         alarmListScrollPane = new javax.swing.JScrollPane();
         alarmList = new javax.swing.JList();
         participantsScrollPane = new javax.swing.JScrollPane();
-        oarticipantList = new javax.swing.JList();
+        participantList = new javax.swing.JList();
         removeAlarmButton = new javax.swing.JButton();
-        jSpinner1 = new javax.swing.JSpinner();
-        jSpinner2 = new javax.swing.JSpinner();
+        alarmHSpinner = new javax.swing.JSpinner();
+        alarmMSpinner = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -213,14 +246,29 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         addAlarmButton.setText("Add");
+        addAlarmButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addAlarmButtonActionPerformed(evt);
+            }
+        });
 
         alarmList.setBackground(new java.awt.Color(200, 230, 230));
+        alarmList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         alarmListScrollPane.setViewportView(alarmList);
 
-        oarticipantList.setBackground(new java.awt.Color(200, 230, 230));
-        participantsScrollPane.setViewportView(oarticipantList);
+        participantList.setBackground(new java.awt.Color(200, 230, 230));
+        participantsScrollPane.setViewportView(participantList);
 
         removeAlarmButton.setText("Remove");
+        removeAlarmButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeAlarmButtonActionPerformed(evt);
+            }
+        });
+
+        alarmHSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 23, 1));
+
+        alarmMSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
 
         jLabel1.setText("h");
 
@@ -247,22 +295,23 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(infoSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(removeAlarmButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(alarmListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(removeAlarmButton, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(alarmListScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(addAlarmButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(alarmLabel)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel2)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                        .addComponent(addAlarmButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(alarmLabel)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(alarmHSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(alarmMSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel2))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -284,6 +333,9 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(removeAlarmButton))
                     .addComponent(infoSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(infoSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
@@ -307,16 +359,15 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
                                 .addComponent(alarmLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(alarmHSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(alarmMSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel2))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(addAlarmButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(alarmListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(removeAlarmButton)))
+                                .addGap(29, 29, 29)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -328,6 +379,7 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
 
     private void confirmYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmYesActionPerformed
         hideConfirmation();
+        frame.deleteAppointment(model);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -344,11 +396,26 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
         new AppointmentEditor(frame, model).setVisible(true);
     }//GEN-LAST:event_editAppointmentButtonActionPerformed
 
+    private void addAlarmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAlarmButtonActionPerformed
+        int h = (int)alarmHSpinner.getValue();
+        int m =  (int)alarmMSpinner.getValue();
+        if ((h + m) != 0) {
+            Time alarmTime = new Time(Converters.HHMMToMilliseconds(h,m));
+            model.addAlarm(new Alarm(alarmTime, model, "+"+h + " hour(s) and " + m + " minutes before start"));
+        }
+    }//GEN-LAST:event_addAlarmButtonActionPerformed
+
+    private void removeAlarmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAlarmButtonActionPerformed
+        model.removeAlarm((Alarm)alarmList.getSelectedValue());
+    }//GEN-LAST:event_removeAlarmButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addAlarmButton;
+    private javax.swing.JSpinner alarmHSpinner;
     private javax.swing.JLabel alarmLabel;
     private javax.swing.JList alarmList;
     private javax.swing.JScrollPane alarmListScrollPane;
+    private javax.swing.JSpinner alarmMSpinner;
     private javax.swing.JButton confirmNo;
     private javax.swing.JPanel confirmRemovePanel;
     private javax.swing.JButton confirmYes;
@@ -361,11 +428,9 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
     private javax.swing.JLabel location;
     private javax.swing.JLabel name;
-    private javax.swing.JList oarticipantList;
+    private javax.swing.JList participantList;
     private javax.swing.JLabel participantsLabel;
     private javax.swing.JScrollPane participantsScrollPane;
     private javax.swing.JButton removeAlarmButton;

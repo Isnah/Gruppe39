@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class Person {
 
+        private int id;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -24,7 +25,8 @@ public class Person {
 	public final static String EMAIL = "email";
 	
 	
-	public Person(String email, String lastName, String firstName) {
+	public Person(int id, String email, String lastName, String firstName) {
+                this.id = id;
 		this.email = email;
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -62,6 +64,13 @@ public class Person {
 	
 	//GETTERS
 	
+        /**
+         * 
+         * @return int with the persons id
+         */
+        public int getId() {
+            return id;
+        }
 	/**
 	 * @return String with this persons first name
 	 */
@@ -83,6 +92,13 @@ public class Person {
 		return new String(email);
 	}
 	
+        /**
+         * 
+         * @return ArrayList with all the persons notifications
+         */
+        public ArrayList<Notification> getNotifications() {
+            return notifications;
+        }
 	/**
 	 * This function is usefull to show info about a meeting
 	 * @param start The time you start looking for appointments
@@ -109,9 +125,12 @@ public class Person {
             notifications.add(not);
         }
 	public void addAppointment(Meeting app) {
-		appointments.add(app);
+            appointments.add(app);
 	} 
-	
+        public void removeAppointment(Meeting app) {
+            appointments.remove(app);
+        }
+	 
 	public void addPropertyChangeListener(PropertyChangeListener listener) 
 	{
 		pcs.addPropertyChangeListener(listener);

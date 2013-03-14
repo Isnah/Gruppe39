@@ -19,6 +19,13 @@ public class Meeting extends Appointment {
 		super(id, start, end, name, descr, registeredBy);
 		attendees = initialAttendees;
 		groupAttendees = initialGroups;
+                
+                if (attendees == null) {
+                    attendees = new ArrayList<>();
+                }
+                if (groupAttendees == null) {
+                    groupAttendees = new ArrayList<>();
+                }
 	}
 	
 	
@@ -29,7 +36,7 @@ public class Meeting extends Appointment {
 	 */
 	public void setAccepted(ArrayList<Person> accepted) {
 		//ArrayList<Person> oldAccepted = new ArrayList<Person>(this.accepted);
-		this.accepted = new ArrayList<Person>(accepted);
+		this.accepted = new ArrayList<>(accepted);
 		
 		//pcs.firePropertyChange(LISTS, oldAccepted, accepted);
 	}
@@ -40,7 +47,7 @@ public class Meeting extends Appointment {
 	 */
 	public void setDeclined(ArrayList<Person> declined) {
 		//ArrayList<Person> oldDeclined = new ArrayList<Person>(this.declined);
-		this.declined = new ArrayList<Person>(declined);
+		this.declined = new ArrayList<>(declined);
 		
 		//pcs.firePropertyChange(LISTS, oldDeclined, declined);
 	}
@@ -51,7 +58,7 @@ public class Meeting extends Appointment {
 	 */
 	public void setPending(ArrayList<Person> pending) {
 		//ArrayList<Person> oldPending = new ArrayList<Person>(this.pending);
-		this.pending = new ArrayList<Person>(pending);
+		this.pending = new ArrayList<>(pending);
 		
 		//pcs.firePropertyChange(LISTS, oldPending, pending);
 	}
@@ -73,7 +80,7 @@ public class Meeting extends Appointment {
 	 * editable as normal.
 	 */
 	public ArrayList<Person> getAttendees() {
-		return new ArrayList<Person>(attendees);
+		return new ArrayList<>(attendees);
 	}
 	
 	/**
@@ -81,7 +88,7 @@ public class Meeting extends Appointment {
 	 * as normal.
 	 */
 	public ArrayList<Group> getGroupAttendees() {
-		return new ArrayList<Group>(groupAttendees);
+		return new ArrayList<>(groupAttendees);
 	}
 	
 	
@@ -93,9 +100,22 @@ public class Meeting extends Appointment {
 	 * @param person The person you want to add to the attendees list
 	 */
 	public void addAttendee(Person person) {
-		if(attendees.contains(person)) return;
-		attendees.add(person);
-	}	
+		if(attendees.contains(person)) {
+                    return;
+                }
+                ArrayList<Person> old = attendees;
+                attendees.add(person);
+                pcs.firePropertyChange(LISTS, old, attendees);
+        }
+        
+        public void addGroupAttendee(Group group) {
+            if(groupAttendees.contains(group)) {
+                    return;
+                }
+                ArrayList<Group> old = groupAttendees;
+                groupAttendees.add(group);
+                pcs.firePropertyChange(LISTS, old, groupAttendees);
+        }
 	
 	/**
 	 * Checks whether a person is already in the accepted list before adding
@@ -103,9 +123,11 @@ public class Meeting extends Appointment {
 	 * @param person The person you want to add to the accepted list
 	 */
 	public void addToAccepted(Person person) {
-		if(accepted.contains(person)) return;
+		if(accepted.contains(person)) {
+                    return;
+                }
 		
-		ArrayList<Person> oldAccepted = new ArrayList<Person>(accepted);
+		ArrayList<Person> oldAccepted = new ArrayList<>(accepted);
 		accepted.add(person);
 		
 		pcs.firePropertyChange(LISTS, oldAccepted, accepted);
@@ -117,9 +139,11 @@ public class Meeting extends Appointment {
 	 * @param person The person you want to add to the declined list
 	 */
 	public void addToDeclined(Person person) {
-		if(declined.contains(person)) return;
+		if(declined.contains(person)) {
+                    return;
+                }
 		
-		ArrayList<Person> oldDeclined = new ArrayList<Person>(declined);
+		ArrayList<Person> oldDeclined = new ArrayList<>(declined);
 		declined.add(person);
 		
 		pcs.firePropertyChange(LISTS, oldDeclined, declined);
@@ -131,9 +155,11 @@ public class Meeting extends Appointment {
 	 * @param person The person you want to add to the pending list
 	 */
 	public void addToPending(Person person) {
-		if(pending.contains(person)) return;
+		if(pending.contains(person)) {
+                    return;
+                }
 		
-		ArrayList<Person> oldPending = new ArrayList<Person>(pending);
+		ArrayList<Person> oldPending = new ArrayList<>(pending);
 		pending.add(person);
 		
 		pcs.firePropertyChange(LISTS, oldPending, pending);

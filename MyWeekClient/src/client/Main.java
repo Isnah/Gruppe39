@@ -9,6 +9,7 @@ import gui.MainWindow;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -18,6 +19,7 @@ public class Main {
     
     private Person person;
     private MainWindow frame;
+    private GregorianCalendar currentCalendar = new GregorianCalendar();
  
     /**
      * The general login method used by the login frame
@@ -43,14 +45,13 @@ public class Main {
     }
     
     private ArrayList<Meeting> getAppointmentsForCurrentWeek() {
-        Calendar cal = Calendar.getInstance();
-        // "calculate" the start date of the week
-        Calendar first = (Calendar) cal.clone();
+        
+        GregorianCalendar first = (GregorianCalendar)currentCalendar.clone();
         first.add(Calendar.DAY_OF_WEEK, 
               first.getFirstDayOfWeek() - first.get(Calendar.DAY_OF_WEEK));
 
         // and add six days to the end date
-        Calendar last = (Calendar) first.clone();
+        GregorianCalendar last = (GregorianCalendar) first.clone();
         last.add(Calendar.DAY_OF_YEAR, 6);
         return person.getAppointments(new Time(first.getTimeInMillis()),new Time(last.getTimeInMillis()));
     }
@@ -67,6 +68,13 @@ public class Main {
      */
     public String getPersonName() {
         return person.getFirstName() + " " + person.getLastName();
+    }
+    public void setCurrentWeek(int week) {
+        currentCalendar.set(Calendar.WEEK_OF_YEAR, week);
+        
+        for (Meeting app : getAppointmentsForCurrentWeek()) {
+            addAppointment(app);
+        }
     }
     
     /**
@@ -88,9 +96,17 @@ public class Main {
             frame.addAppointment(model);
         }
     }
-    
+
+    public void editAppointment(Meeting model) {
+        // TODO send server update
+        addAppointment(model);
+    }
+    public void removeAppointment(Meeting model) {
+        // TODO send server update
+        person.removeAppointment(model);
+    }
     public Main() {
-        person = new Person("awesome@man.com", "Man", "Awesome");
+        person = new Person(2,"awesome@man.com", "Man", "Awesome");
     }
     /**
      * The main method for the application.

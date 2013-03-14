@@ -41,7 +41,9 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         alarmIcon.setText("");
         
         setPosition();
-        frame.showInformationPanel(model);
+    }
+    public Meeting getModel() {
+        return model;
     }
     private String getRoom() {
         if (model.getRoom() != null) {

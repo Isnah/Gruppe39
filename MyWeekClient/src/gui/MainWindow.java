@@ -8,8 +8,13 @@ import client.Alarm;
 import client.Converters;
 import client.Main;
 import client.Meeting;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -19,6 +24,11 @@ import javax.swing.SwingUtilities;
 public class MainWindow extends javax.swing.JFrame {
     
     private Main main;
+    
+    private int currentWeek;
+    private DefaultComboBoxModel<Integer> weekSelectionModel;
+    private ArrayList<AppointmentView> appointments;
+    private ArrayList<JPanel> dayPanels;
     /**
 	 * 
 	 */
@@ -38,6 +48,17 @@ public class MainWindow extends javax.swing.JFrame {
         
         //NetBeans component init
         initComponents();
+        weekSelectionModel = new DefaultComboBoxModel<>();
+        appointments = new ArrayList<>();
+        
+        dayPanels = new ArrayList<>();
+        dayPanels.add(mondayPanel);
+        dayPanels.add(tuesdayPanel);
+        dayPanels.add(wednesdayPanel);
+        dayPanels.add(thursdayPanel);
+        dayPanels.add(fridayPanel);
+        dayPanels.add(saturdayPanel);
+        dayPanels.add(sundayPanel);
         
         //Fixing general component placement and size
         SwingUtilities.invokeLater(new Runnable() {
@@ -48,6 +69,11 @@ public class MainWindow extends javax.swing.JFrame {
         });
         informationPanel.setVisible(false);
         usernameLabel.setText(this.main.getPersonName());
+        currentWeek = new GregorianCalendar().get(Calendar.WEEK_OF_YEAR);
+        weekNumberLabel.setText(currentWeek + "");
+        populateWeekSelectionModel();
+        skipToWeekBox.setModel(weekSelectionModel);
+        skipToWeekBox.setSelectedIndex(currentWeek - 1);
         
     }
     /**
@@ -227,8 +253,18 @@ public class MainWindow extends javax.swing.JFrame {
         weekNumberLabel.setText("10");
 
         previousWeekButton.setText("<");
+        previousWeekButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previousWeekButtonActionPerformed(evt);
+            }
+        });
 
         nextWeekButton.setText(">");
+        nextWeekButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextWeekButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
         topPanel.setLayout(topPanelLayout);
@@ -277,6 +313,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         skipToWeekBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53" }));
         skipToWeekBox.setSelectedIndex(9);
+        skipToWeekBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                skipToWeekBoxActionPerformed(evt);
+            }
+        });
 
         otherCalendarLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         otherCalendarLabel.setText("Other calendars");
@@ -325,11 +366,6 @@ public class MainWindow extends javax.swing.JFrame {
             String[] strings = { "-No new notifications-" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
-        });
-        notificationList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                notificationListMouseClicked(evt);
-            }
         });
         notificationScroll.setViewportView(notificationList);
 
@@ -1268,6 +1304,19 @@ public class MainWindow extends javax.swing.JFrame {
         new Login(new Main()).setVisible(true);
     }
     
+    private void populateWeekSelectionModel() {
+        for (int i=1;i<new GregorianCalendar().getMaximum(Calendar.WEEK_OF_YEAR);i++) {
+            weekSelectionModel.addElement(i);
+        }
+    }
+    
+    private void setWeek(int week) {
+        currentWeek = week;
+        weekNumberLabel.setText(week+"");
+        hideInformationPanel();
+        removeAllAppointments();
+        main.setCurrentWeek(week);
+    }
     /**
      * Method used by the main program to fire alarms
      * @param alarm 
@@ -1283,9 +1332,31 @@ public class MainWindow extends javax.swing.JFrame {
     public void newAppointment(Meeting model) {
         main.newAppointment(model);
     }
+    
+    public void editAppointment(Meeting model) {
+        main.editAppointment(model);
+    }
+    private void removeAllAppointments() {
+        for (JPanel day : dayPanels) {
+            day.removeAll();
+        }
+        revalidate();
+        repaint();
+    }
+    public void deleteAppointment(Meeting app) {
+        for (AppointmentView av : appointments) {
+            if (av.getModel().equals(app)) {
+                for (JPanel day : dayPanels) {
+                    day.remove(av);
+                }
+            }
+        }
+        main.removeAppointment(app);
+    }
     public void addAppointment(Meeting model) {
         //Creating a new appointment panel
         AppointmentView av = new AppointmentView(this, model);
+        appointments.add(av);
         
         //Getting the right day-panel to add the appointment to
         switch (Converters.dayStringFormat(model.getStart())) {
@@ -1330,12 +1401,6 @@ public class MainWindow extends javax.swing.JFrame {
     public void hideInformationPanel() {
         informationPanel.setVisible(false);
     }
-    
-    //NetBeans event handlers
-    private void notificationListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notificationListMouseClicked
-        // TODO add notification support
-    }//GEN-LAST:event_notificationListMouseClicked
-
     private void newAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newAppointmentButtonActionPerformed
         new AppointmentEditor(this).setVisible(true);
     }//GEN-LAST:event_newAppointmentButtonActionPerformed
@@ -1351,6 +1416,18 @@ public class MainWindow extends javax.swing.JFrame {
     private void calendarScrollPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_calendarScrollPaneMouseReleased
         revalidate();
     }//GEN-LAST:event_calendarScrollPaneMouseReleased
+
+    private void skipToWeekBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_skipToWeekBoxActionPerformed
+        setWeek((int)skipToWeekBox.getSelectedItem());
+    }//GEN-LAST:event_skipToWeekBoxActionPerformed
+
+    private void nextWeekButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextWeekButtonActionPerformed
+        weekSelectionModel.setSelectedItem((int)weekSelectionModel.getSelectedItem() + 1);
+    }//GEN-LAST:event_nextWeekButtonActionPerformed
+
+    private void previousWeekButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousWeekButtonActionPerformed
+        weekSelectionModel.setSelectedItem((int)weekSelectionModel.getSelectedItem() - 1);
+    }//GEN-LAST:event_previousWeekButtonActionPerformed
     // END NetBeans event handlers.
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

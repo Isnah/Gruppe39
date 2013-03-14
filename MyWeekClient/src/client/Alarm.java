@@ -29,6 +29,10 @@ public class Alarm {
 		return appointment;
 	}
 	
+        @Override
+        public String toString() {
+            return getMessage();
+        }
 	/**
 	 * @param currentTime The time now at this very moment
 	 * @return Boolean if it should start this alarm or not

@@ -98,7 +98,7 @@
                           <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="whereField" pref="162" max="32767" attributes="0"/>
+                                  <Component id="whereField" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="removeRoomButton" min="-2" pref="50" max="-2" attributes="0"/>
                               </Group>
@@ -458,6 +458,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Add ---&gt;"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addButtonActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="removeButton">
                   <Properties>
@@ -466,6 +469,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="&lt;--- Remove"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeButtonActionPerformed"/>
+                  </Events>
                 </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane1">
 

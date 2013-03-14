@@ -1,12 +1,9 @@
 package client;
 
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Calendar;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-
+import java.sql.Time;
+import java.util.Calendar;
 import javax.swing.DefaultListModel;
 //import java.beans.PropertyChangeEvent;
 
@@ -55,7 +52,7 @@ public class Appointment {
 		
 		this.roomDescr = null; //This might never ever be set
 		this.room = null; //This one as well
-		this.alarms = new DefaultListModel<Alarm>();
+		this.alarms = new DefaultListModel<>();
 		
 		pcs = new PropertyChangeSupport(this);
 	}
