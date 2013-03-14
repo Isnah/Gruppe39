@@ -33,6 +33,55 @@ public class SQLTranslator2 {
 
 		return personer;
 	}
+	
+	public static ArrayList<Person> getAllPeople(Connection c){
+		
+		//SELECT email FROM Person;
+		
+		ArrayList<Person> personer = new ArrayList<Person>();
+		
+		StringBuilder query = new StringBuilder(); 
+		query.append("SELECT email FROM Person;");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			while(r.next()){
+				personer.add(getPerson(r.getString(1), c));
+			}
+
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		return personer;
+	}
+	
+	public static ArrayList<Group> getAllGroups(Connection c){
+		
+		//SELECT id FROM Group_i;
+		
+		ArrayList<Group> grupper = new ArrayList<Group>();
+		
+		StringBuilder query = new StringBuilder(); 
+		query.append("SELECT id FROM Group_i;");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			while(r.next()){
+				grupper.add(getGroup(r.getInt(1), c));
+			}
+
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		return grupper;
+		
+	}	
 
 	public static ArrayList<String> getIdsGroupMembers(int groupId, Connection c){
 
@@ -252,6 +301,33 @@ public class SQLTranslator2 {
 			System.err.println("Message: " + e.getMessage());
 		}
 		return 0;
+	}
+	
+	public static Group getGroup(int id, Connection c){
+		
+		//SELECT name, email WHERE id=[id]
+		
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT name, email WHERE id=");
+		query.append(id);
+		
+		String name;
+		String email;
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			r.next();
+			name = r.getString(1);
+			email = r.getString(2);
+				
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		
+		return new Group(id, name, email);
 	}
 
 }
