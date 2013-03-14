@@ -1303,6 +1303,8 @@ public class MainWindow extends javax.swing.JFrame {
      * @param model 
      */
     public void addAppointment(Meeting model) {
+        //TODO add to the appointment list
+        
         //Creating a new appointment panel
         AppointmentView av = new AppointmentView(this, model);
         
@@ -1331,6 +1333,8 @@ public class MainWindow extends javax.swing.JFrame {
                 break;
             default:
         }
+        revalidate();
+        repaint();
     }
     /**
      * Showing the information panel with a new model

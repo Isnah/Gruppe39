@@ -4,9 +4,10 @@
  */
 package gui;
 
-import client.Meeting;
 import client.Converters;
+import client.Meeting;
 import java.sql.Time;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -23,6 +24,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     
     private boolean newAppointment = false;
     private boolean roomReserved = false;
+    private NumberFormat f;
     /**
      * Creates new form AppointmentEditor
      */
@@ -50,10 +52,16 @@ public class AppointmentEditor extends javax.swing.JFrame {
      */
     private void init(MainWindow frame) {
         this.frame = frame;
+        
+        f = NumberFormat.getInstance();
+        f.setMaximumIntegerDigits(2);
+        f.setMinimumIntegerDigits(1);
+        
         initComponents();
         setLocationRelativeTo(null);
         dateChooser.setSelectableDateRange(new Date(), null);
         roomTable.setEnabled(false);
+        
     }
     /**
      * Updates all the fields
@@ -75,10 +83,20 @@ public class AppointmentEditor extends javax.swing.JFrame {
             removeRoomButton.setEnabled(true);
             whereField.setEnabled(false);
     }
+    
+    private void save() {
+        if (checkChanges()) {
+            saveChanges();
+        }
+        else {
+            System.out.println("Changes are not right for some reason.");
+        }
+    }
     /**
      * 
      */
     private void saveChanges() {
+        
         model.setName(titleField.getText());
         model.setDescr(descField.getText());
         
@@ -108,17 +126,21 @@ public class AppointmentEditor extends javax.swing.JFrame {
         dispose();
     }
     
+    private boolean checkChanges() {
+        return true;
+    }
+    
     private int getHHFrom() {
-        return Integer.parseInt(timeFromHH.getText());
+        return (int)timeFromHH.getValue();
     }
     private int getMMFrom() {
-        return Integer.parseInt(timeFromMM.getText());
+        return (int)timeFromMM.getValue();
     }
     private int getHHTo() {
-        return Integer.parseInt(timeToHH.getText());
+        return (int)timeToHH.getValue();
     }
     private int getMMTo() {
-        return Integer.parseInt(timeToMM.getText());
+        return (int)timeToMM.getValue();
     }
     private String getRoom() {
         if (model.getRoom() != null) {
@@ -128,6 +150,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
             return model.getRoomDescr();
         }
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -145,15 +168,15 @@ public class AppointmentEditor extends javax.swing.JFrame {
         whereLabel = new javax.swing.JLabel();
         titleField = new javax.swing.JTextField();
         dateChooser = new com.toedter.calendar.JDateChooser();
-        jPanel3 = new javax.swing.JPanel();
+        timePanel = new javax.swing.JPanel();
         timeFromLabel = new javax.swing.JLabel();
-        timeFromHH = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        timeFromMM = new javax.swing.JTextField();
         timeToLabel = new javax.swing.JLabel();
-        timeToHH = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        timeToMM = new javax.swing.JTextField();
+        timeToMM = new javax.swing.JSpinner();
+        timeFromHH = new javax.swing.JSpinner();
+        timeFromMM = new javax.swing.JSpinner();
+        timeToHH = new javax.swing.JSpinner();
         whereField = new javax.swing.JTextField();
         removeRoomButton = new javax.swing.JButton();
         reserveRoomButton = new javax.swing.JButton();
@@ -190,7 +213,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
 
         whereLabel.setText("Where");
 
-        jPanel3.setOpaque(false);
+        timePanel.setOpaque(false);
 
         timeFromLabel.setText("From");
 
@@ -200,40 +223,67 @@ public class AppointmentEditor extends javax.swing.JFrame {
 
         jLabel12.setText(":");
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        timeToMM.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
+        timeToMM.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                timeToMMStateChanged(evt);
+            }
+        });
+
+        timeFromHH.setModel(new javax.swing.SpinnerNumberModel(0, 0, 23, 1));
+        timeFromHH.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                timeFromHHStateChanged(evt);
+            }
+        });
+
+        timeFromMM.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
+        timeFromMM.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                timeFromMMStateChanged(evt);
+            }
+        });
+
+        timeToHH.setModel(new javax.swing.SpinnerNumberModel(0, 0, 23, 1));
+        timeToHH.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                timeToHHStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout timePanelLayout = new javax.swing.GroupLayout(timePanel);
+        timePanel.setLayout(timePanelLayout);
+        timePanelLayout.setHorizontalGroup(
+            timePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(timePanelLayout.createSequentialGroup()
                 .addComponent(timeFromLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(timeFromHH, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(timeFromMM, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(timeToLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(timeToHH, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(timeToMM, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(timeToHH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel12)
-                .addComponent(timeToMM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(timeFromLabel)
                 .addComponent(timeFromHH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(timeFromMM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(timeToLabel))
+                .addGap(1, 1, 1)
+                .addComponent(timeToLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(timeToHH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(timeToMM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
+        timePanelLayout.setVerticalGroup(
+            timePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(timePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(timeFromLabel)
+                .addComponent(jLabel9)
+                .addComponent(timeToLabel)
+                .addComponent(jLabel12)
+                .addComponent(timeToMM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(timeFromHH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(timeFromMM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(timeToHH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         whereField.setText("Type in a description...");
@@ -268,7 +318,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
                             .addComponent(timeLabel))
                         .addGap(55, 55, 55)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(timePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane4)
                             .addComponent(titleField)
                             .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -300,7 +350,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
                     .addComponent(dateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(timePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -499,7 +549,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        saveChanges();
+        save();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -509,6 +559,36 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private void reserveRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveRoomButtonActionPerformed
         roomTable.setEnabled(true);
     }//GEN-LAST:event_reserveRoomButtonActionPerformed
+
+    private void timeToHHStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_timeToHHStateChanged
+        if ((int)timeToHH.getValue() < (int)timeFromHH.getValue()) {
+            timeFromHH.setValue(timeToHH.getValue());
+        }
+        timeToMMStateChanged(null);
+    }//GEN-LAST:event_timeToHHStateChanged
+
+    private void timeFromHHStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_timeFromHHStateChanged
+        if ((int)timeToHH.getValue() < (int)timeFromHH.getValue()) {
+            timeToHH.setValue(timeFromHH.getValue());
+        }
+        timeFromMMStateChanged(null);
+    }//GEN-LAST:event_timeFromHHStateChanged
+
+    private void timeFromMMStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_timeFromMMStateChanged
+        if ((int)timeToHH.getValue() == (int)timeFromHH.getValue()) {
+            if ((int)timeToMM.getValue() < (int)timeFromMM.getValue()) {
+                timeToMM.setValue(timeFromMM.getValue());
+            }
+        }
+    }//GEN-LAST:event_timeFromMMStateChanged
+
+    private void timeToMMStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_timeToMMStateChanged
+        if ((int)timeToHH.getValue() == (int)timeFromHH.getValue()) {
+            if ((int)timeToMM.getValue() < (int)timeFromMM.getValue()) {
+                timeFromMM.setValue(timeToMM.getValue());
+            }
+        }
+    }//GEN-LAST:event_timeToMMStateChanged
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
@@ -523,7 +603,6 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
@@ -537,13 +616,14 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private javax.swing.JButton reserveRoomButton;
     private javax.swing.JTable roomTable;
     private javax.swing.JButton saveButton;
-    private javax.swing.JTextField timeFromHH;
+    private javax.swing.JSpinner timeFromHH;
     private javax.swing.JLabel timeFromLabel;
-    private javax.swing.JTextField timeFromMM;
+    private javax.swing.JSpinner timeFromMM;
     private javax.swing.JLabel timeLabel;
-    private javax.swing.JTextField timeToHH;
+    private javax.swing.JPanel timePanel;
+    private javax.swing.JSpinner timeToHH;
     private javax.swing.JLabel timeToLabel;
-    private javax.swing.JTextField timeToMM;
+    private javax.swing.JSpinner timeToMM;
     private javax.swing.JTextField titleField;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField whereField;
