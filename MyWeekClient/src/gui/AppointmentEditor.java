@@ -5,12 +5,16 @@
 package gui;
 
 import client.Converters;
+import client.Group;
 import client.Meeting;
+import client.Person;
 import java.sql.Time;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -21,6 +25,12 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private MainWindow frame;
     private Meeting model;
     
+    private ArrayList<Group> invitedGroups;
+    private ArrayList<Group> notInvitedGroups;
+    private ArrayList<Person> invitedPersons;
+    private ArrayList<Person> notInvitedPersons;
+    private DefaultListModel<String> notInvited;
+    private DefaultListModel<String> invited;
     
     private boolean newAppointment = false;
     private boolean roomReserved = false;
@@ -71,6 +81,10 @@ public class AppointmentEditor extends javax.swing.JFrame {
         descField.setText(model.getDescr());
         dateChooser.setDate(new Date(model.getStart()));
         whereField.setText(getRoom());
+        timeFromHH.setValue(Integer.parseInt(model.getTimeFormat().subSequence(0, 2).toString()));
+        timeFromMM.setValue(Integer.parseInt(model.getTimeFormat().subSequence(3, 5).toString()));
+        timeToHH.setValue(Integer.parseInt(model.getTimeFormat().subSequence(6, 8).toString()));
+        timeToMM.setValue(Integer.parseInt(model.getTimeFormat().subSequence(9, 11).toString()));
         if (model.getRoom() != null) {
             roomReserved = true;
             removeRoomButton.setEnabled(true);
@@ -82,15 +96,6 @@ public class AppointmentEditor extends javax.swing.JFrame {
             // TODO set the selected room
             removeRoomButton.setEnabled(true);
             whereField.setEnabled(false);
-    }
-    
-    private void save() {
-        if (checkChanges()) {
-            saveChanges();
-        }
-        else {
-            System.out.println("Changes are not right for some reason.");
-        }
     }
     /**
      * 
@@ -121,13 +126,9 @@ public class AppointmentEditor extends javax.swing.JFrame {
         
         
         if (newAppointment) {
-            frame.addAppointment(model);
+            frame.newAppointment(model);
         }
         dispose();
-    }
-    
-    private boolean checkChanges() {
-        return true;
     }
     
     private int getHHFrom() {
@@ -219,7 +220,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
 
         jLabel9.setText(":");
 
-        timeToLabel.setText("to");
+        timeToLabel.setText("To");
 
         jLabel12.setText(":");
 
@@ -263,15 +264,14 @@ public class AppointmentEditor extends javax.swing.JFrame {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(timeFromMM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(timeToLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(timeToHH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(timeToMM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addComponent(timeToMM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         timePanelLayout.setVerticalGroup(
             timePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,7 +318,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
                             .addComponent(timeLabel))
                         .addGap(55, 55, 55)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(timePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(timePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane4)
                             .addComponent(titleField)
                             .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -549,7 +549,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        save();
+        saveChanges();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed

@@ -16,7 +16,7 @@ public class Person {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private ArrayList<Appointment> appointments;
+	private ArrayList<Meeting> appointments;
         private ArrayList<Notification> notifications;
 	private PropertyChangeSupport pcs;
 	
@@ -29,7 +29,7 @@ public class Person {
 		this.lastName = lastName;
 		this.firstName = firstName;
 		
-		this.appointments = new ArrayList<Appointment>();
+		this.appointments = new ArrayList<Meeting>();
 		
 		pcs = new PropertyChangeSupport(this);
 	}
@@ -89,10 +89,10 @@ public class Person {
 	 * @param end The time you End looking for appointments
 	 * @return ArrayList with the appointments for this person in the time period
 	 */
-	public ArrayList<Appointment> getAppointments(Time start, Time end) {
-		ArrayList<Appointment> returnAppointments = new ArrayList<Appointment>();
+	public ArrayList<Meeting> getAppointments(Time start, Time end) {
+		ArrayList<Meeting> returnAppointments = new ArrayList<Meeting>();
 		for(int i = 0; i < appointments.size(); ++i) {
-			Appointment app = appointments.get(i);
+			Meeting app = appointments.get(i);
 			if(app.getStart() > start.getTime() && app.getStart() < end.getTime()) {
 				returnAppointments.add(app);
 			} else if(app.getStart() < end.getTime() && app.getEnd() > start.getTime()) {
@@ -108,7 +108,7 @@ public class Person {
         public void addNotification(Notification not) {
             notifications.add(not);
         }
-	public void addAppointment(Appointment app) {
+	public void addAppointment(Meeting app) {
 		appointments.add(app);
 	} 
 	
