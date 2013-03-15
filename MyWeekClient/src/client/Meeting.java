@@ -100,19 +100,24 @@ public class Meeting extends Appointment {
 	 * @param person The person you want to add to the attendees list
 	 */
 	public void addAttendee(Person person) {
-		if(attendees.contains(person)) {
-                    return;
+		for (Person p : attendees) {
+                    if (p.getEmail().equals(person.getEmail())) {
+                        return;
+                    }
                 }
-                ArrayList<Person> old = attendees;
+                ArrayList<Person> old = new ArrayList<>(attendees);
                 attendees.add(person);
                 pcs.firePropertyChange(LISTS, old, attendees);
         }
         
         public void addGroupAttendee(Group group) {
-            if(groupAttendees.contains(group)) {
+            for (Group g : groupAttendees) {
+                if(groupAttendees.contains(group)) {
                     return;
                 }
-                ArrayList<Group> old = groupAttendees;
+            }    
+                
+                ArrayList<Group> old = new ArrayList<>(groupAttendees);
                 groupAttendees.add(group);
                 pcs.firePropertyChange(LISTS, old, groupAttendees);
         }

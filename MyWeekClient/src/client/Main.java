@@ -83,6 +83,16 @@ public class Main {
     public void logout() {
         // TODO This needs a connection
     }
+    
+    public Person getPersonByEmail(String email) {
+        // TODO return person from server
+        return new Person(email, "name", email);
+    }
+    public Group getGroupById(int id) {
+        // TODO return group from server
+        return new Group(8, "a random group");
+    }
+    
     public void newAppointment(Meeting model) {
         //TODO send appointment to the server
         
@@ -106,7 +116,7 @@ public class Main {
         person.removeAppointment(model);
     }
     public Main() {
-        person = new Person(2,"awesome@man.com", "Man", "Awesome");
+        person = new Person("awesome@man.com", "Man", "Awesome");
     }
     /**
      * The main method for the application.
