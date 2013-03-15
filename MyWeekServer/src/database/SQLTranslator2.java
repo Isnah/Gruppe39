@@ -20,7 +20,7 @@ import model.notifications.Alarm;
  * 
  * addGroup
  * 
- */
+ */ 
 
 public class SQLTranslator2 {
 
