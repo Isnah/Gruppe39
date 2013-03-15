@@ -22,8 +22,6 @@ import model.notifications.Alarm;
  * 
  */
 
-//TODO: addAlarm
-
 public class SQLTranslator2 {
 
 	public static ArrayList<Person> getGroupMembers(int groupId, Connection c){
