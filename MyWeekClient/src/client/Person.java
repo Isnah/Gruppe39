@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.sql.Time;
 import java.util.ArrayList;
-
+import java.util.Iterator;
 
 /**
  * @author Endre Elvestad 
@@ -118,6 +118,10 @@ public class Person {
 			}
 		}
 		return returnAppointments;
+	}
+	
+	public Iterator<Meeting> getAppointmentIterator() {
+		return appointments.iterator();
 	}
 	
 	

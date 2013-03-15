@@ -1,6 +1,7 @@
 package client;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * 
@@ -69,6 +70,9 @@ public class Room {
 		return occupiedTimes;
 	}
 	
+	public Iterator<Appointment> getAppointmentIterator() {
+		return appointments.iterator();
+	}
 	
 	/**
 	 * This adds an appointment to the room if it is available
