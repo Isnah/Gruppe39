@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import javax.print.attribute.standard.PresentationDirection;
-
 import model.*;
 import model.appointment.Appointment;
 import model.appointment.Meeting;
