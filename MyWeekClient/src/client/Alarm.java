@@ -57,4 +57,8 @@ public class Alarm {
 		return email;
 	}
 
+	public Timestamp getStartAlarm()
+	{
+		return startAlarm;
+	}
 }
