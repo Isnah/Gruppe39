@@ -84,6 +84,13 @@ public class Main {
         // TODO This needs a connection
     }
     
+    public Meeting getMeeting(int id) {
+        // TODO ask the server
+        
+        //FOR OFFLINE SERVICE
+        return person.getMeeting(id);
+        //END OFFLINE
+    }
     public Person getPersonByEmail(String email) {
         // TODO return person from server
         return new Person(email, "name", email);

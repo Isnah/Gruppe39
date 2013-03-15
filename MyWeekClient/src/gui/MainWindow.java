@@ -9,11 +9,13 @@ import client.Converters;
 import client.Group;
 import client.Main;
 import client.Meeting;
+import client.Notification;
 import client.Person;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,6 +30,7 @@ public class MainWindow extends javax.swing.JFrame {
     private Main main;
     
     private int currentWeek;
+    private DefaultListModel<Notification> notifications;
     private DefaultComboBoxModel<Integer> weekSelectionModel;
     private ArrayList<AppointmentView> appointments;
     private ArrayList<JPanel> dayPanels;
@@ -50,6 +53,8 @@ public class MainWindow extends javax.swing.JFrame {
         
         //NetBeans component init
         initComponents();
+        notifications = new DefaultListModel<>();
+        notificationList.setModel(notifications);
         weekSelectionModel = new DefaultComboBoxModel<>();
         appointments = new ArrayList<>();
         
@@ -368,6 +373,7 @@ public class MainWindow extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        notificationList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         notificationScroll.setViewportView(notificationList);
 
         javax.swing.GroupLayout sidePanelLayout = new javax.swing.GroupLayout(sidePanel);
@@ -377,7 +383,6 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(notificationScroll)
                     .addComponent(newAppointmentButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, sidePanelLayout.createSequentialGroup()
                         .addComponent(skipToWeekLabel)
@@ -394,7 +399,8 @@ public class MainWindow extends javax.swing.JFrame {
                         .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(otherCalendarLabel)
                             .addComponent(notificationsLable))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(notificationScroll, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
         );
         sidePanelLayout.setVerticalGroup(
@@ -1305,6 +1311,13 @@ public class MainWindow extends javax.swing.JFrame {
         main.logout();
         dispose();
         new Login(new Main()).setVisible(true);
+    }
+    
+    public Meeting getMeeting(int id) {
+        return main.getMeeting(id);
+    }
+    public void addNotification(Notification not) {
+        notifications.addElement(not);
     }
     
     private void populateWeekSelectionModel() {

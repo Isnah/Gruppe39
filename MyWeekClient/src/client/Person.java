@@ -62,6 +62,17 @@ public class Person {
 	
 	//GETTERS
 	
+        //FOR OFFLINE SERVICE
+        public Meeting getMeeting(int id) {
+            for (Meeting meeting : appointments) {
+                if (meeting.getID() == id) {
+                    return meeting;
+                }
+            }
+            return null;
+        }
+        //END OFFLINE
+        
 	/**
 	 * @return String with this persons first name
 	 */

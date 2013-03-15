@@ -107,7 +107,6 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
                 break;
             case Meeting.LISTS:
                 initParticipants();
-                System.out.println("List changes");
             default:
         }
         repaint();
