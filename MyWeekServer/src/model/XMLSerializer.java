@@ -425,6 +425,92 @@ public class XMLSerializer {
 		return person;
 	}
 	
+	public static Element idToXml(int id, char type) {
+		Element ret = new Element("return");
+		
+		Element idEl;
+		
+		switch(type) {
+		case 'a': case 'm':
+			idEl = new Element("app_id");
+			break;
+		case 'r':
+			idEl = new Element("room_id");
+			break;
+		default:
+			System.err.println("Type not supported in idToXml");
+			return null;
+		}
+			
+		idEl.appendChild(Integer.toString(id));
+		ret.appendChild(idEl);
+		
+		return ret;
+	}
+	
+	public Element alarmToXml(Alarm alarm) {
+		Element root = new Element("alarm");
+		
+		Element id = new Element("id");
+		id.appendChild(Integer.toString(alarm.getId()));
+		
+		Element email = new Element("email");
+		email.appendChild(alarm.getEmail());
+		
+		Element appId = new Element("app_id");
+		appId.appendChild(Integer.toString(alarm.getAppId()));
+		
+		Element msg = new Element("message");
+		msg.appendChild(alarm.getMsg());
+		
+		root.appendChild(email);
+		root.appendChild(appId);
+		root.appendChild(msg);
+		
+		return root;
+	}
+	
+	public Alarm assembleAlarm(Element xmlAlarmElement) {
+		if( ! xmlAlarmElement.getLocalName().equals("alarm")) {
+			System.err.println("Malformed xml element. This is not an alarm");
+			return null;
+		}
+		
+		int id, app_id;
+		String email, message;
+		
+		Element el = xmlAlarmElement.getFirstChildElement("id");
+		if(el == null) {
+			System.err.println("No id while assembling alarm. Setting it to 0");
+			id = 0;
+		} else {
+			id = Integer.parseInt(el.getValue());
+		}
+		
+		el = xmlAlarmElement.getFirstChildElement("email");
+		if(el == null) {
+			System.err.println("Malformed xml element. No email while assembling alarm");
+			return null;
+		}
+		email = el.getValue();
+		
+		el = xmlAlarmElement.getFirstChildElement("app_id");
+		if(el == null) {
+			System.err.println("Malformed xml element. No app_id while assembling alarm");
+			return null;
+		}
+		app_id = Integer.parseInt(el.getValue());
+		
+		el = xmlAlarmElement.getFirstChildElement("message");
+		if(el == null) {
+			System.err.println("Malformed xml element. No message while assembling alarm");
+			return null;
+		}
+		message = el.getValue();
+		
+		return new Alarm(id, message, email, app_id);
+	}
+	
 	/**
 	 * Assembles a simple person from an xml element. Returns null if the
 	 * element is malformed, along with printing an error message in
@@ -797,6 +883,8 @@ public class XMLSerializer {
 		message = el.getValue();
 		
 		Notification notification = new Notification(appID, invitation, cancelled, message);
+		
+		return notification;
 	}
 	
 	public static Element getAppsByIdXml(int[] ids) {
