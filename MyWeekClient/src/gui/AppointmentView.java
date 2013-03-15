@@ -61,10 +61,9 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         durationH = Integer.parseInt(model.getTimeFormat().substring(6, 8)) - startH;
         durationM = Integer.parseInt(model.getTimeFormat().substring(9, 11)) - startM;
         x = 2;
-        y = 38*startH + (38f/60)*startM; //*antall timer og minutter fra 00:00 til start
+        y = 38*startH + (38f/60)*startM; //*hours and minutes from 00:00
         width = 110;
-        height = 38*durationH + (38f/60)*durationM; // *antall timer
-                System.out.println("working");
+        height = 38*durationH + (38f/60)*durationM;
         setBounds(x, (int)y, width, (int)height);
     }
 
@@ -141,8 +140,8 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         add(appointmentName, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         alarmIcon.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        alarmIcon.setText("---");
-        add(alarmIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 0, -1, -1));
+        alarmIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/alarm.png"))); // NOI18N
+        add(alarmIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(95, 0, -1, -1));
 
         appointmentTime.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         appointmentTime.setText("<Timestamp>");
@@ -153,7 +152,6 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         add(appointmentRoom, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, -1, -1));
 
         appointmentStatus.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        appointmentStatus.setText("---");
         add(appointmentStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables

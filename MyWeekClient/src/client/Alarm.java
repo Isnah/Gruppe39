@@ -8,11 +8,13 @@ import java.sql.Time;
  */
 
 public class Alarm {
+	private int id;
 	private Time startAlarm;
 	private Appointment appointment;
 	private String message;
 	
-	public Alarm(Time startAlarm, Appointment appointment, String message){
+	public Alarm(int id, Time startAlarm, Appointment appointment, String message){
+		this.id = id;
 		this.startAlarm = startAlarm;
 		this.appointment = appointment;
 		this.message = message;
@@ -20,6 +22,10 @@ public class Alarm {
 	
 	
 	//GETTERS
+	
+	public int getId(){
+		return id;
+	}
 	
 	public String getMessage(){
 		return new String(message);

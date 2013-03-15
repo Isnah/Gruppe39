@@ -6,10 +6,22 @@ package client;
 
 import gui.Login;
 import gui.MainWindow;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.sql.Time;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import client.XMLSerializer;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.ParsingException;
 
 /**
  *
@@ -20,7 +32,7 @@ public class Main {
     private Person person;
     private MainWindow frame;
     private GregorianCalendar currentCalendar = new GregorianCalendar();
- 
+    private Thread server;
     /**
      * The general login method used by the login frame
      * @param username
@@ -84,6 +96,13 @@ public class Main {
         // TODO This needs a connection
     }
     
+    public Meeting getMeeting(int id) {
+        // TODO ask the server
+        
+        //FOR OFFLINE SERVICE
+        return person.getMeeting(id);
+        //END OFFLINE
+    }
     public Person getPersonByEmail(String email) {
         // TODO return person from server
         return new Person(email, "name", email);
@@ -117,6 +136,23 @@ public class Main {
     }
     public Main() {
         person = new Person("awesome@man.com", "Man", "Awesome");
+        run();
+    }
+    public void run()  {
+    	int port;
+    	String host;
+    	Socket socket = null;
+    	ConnectionThread thread;
+    	try {
+        	port = 1234;
+        	host = "localhost";
+        	socket = new Socket(host, port);
+    	}catch (IOException e) {
+    		System.err.println("No connection to the server");
+    		System.exit(0);
+    	}
+    	thread = new ConnectionThread(socket, this);
+    	new Thread(thread).start();
     }
     /**
      * The main method for the application.
@@ -125,5 +161,38 @@ public class Main {
     public static void main(String[] args) {
         new Login(new Main()).setVisible(true);
         
+    }
+    private class ConnectionThread implements Runnable {
+
+    	private Socket socket;
+    	private Main main;
+    	
+    	
+		@Override
+		public void run() {
+			try {
+				DataInputStream in = new DataInputStream(socket.getInputStream());
+				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+
+				while(true) {
+					Builder builder = new Builder();
+					String input = in.readUTF();
+					Document doc = builder.build(input, null);
+					String type = XMLSerializer.getType(doc);
+				}
+			} catch(IOException ex) {
+				System.err.println("IO exception.");
+				System.err.println("Message: " + ex.getMessage());
+			} catch(ParsingException ex) {
+				System.err.println("Parsing Exception.");
+				System.err.println("Message: " + ex.getMessage());
+			}
+		}
+		
+		public ConnectionThread(Socket socket, Main main) {
+			this.socket = socket;
+			this.main = main;
+		}
+    	
     }
 }

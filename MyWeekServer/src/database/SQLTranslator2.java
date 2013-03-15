@@ -26,6 +26,96 @@ import model.notifications.Alarm;
 
 public class SQLTranslator2 {
 	
+	public static ArrayList<Room> getAllRooms(Connection c){
+		
+		ArrayList<Room> allerom = new ArrayList<Room>();
+		
+		//SELECT id FROM Room;
+		
+		StringBuilder query = new StringBuilder(); 
+		query.append("SELECT id FROM Room;");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			while(r.next()){
+				allerom.add(getRoom(r.getInt(1), c));
+			}
+
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		
+		return allerom;
+		
+	}
+	
+	public static ArrayList<Alarm> getAlarm(String personId, long startTime, long endTime, Connection c){
+		
+		ArrayList<Alarm> alarmliste = new ArrayList<Alarm>();
+		
+		String startTimeDBFormat = "'" + longTimeToDatetime(startTime) + "'";
+		
+		//SELECT id FROM Alarm WHERE time>[startTimeDBFormat] AND time<[startTimeDBFormat];
+		
+		StringBuilder query = new StringBuilder(); 
+		query.append("SELECT id FROM Alarm WHERE time>");
+		query.append(startTimeDBFormat);
+		query.append(" AND time<");
+		query.append(startTimeDBFormat);
+		query.append(";");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			while(r.next()){
+				alarmliste.add(getAlarmById(r.getInt(1), c));
+			}
+
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		
+		return alarmliste;
+		
+	}
+	
+	public static Alarm getAlarmById(int id, Connection c){
+		
+		//SELECT msg, email, app_id, time FROM Alarm WHERE id=[id];
+		
+		String msg;
+		String email;
+		int appId;
+		Timestamp startAlarm;
+		
+		StringBuilder query = new StringBuilder(); 
+		query.append("SELECT msg, email, app_id, time FROM Alarm WHERE id=");
+		query.append(id+";");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			r.next();
+			msg = r.getString(1);
+			email = r.getString(2);
+			appId = r.getInt(3);
+			startAlarm = new Timestamp(datetimeToLongTime(r.getString(4)));
+			} 
+		catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		
+		return new Alarm(msg, email, appId, startAlarm);
+		
+	}
+	
 	public static boolean addAlarm(Alarm alarm, Connection c) throws Exception{
 		
 		int appId = alarm.getAppId();
@@ -42,9 +132,6 @@ public class SQLTranslator2 {
 		
 		//INSERT INTO Alarm (msg, email, app_id, time)
 		//VALUES ('[msg]', '[email]', [appId], [startAlarm]);
-		
-		
-		
 		
 		StringBuilder query = new StringBuilder(); 
 		query.append("INSERT INTO Alarm (msg, email, app_id, time) VALUES ('");
@@ -157,36 +244,6 @@ public class SQLTranslator2 {
 				FOREIGN KEY (email) REFERENCES Person(email)  ON UPDATE CASCADE ON DELETE CASCADE
 			);
 		 */
-
-	}
-
-	public static Alarm getAlarm(int id, Connection c){
-
-		String msg;
-		String email;
-		int appId;
-
-		//SELECT msg, email, app_id FROM Alarm WHERE id=[id]
-
-		StringBuilder query = new StringBuilder(); 
-		query.append("SELECT msg, email, app_id FROM Alarm WHERE id=");
-		query.append(id);
-
-		try {
-			Statement s = c.createStatement();
-			ResultSet r = s.executeQuery(query.toString());
-			r.next();
-			msg = r.getString(1);
-			email = r.getString(2);
-			appId = r.getInt(3);
-
-		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
-			System.err.println("Message: " + ex.getMessage());
-			return null;
-		}	
-
-		return new Alarm(id, msg, email, appId);
 
 	}
 	

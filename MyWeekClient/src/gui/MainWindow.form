@@ -229,7 +229,6 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="notificationScroll" max="32767" attributes="0"/>
                       <Component id="newAppointmentButton" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="skipToWeekLabel" min="-2" max="-2" attributes="0"/>
@@ -251,6 +250,7 @@
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="notificationScroll" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -471,6 +471,7 @@
                     <StringItem index="0" value="-No new notifications-"/>
                   </StringArray>
                 </Property>
+                <Property name="selectionMode" type="int" value="0"/>
               </Properties>
             </Component>
           </SubComponents>
