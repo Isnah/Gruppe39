@@ -4,11 +4,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/*
 import server.helpers.LoginCredentials;
 
 import model.appointment.Appointment;
 import model.appointment.Meeting;
 import model.notifications.Notification;
+*/
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -54,32 +56,6 @@ public class XMLSerializer {
 		root.appendChild(pword);
 		
 		return new Document(root);
-	}
-	
-	public static LoginCredentials assembleLogin(Document loginDoc) {
-		String user, password;
-		
-		Element root = loginDoc.getRootElement();
-		if(root.getLocalName() != "login") {
-			System.err.println("Not a login xml");
-			return null;
-		}
-		
-		Element element = root.getFirstChildElement("user");
-		if(element == null) {
-			System.err.println("Not a valid login xml. No user.");
-			return null;
-		}
-		user = element.getValue();
-		
-		element = root.getFirstChildElement("password");
-		if(element == null) {
-			System.err.println("Not a valid login xml. No password.");
-			return null;
-		}
-		password = element.getValue();
-		
-		return new LoginCredentials(user, password);
 	}
 	
 	/**
@@ -331,13 +307,13 @@ public class XMLSerializer {
 		Element group = new Element("group");
 		
 		Element id = new Element("id");
-		id.appendChild(Integer.toString(aGroup.getID()));
+		id.appendChild(Integer.toString(aGroup.getId()));
 		
 		Element name = new Element("name");
 		name.appendChild(aGroup.getName());
 		
-		Element email = new Element("email");
-		email.appendChild(aGroup.getEmail());
+		//Element email = new Element("email");
+		//email.appendChild(aGroup.getEmail());
 		
 		group.appendChild(id);
 		group.appendChild(name);
@@ -350,7 +326,7 @@ public class XMLSerializer {
 		
 		Element members = new Element("members");
 		
-		Iterator<Person> pIt = aGroup.getMembers().iterator();
+		Iterator<Person> pIt = aGroup.getMember().iterator();
 		
 		while(pIt.hasNext()) {
 			Person person = pIt.next();
@@ -360,7 +336,7 @@ public class XMLSerializer {
 		
 		Element subgroups = new Element("subgroups");
 		
-		Iterator<Group> gIt = aGroup.getSubgroups().iterator();
+		Iterator<Group> gIt = aGroup.getSubgroup().iterator();
 		
 		while(gIt.hasNext()) {
 			Group grp = gIt.next();
@@ -420,7 +396,7 @@ public class XMLSerializer {
 				person.addAppointment(meeting);
 			} else if(app.getLocalName().equals("appointment")) {
 				Appointment appointment = assembleAppointment(app);
-				person.addAppointment(appointment);
+				person.addAppointment((Meeting)appointment);
 			}
 		}
 		
