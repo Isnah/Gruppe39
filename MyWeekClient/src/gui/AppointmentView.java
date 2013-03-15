@@ -38,7 +38,7 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         appointmentTime.setText(model.getTimeFormat());
         appointmentRoom.setText(getRoom());
         appointmentStatus.setText("");
-        alarmIcon.setText("");
+        alarmIcon.setVisible(false);
         
         setPosition();
     }
@@ -83,6 +83,14 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
                 break;
             case Meeting.ROOM:
                 appointmentRoom.setText(getRoom());
+                break;
+            case Meeting.ALARMS:
+                if (model.getAlarmList().isEmpty()) {
+                    alarmIcon.setVisible(false);
+                }
+                else {
+                    alarmIcon.setVisible(true);
+                }
                 break;
             default:
         }
