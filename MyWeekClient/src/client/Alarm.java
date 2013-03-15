@@ -60,5 +60,5 @@ public class Alarm {
 	public Timestamp getStartAlarm()
 	{
 		return startAlarm;
-	}
+	}  
 }
