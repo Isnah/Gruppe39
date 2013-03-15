@@ -11,6 +11,7 @@ import client.Main;
 import client.Meeting;
 import client.Notification;
 import client.Person;
+import client.Room;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -1313,6 +1314,9 @@ public class MainWindow extends javax.swing.JFrame {
         new Login(new Main()).setVisible(true);
     }
     
+    public ArrayList<Room> getAllRooms() {
+        return main.getAllRooms();
+    }
     public Meeting getMeeting(int id) {
         return main.getMeeting(id);
     }
