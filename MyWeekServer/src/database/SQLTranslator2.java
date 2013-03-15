@@ -25,6 +25,48 @@ import model.notifications.Alarm;
 //TODO: addAlarm
 
 public class SQLTranslator2 {
+	
+	public static boolean addAlarm(Alarm alarm, Connection c) throws Exception{
+		
+		int appId = alarm.getAppId();
+		String msg = alarm.getMsg();
+		String email = alarm.getEmail();
+		Timestamp startAlarm = alarm.getStartAlarm();
+		
+		if(msg.length()>255){
+			throw new Exception("Beskjed er for lang.");
+		}
+		if(email.length()>50){
+			throw new Exception("emailadresse er for lang.");
+		}
+		
+		//INSERT INTO Alarm (msg, email, app_id, time)
+		//VALUES ('[msg]', '[email]', [appId], [startAlarm]);
+		
+		
+		
+		
+		StringBuilder query = new StringBuilder(); 
+		query.append("INSERT INTO Alarm (msg, email, app_id, time) VALUES ('");
+		query.append(msg+"', '"+email+"', ");
+		query.append(appId);
+		query.append(", " + longTimeToDatetime(startAlarm.getTime()) + ")");
+		
+		
+		
+		/*
+CREATE TABLE Alarm(
+	id 		int NOT NULL AUTO_INCREMENT,
+	msg		varchar(255),
+	email		varchar(50) NOT NULL,
+	app_id		int NOT NULL,
+	time		datetime NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (email) REFERENCES Person(email) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (app_id) REFERENCES Appointment(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+		*/
+	}
 
 	public static ArrayList<Person> getGroupMembers(int groupId, Connection c){
 		ArrayList<String> ids = getIdsGroupMembers(groupId, c);
@@ -330,6 +372,11 @@ public class SQLTranslator2 {
 		}
 		
 		return new Group(id, name, email);
+	}
+	
+	private static String longTimeToDatetime(long time) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(time);
 	}
 
 }
