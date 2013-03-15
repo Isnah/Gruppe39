@@ -7,6 +7,7 @@ package client;
 /**
  *
  * @author Laxcor
+ * @author Tobias Linkjendal
  */
 public class Notification {
 	private boolean invitation = false;
@@ -17,9 +18,6 @@ public class Notification {
     public Notification(int id, boolean invitation, boolean cancelled, String msg) {
         this.invitation = invitation;
         this.cancelled = cancelled;
-        if(!(cancelled ^ invitation)) {
-        	System.err.println("cancelled can not also be an invitation");
-        }
         appID = id;
         message = msg;
     }
@@ -43,13 +41,18 @@ public class Notification {
     @Override
     public String toString(){
     	String text = "";
-    	if(invitation){
-    		text += "";
+    	if(!invitation && !cancelled){
+    		text += "Removed from " + message;
     	}
-    	else if (cancelled){
-    		
+    	else if(invitation && !cancelled){
+    		text += "Invited to " + message;
     	}
-    	
+    	else if(!invitation && cancelled){
+    		text += "Someone has declined" + message;
+    	}
+    	else if(invitation && cancelled){
+    		text += message + " is cancelled";
+    	}
     	return text;
     }
 }
