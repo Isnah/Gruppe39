@@ -10,6 +10,7 @@ import gui.MainWindow;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Time;
@@ -106,6 +107,10 @@ public class Main {
         return person.getMeeting(id);
         //END OFFLINE
     }
+    
+    public String getEmail() {
+    	return Person.getEmail();
+    }
     public Person getPersonByEmail(String email) {
         // TODO return person from server
         return new Person(email, "name", email);
@@ -142,19 +147,19 @@ public class Main {
         //run();
     }
     public void run()  {
-    	int port;
-    	String host;
-    	Socket socket = null;
+    	int port = 1234;
+    	String serverName = "localhost";
+    	Socket client = null;
     	ConnectionThread thread;
     	try {
-        	port = 1234;
-        	host = "localhost";
-        	socket = new Socket(host, port);
+    		System.out.println("Connecting to " + serverName + " on port " + port);
+        	client = new Socket(serverName, port);
+        	System.out.println("Connected to " + client.getRemoteSocketAddress());
     	}catch (IOException e) {
     		System.err.println("No connection to the server");
     		System.exit(0);
     	}
-    	thread = new ConnectionThread(socket, this);
+    	thread = new ConnectionThread(client, this);
     	new Thread(thread).start();
     }
     /**
@@ -167,17 +172,26 @@ public class Main {
     }
     private class ConnectionThread implements Runnable {
 
-    	private Socket socket;
+    	private Socket client;
     	private Main main;
-    	
+    	private DataInputStream in;
+    	private DataOutputStream out;
     	
 		@Override
 		public void run() {
-			
+			try {
+				in = new DataInputStream(client.getInputStream());
+				out = new DataOutputStream(client.getOutputStream());
+				
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		public ConnectionThread(Socket socket, Main main) {
-			this.socket = socket;
+			this.client = socket;
 			this.main = main;
 		}
     	
