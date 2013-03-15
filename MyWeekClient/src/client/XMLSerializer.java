@@ -1,5 +1,6 @@
 package client;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -67,18 +68,13 @@ public class XMLSerializer {
 	public static Element completePersonToXml(Person person) {
 		Element personElem = simplePersonToXml(person);
 		
-		Iterator<Appointment> it = person.getAppointmentIterator();
+		Iterator<Meeting> it = person.getAppointmentIterator();
 		
 		Element appointments = new Element("appointments");
 		while(it.hasNext()) {
 			Appointment appointment = it.next();
-			if(appointment.isMeeting()) {
-				Element el = meetingToXml((Meeting)appointment);
-				appointments.appendChild(el);
-			} else {
-				Element el = appointmentToXml(appointment);
-				appointments.appendChild(el);
-			}
+			Element el = meetingToXml((Meeting)appointment);
+			appointments.appendChild(el);
 		}
 		personElem.appendChild(appointments);
 		
@@ -429,8 +425,8 @@ public class XMLSerializer {
 	public Element alarmToXml(Alarm alarm) {
 		Element root = new Element("alarm");
 		
-		Element id = new Element("id");
-		id.appendChild(Integer.toString(alarm.getId()));
+		Element time = new Element("time");
+		time.appendChild(Long.toString(alarm.getStartAlarm().getTime()));
 		
 		Element email = new Element("email");
 		email.appendChild(alarm.getEmail());
@@ -441,6 +437,7 @@ public class XMLSerializer {
 		Element msg = new Element("message");
 		msg.appendChild(alarm.getMsg());
 		
+		root.appendChild(time);
 		root.appendChild(email);
 		root.appendChild(appId);
 		root.appendChild(msg);
@@ -454,30 +451,24 @@ public class XMLSerializer {
 			return null;
 		}
 		
-		int id, app_id;
+		Timestamp startAlarm;
+		int id, appId;
 		String email, message;
 		
-		Element el = xmlAlarmElement.getFirstChildElement("id");
+		Element el = xmlAlarmElement.getFirstChildElement("time");
 		if(el == null) {
-			System.err.println("No id while assembling alarm. Setting it to 0");
-			id = 0;
-		} else {
-			id = Integer.parseInt(el.getValue());
-		}
-		
-		el = xmlAlarmElement.getFirstChildElement("email");
-		if(el == null) {
-			System.err.println("Malformed xml element. No email while assembling alarm");
+			System.err.println("Malformed xml element. No time while assembling alarm");
 			return null;
+		} else {
+			startAlarm = new Timestamp(Long.parseLong(el.getValue()));
 		}
-		email = el.getValue();
 		
 		el = xmlAlarmElement.getFirstChildElement("app_id");
 		if(el == null) {
 			System.err.println("Malformed xml element. No app_id while assembling alarm");
 			return null;
 		}
-		app_id = Integer.parseInt(el.getValue());
+		appId = Integer.parseInt(el.getValue());
 		
 		el = xmlAlarmElement.getFirstChildElement("message");
 		if(el == null) {
@@ -486,7 +477,15 @@ public class XMLSerializer {
 		}
 		message = el.getValue();
 		
-		return new Alarm(id, message, email, app_id);
+		el = xmlAlarmElement.getFirstChildElement("email");
+		if(el == null) {
+			System.err.println("Malformed xml element. No email while assembling alarm");
+			return null;
+		}
+		email = el.getValue();
+		
+		return new Alarm(startAlarm, appId, message, email);
+		//return new Alarm(id, message, email, app_id);
 	}
 	
 	/**
@@ -533,7 +532,7 @@ public class XMLSerializer {
 	 */
 	public static Group assembleSimpleGroup(Element xmlGroupElement) {
 		int id;
-		String name, email;
+		String name;
 		
 		Element element = xmlGroupElement.getFirstChildElement("id");
 		if(element == null) {
@@ -549,14 +548,16 @@ public class XMLSerializer {
 		}
 		name = element.getValue();
 		
+		/*
 		element = xmlGroupElement.getFirstChildElement("email");
 		if(element == null) {
 			System.err.println("Malformed xml element. No email in assemble simple group");
 			return null;
 		}
 		email = element.getValue();
+		*/
 		
-		return new Group(id, name, email);
+		return new Group(id, name);
 	}
 	
 	/**
@@ -681,7 +682,10 @@ public class XMLSerializer {
 			groupAttendees.add(grp);
 		}
 		
-		Meeting meeting = new Meeting(id, start, end, name, descr, registeredBy, attendees, groupAttendees);
+		Time startTime = new Time(start.getTime());
+		Time endTime = new Time(end.getTime());
+		
+		Meeting meeting = new Meeting(id, startTime, endTime, name, descr, registeredBy, attendees, groupAttendees);
 		if(room != null) meeting.setRoom(room);
 		if(roomDescr != null) meeting.setRoomDescr(roomDescr);
 		
@@ -777,7 +781,10 @@ public class XMLSerializer {
 			}
 		}
 		
-		Appointment app = new Appointment(id, start, end, name, descr, registeredBy);
+		Time startTime = new Time(start.getTime());
+		Time endTime = new Time(end.getTime());
+		
+		Appointment app = new Appointment(id, startTime, endTime, name, descr, registeredBy);
 		if(roomDescr != null) app.setRoomDescr(roomDescr);
 		if(room != null) app.setRoom(room);
 		

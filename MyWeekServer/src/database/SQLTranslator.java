@@ -500,7 +500,7 @@ public class SQLTranslator {
 	
 	/**
 	 * Adds a cancel notification related to the person with the email to the database
-	 * @param mtn the meeting
+	 * @param mtn The meeting
 	 * @param email The persons email
 	 * @param cancelled True if meeting is cancelled - False if the person is removed from the meeting
 	 * @param c The connection to the database.
@@ -512,10 +512,8 @@ public class SQLTranslator {
 		
 		query.append("INSERT INTO CancelNotification email, msg, cancelled VALUES ( '");
 		query.append(email);
-		query.append("', ");
+		query.append("', '");
 		query.append(mtn.getName());
-		query.append(", '");
-		query.append(email);
 		query.append("', ");
 		if(cancelled)
 		{
@@ -532,7 +530,7 @@ public class SQLTranslator {
 			s.executeUpdate(query.toString());
 			return true;
 		} catch (SQLException ex) {
-			System.err.println("SQL exception in room addition");
+			System.err.println("SQL exception in room addCancelNotification()");
 			System.err.println("Message: " + ex.getMessage());
 			return false;
 		}

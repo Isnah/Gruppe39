@@ -2,6 +2,7 @@ package client;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * @author Tobias Linkjendal
@@ -91,6 +92,22 @@ public class Meeting extends Appointment {
 		return new ArrayList<>(groupAttendees);
 	}
 	
+	
+	/**
+	 * 
+	 * @return A {@link java.util.Iterator} of the attendees list.
+	 */
+	public Iterator<Person> getAttendeeIterator() {
+		return attendees.iterator();
+	}
+	
+	/**
+	 * 
+	 * @return A {@link java.util.Iterator} of the group attendees list
+	 */
+	public Iterator<Group> getGroupAttendeeIterator() {
+		return groupAttendees.iterator();
+	}
 	
 	//ADDERS
 	

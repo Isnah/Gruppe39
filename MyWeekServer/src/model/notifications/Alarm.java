@@ -2,6 +2,11 @@ package model.notifications;
 
 import java.sql.Timestamp;
 
+/**
+ * @author Thor Jarle Skinstad
+ * @author Tor Økland Barstad
+ *
+ */
 public class Alarm {
 	private String msg;
 	private String email;
