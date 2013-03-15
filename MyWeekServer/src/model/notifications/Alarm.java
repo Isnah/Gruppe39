@@ -13,7 +13,6 @@ public class Alarm {
 		this.email = email;
 		this.appId = appId;
 		this.startAlarm = startAlarm;
-		
 	}
 	
 	public int getAppId(){
