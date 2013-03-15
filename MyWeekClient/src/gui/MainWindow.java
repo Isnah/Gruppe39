@@ -6,8 +6,10 @@ package gui;
 
 import client.Alarm;
 import client.Converters;
+import client.Group;
 import client.Main;
 import client.Meeting;
+import client.Person;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -198,7 +200,7 @@ public class MainWindow extends javax.swing.JFrame {
         logoPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         logoLabel.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
-        logoLabel.setText("myWeek");
+        logoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/logo felles.png"))); // NOI18N
 
         welcomeLabel.setText("Welcome, ");
 
@@ -218,27 +220,26 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(logoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logoPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton1))
                     .addGroup(logoPanelLayout.createSequentialGroup()
-                        .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(logoLabel)
-                            .addGroup(logoPanelLayout.createSequentialGroup()
-                                .addComponent(welcomeLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(usernameLabel)))
+                        .addComponent(welcomeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(usernameLabel)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         logoPanelLayout.setVerticalGroup(
             logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logoPanelLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
                 .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(usernameLabel)
-                    .addComponent(welcomeLabel))
+                .addGroup(logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(welcomeLabel)
+                    .addComponent(usernameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(22, 22, 22))
@@ -1010,6 +1011,8 @@ public class MainWindow extends javax.swing.JFrame {
         dayAndDatePanel.setMinimumSize(new java.awt.Dimension(0, 0));
         dayAndDatePanel.setLayout(new java.awt.GridLayout(1, 0));
 
+        fillerPanel.setBackground(new java.awt.Color(230, 230, 230));
+
         javax.swing.GroupLayout fillerPanelLayout = new javax.swing.GroupLayout(fillerPanel);
         fillerPanel.setLayout(fillerPanelLayout);
         fillerPanelLayout.setHorizontalGroup(
@@ -1325,6 +1328,12 @@ public class MainWindow extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, alarm.getMessage(),"Alarm", JOptionPane.INFORMATION_MESSAGE);
     }
     
+    public Person getPersonByEmail(String email) {
+        return main.getPersonByEmail(email);
+    }
+    public Group getGroupById(int id) {
+        return main.getGroupById(id);
+    }
     /**
      * Method to add appointments to the calendar view
      * @param model 

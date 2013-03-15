@@ -26,6 +26,7 @@ public class ServerMain {
 	
 	private Connection connection;
 	private ArrayList<ConnectedUserThread> connectThreads;
+	private boolean running;
 	
 	public ServerMain() {
 		connection = SQLTranslator.connectToDatabase();
@@ -33,10 +34,11 @@ public class ServerMain {
 	
 	public void run() throws IOException {
 		int port = 1234;
+		running = true;
 		
 		ServerSocket welcomeSocket = new ServerSocket(port);
 		
-		while(true) {
+		while(running) {
 			Socket socket = welcomeSocket.accept();
 			ConnectedUserThread thread = new ConnectedUserThread(socket);
 			connectThreads.add(thread);
@@ -76,8 +78,13 @@ public class ServerMain {
 					Document doc = builder.build(input, null);
 					String type = XMLSerializer.getType(doc);
 					
+					
 					if(type.equals("login")) {
 						credentials = XMLSerializer.assembleLogin(doc);
+						if(credentials == null) {
+							out.writeUTF("Malformed xml in credentials. Disconnecting.");
+							break;
+						}
 						valid = SQLTranslator.isValidEmailAndPassword(credentials.getUser(), credentials.getPassword(), connection);
 						if(!valid){
 							out.writeUTF("invalid_login");
@@ -148,7 +155,7 @@ public class ServerMain {
 								wasRegisteredByUser = registeredBy.getEmail().equals(credentials.getUser());
 								
 								if(wasRegisteredByUser) {
-									SQLTranslator.updateAppointmentOrMeeting(mtn);
+									SQLTranslator.updateAppointmentOrMeeting(mtn, connection);
 									out.writeUTF("meeting_update_ok");
 								} else {
 									out.writeUTF("meeting_update_failed_wrong_user");
@@ -184,9 +191,13 @@ public class ServerMain {
 									break;
 								}
 								
-								SQLTranslator.addMeeting(meeting, connection);
+								int id = SQLTranslator.addMeeting(meeting, connection);
 								
-								out.writeUTF("Meeting added");
+								Document ret = new Document(XMLSerializer.idToXml(id, 'm'));
+								
+								out.writeUTF(ret.toXML());
+							} else if(elementType.equals("alarm")) { 
+								// make a new alarm and add it to the database
 							} else {
 								out.writeUTF("Add statement not recognized");
 							}
@@ -212,13 +223,16 @@ public class ServerMain {
 								boolean registeredByUser = registeredBy.getEmail().equals(credentials.getUser());
 								
 								if(registeredByUser) {
-									SQLTranslator.deleteAppointmentOrMeeting(mtn);
+									SQLTranslator.deleteAppointmentOrMeeting(mtn, connection);
 								} else {
 									out.writeUTF("meeting_deletion_failed_wrong_user");
 								}
 							}
 						}
 						
+					} else if (type.equals("logout")) {
+						out.writeUTF("Logging out of server");
+						break;
 					} else {
 						out.writeUTF("invalid_request");
 					}

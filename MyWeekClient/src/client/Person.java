@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class Person {
 
-        private int id;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -25,8 +24,7 @@ public class Person {
 	public final static String EMAIL = "email";
 	
 	
-	public Person(int id, String email, String lastName, String firstName) {
-                this.id = id;
+	public Person(String email, String lastName, String firstName) {
 		this.email = email;
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -64,13 +62,6 @@ public class Person {
 	
 	//GETTERS
 	
-        /**
-         * 
-         * @return int with the persons id
-         */
-        public int getId() {
-            return id;
-        }
 	/**
 	 * @return String with this persons first name
 	 */

@@ -11,20 +11,25 @@ package gui;
 public class ListUnit {
     private int id;
     private String name;
+    private String email;
     private boolean isGroup = false;
     
-    public ListUnit(int id, String name, boolean isGroup) {
+    public ListUnit(int id, String name) {
         this.id = id;
         this.name = name;
-        this.isGroup = isGroup;
+        isGroup = true;
+    }
+    public ListUnit(String email, String name) {
+        this.email = email;
+        this.name = name;
     }
     
     public int getId() {
         return id;
     }
     
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
     public boolean isGroup() {
         return isGroup;

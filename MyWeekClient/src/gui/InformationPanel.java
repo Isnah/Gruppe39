@@ -44,7 +44,7 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
 
     public void setModel(Meeting model) {
         this.model = model;
-        model.addPropertyChangeListener(this);
+        this.model.addPropertyChangeListener(this);
         alarmList.setModel(model.getAlarmList());
         initParticipants();
         update();
@@ -61,20 +61,11 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
     private void initParticipants() {
         participants = new DefaultListModel<>();
         for (Person person : model.getAttendees()) {
-            participants.addElement(new ListUnit(person.getId(), person.getFirstName() + " " + person.getLastName(), false));
+            participants.addElement(new ListUnit(person.getEmail(), person.getFirstName() + " " + person.getLastName()));
         }
         for (Group group : model.getGroupAttendees()) {
-            participants.addElement(new ListUnit(group.getId(), group.getName(), true));
+            participants.addElement(new ListUnit(group.getId(), group.getName()));
         }
-        
-        //TESTING STUFFS
-        participants.addElement(new ListUnit(1,"Ola", false));
-        participants.addElement(new ListUnit(2,"Knut", false));
-        participants.addElement(new ListUnit(3,"Are", false));
-        participants.addElement(new ListUnit(4,"Odin", false));
-        participants.addElement(new ListUnit(5,"Tor", false));
-        participants.addElement(new ListUnit(1, "39", true));
-        //END TESTING STUFFS
         
         participantList.setModel(participants);
     }
@@ -116,6 +107,7 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
                 break;
             case Meeting.LISTS:
                 initParticipants();
+                System.out.println("List changes");
             default:
         }
         repaint();
