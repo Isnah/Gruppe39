@@ -8,12 +8,17 @@ import client.Converters;
 import client.Group;
 import client.Meeting;
 import client.Person;
+import client.Room;
 import java.sql.Time;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -92,6 +97,15 @@ public class AppointmentEditor extends javax.swing.JFrame {
         
         notInvitedList.setModel(notInvited);
         //END TESTING AGAIN
+        
+        DefaultTableModel roomModel = (DefaultTableModel)roomTable.getModel();
+        ArrayList<Room> allRooms = frame.getAllRooms();
+        for (Room room : allRooms) {
+            roomModel.addRow(new Object[] {
+                room.getName(),
+                room.getSpace(),
+            });
+        }
     }
     /**
      * Updates all the fields

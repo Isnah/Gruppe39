@@ -74,6 +74,9 @@ public class Main {
     private void sendAlarm(Alarm alarm) {
         frame.fireAlarm(alarm);
     }
+    public ArrayList<Room> getAllRooms() {
+        return new ArrayList<Room>();
+    }
     /**
      * Used by the main window to get its model
      * @return 
@@ -136,7 +139,7 @@ public class Main {
     }
     public Main() {
         person = new Person("awesome@man.com", "Man", "Awesome");
-        run();
+        //run();
     }
     public void run()  {
     	int port;
@@ -170,23 +173,7 @@ public class Main {
     	
 		@Override
 		public void run() {
-			try {
-				DataInputStream in = new DataInputStream(socket.getInputStream());
-				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-
-				while(true) {
-					Builder builder = new Builder();
-					String input = in.readUTF();
-					Document doc = builder.build(input, null);
-					String type = XMLSerializer.getType(doc);
-				}
-			} catch(IOException ex) {
-				System.err.println("IO exception.");
-				System.err.println("Message: " + ex.getMessage());
-			} catch(ParsingException ex) {
-				System.err.println("Parsing Exception.");
-				System.err.println("Message: " + ex.getMessage());
-			}
+			
 		}
 		
 		public ConnectionThread(Socket socket, Main main) {

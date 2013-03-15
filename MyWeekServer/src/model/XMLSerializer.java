@@ -8,6 +8,7 @@ import server.helpers.LoginCredentials;
 
 import model.appointment.Appointment;
 import model.appointment.Meeting;
+import model.notifications.Alarm;
 import model.notifications.Notification;
 import nu.xom.Document;
 import nu.xom.Element;
@@ -453,9 +454,6 @@ public class XMLSerializer {
 	public Element alarmToXml(Alarm alarm) {
 		Element root = new Element("alarm");
 		
-		Element id = new Element("id");
-		id.appendChild(Integer.toString(alarm.getId()));
-		
 		Element email = new Element("email");
 		email.appendChild(alarm.getEmail());
 		
@@ -464,6 +462,9 @@ public class XMLSerializer {
 		
 		Element msg = new Element("message");
 		msg.appendChild(alarm.getMsg());
+		
+		Element time = new Element("time");
+		time.appendChild(Long.toString(alarm.getStartAlarm().getTime()));
 		
 		root.appendChild(email);
 		root.appendChild(appId);
@@ -478,18 +479,12 @@ public class XMLSerializer {
 			return null;
 		}
 		
-		int id, app_id;
+		int app_id;
 		String email, message;
+		Timestamp start;
 		
-		Element el = xmlAlarmElement.getFirstChildElement("id");
-		if(el == null) {
-			System.err.println("No id while assembling alarm. Setting it to 0");
-			id = 0;
-		} else {
-			id = Integer.parseInt(el.getValue());
-		}
 		
-		el = xmlAlarmElement.getFirstChildElement("email");
+		Element el = xmlAlarmElement.getFirstChildElement("email");
 		if(el == null) {
 			System.err.println("Malformed xml element. No email while assembling alarm");
 			return null;
@@ -510,7 +505,14 @@ public class XMLSerializer {
 		}
 		message = el.getValue();
 		
-		return new Alarm(id, message, email, app_id);
+		el = xmlAlarmElement.getFirstChildElement("start");
+		if(el == null) {
+			System.err.println("Malformed xml element. No start while assembling alarm");
+			return null;
+		}
+		start = new Timestamp(Long.parseLong(el.getValue()));
+		
+		return new Alarm(message, email, app_id, start);
 	}
 	
 	/**
@@ -811,7 +813,9 @@ public class XMLSerializer {
 	
 	/**
 	 * Assembles a room from an xml element. Returns null if the element is
-	 * malformed.
+	 * malformed. If the xmlElement has appointment id's, it will add them
+	 * to the assembled room, but only with id, start and end. If there are
+	 * no appointments the list will be empty.
 	 * @param xmlRoomElement
 	 * @return
 	 */
@@ -843,13 +847,48 @@ public class XMLSerializer {
 		}
 		space = Integer.parseInt(element.getValue());
 		
-		/*
-		 * TODO: Needs to check for appointments. Might need to ask the database for appointments through app_id's
-		 */
+		ArrayList<Appointment> apps = new ArrayList<Appointment>();
 		
-		return new Room(id, space, name);
+		element = xmlRoomElement.getFirstChildElement("appointments");
+		if(element != null) {
+			Elements appElems = element.getChildElements();
+			for(int i = 0; i < appElems.size(); ++i) {
+				Element app = appElems.get(i);
+				
+				int app_id;
+				long start, end;
+				
+				Element el = app.getFirstChildElement("app_id");
+				if(el == null) {
+					continue;
+				}
+				app_id = Integer.parseInt(el.getValue());
+				
+				el = app.getFirstChildElement("start");
+				if(el == null) {
+					continue;
+				}
+				start = Long.parseLong(el.getValue());
+				
+				el = app.getFirstChildElement("end");
+				if(el == null) {
+					continue;
+				}
+				end = Long.parseLong(el.getValue());
+				
+				apps.add(new Appointment(app_id, new Timestamp(start), new Timestamp(end), null, null, null));
+			}
+		}
+		
+		return new Room(id, space, name, apps);
 	}
 	
+	/**
+	 * Assembles a notification from an xml element. Returns null if it is not a
+	 * valid element for a notification.
+	 * @param xmlNotificationElement
+	 * @return
+	 */
 	public static Notification assembleNotification(Element xmlNotificationElement) {
 		if(xmlNotificationElement.getLocalName() != "notification") {
 			System.err.println("Malformed xml element. Not a notification");
