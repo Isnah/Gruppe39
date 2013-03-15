@@ -22,7 +22,7 @@ public class Alarm {
 	}
 	
 
-	//GETTERS
+	//GETTERS & SETTERS
 
 	
 	public String getMessage(){
