@@ -9,11 +9,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import model.Alarm;
 import model.Group;
 import model.Person;
 import model.Room;
 import model.appointment.Appointment;
+import model.notifications.Alarm;
 
 /*
  * Ikke enda implementerte metoder:
@@ -211,7 +211,7 @@ public class SQLTranslator2 {
 	
 	
 	
-	//KUN FOR Å UNNGÅ FEILMELDING!:
+	//KUN FOR AA UNNGAA FEILMELDING!:
 	
 	public static Person getPerson(String email, Connection c) {
 

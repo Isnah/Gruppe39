@@ -1,4 +1,4 @@
-package model;
+package model.notifications;
 
 public class Alarm {
 	
