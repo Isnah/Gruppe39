@@ -100,11 +100,11 @@ public class SQLTranslator {
 	 * the person who created the appointment and the appointment.
 	 * @param app The appointment you wish to add.
 	 * @param c The connection to the database.
-	 * @return True if the appointment and personAppointment were successfully added
-	 * to. False if any of these queries fail.
+	 * @return The appointment_id if the appointment and personAppointment were successfully added
+	 * to the database. -1 if any of these queries fail.
 	 */
 	
-	public static boolean addAppointment(Appointment app, Connection c) {
+	public static int addAppointment(Appointment app, Connection c) {
 		StringBuilder query = new StringBuilder();
 		
 		query.append("INSERT INTO Appointment (name, start, end_time, descr, ");
@@ -138,7 +138,7 @@ public class SQLTranslator {
 		} catch (SQLException ex) {
 			System.err.println("SQLException in add appointment");
 			System.err.println("Message: " + ex.getMessage());
-			return false;
+			return -1;
 		}
 		
 		query = new StringBuilder();
@@ -153,18 +153,36 @@ public class SQLTranslator {
 		} catch (SQLException ex) {
 			System.err.println("SQLException while adding personappointment");
 			System.err.println("Message: " + ex.getMessage());
-			return false;
+			return -1;
 		}
-		return true;
+		
+		//to get the appointment_id
+		query = new StringBuilder();
+		query.append("SELECT id FROM Appointment WHERE id=");
+		query.append("LAST_INSERT_ID()");
+		int app_id = -1;
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			if(r.next()) {
+				app_id = r.getInt(1);
+				r.close();
+			}
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}
+		
+		return app_id;
 	}
 	
 	/**
 	 * Adds a meeting to the database
 	 * @param mtn
 	 * @param c
-	 * @return true if successful, false otherwise
+	 * @return meeting_id if successful, -1 otherwise
 	 */
-	public static boolean addMeeting(Meeting mtn, Connection c) {
+	public static int addMeeting(Meeting mtn, Connection c) {
 		StringBuilder query = new StringBuilder();
 		
 		query.append("INSERT INTO Appointment VALUES ( name, start, end_time, descr, ");
@@ -184,7 +202,7 @@ public class SQLTranslator {
 		} catch (SQLException ex) {
 			System.err.println("SQLException while creating meeting");
 			System.err.println("Message: " + ex.getMessage() );
-			return false;
+			return -1;
 		}
 		
 		//list of the emails to the participants that should be added to meetingAnswer
@@ -205,7 +223,7 @@ public class SQLTranslator {
 				System.err.println("SQLExeption in adding meeting while adding personAppointments");
 				System.err.println("Current index: " + i);
 				System.err.println("Message: " + ex.getMessage());
-				return false;
+				return -1;
 			}
 			
 			if(!participants.contains(mtn.getAttendee(i).getEmail()))
@@ -230,7 +248,7 @@ public class SQLTranslator {
 					System.err.println("SQLException in addMeeting while adding members of groups");
 					System.err.println("i: " + i + ", j: " + j);
 					System.err.println("Message: " + ex.getMessage());
-					return false;
+					return -1;
 				}
 				
 				if(!participants.contains(mtn.getAttendee(i).getEmail()))
@@ -246,7 +264,24 @@ public class SQLTranslator {
 			addMeetingAnswer(mtn.getID(), pEmail, null, c);
 		}
 		
-		return true;
+		//to get the meeting_id
+		query = new StringBuilder();
+		query.append("SELECT id FROM Appointment WHERE id=");
+		query.append("LAST_INSERT_ID()");
+		int mtn_id = -1;
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			if(r.next()) {
+				mtn_id = r.getInt(1);
+				r.close();
+			}
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}
+		
+		return mtn_id;
 	}
 	
 	/**
