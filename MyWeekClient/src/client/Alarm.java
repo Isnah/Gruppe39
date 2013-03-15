@@ -1,42 +1,37 @@
 package client;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 
 /**
- * 
+ * @author Endre Elvestad
  * @author Tobias Linkjendal
  */
 
 public class Alarm {
-	private int id;
-	private Time startAlarm;
-	private Appointment appointment;
+	private Timestamp startAlarm;
+	private int appId;
 	private String message;
+	private String email;
 	
-	public Alarm(int id, Time startAlarm, Appointment appointment, String message){
-		this.id = id;
+	public Alarm( Timestamp startAlarm, int appId, String message, String email){
 		this.startAlarm = startAlarm;
-		this.appointment = appointment;
+		this.appId = appId;
 		this.message = message;
+		this.email = email;
 	}
 	
-	
+
 	//GETTERS
-	
-	public int getId(){
-		return id;
-	}
+
 	
 	public String getMessage(){
 		return new String(message);
 	}
 	
-	public Appointment getAppointment(){
-		return appointment;
-	}
 	
         @Override
-        public String toString() {
+     public String toString() {
             return getMessage();
         }
 	/**
@@ -48,6 +43,18 @@ public class Alarm {
 		else return true;
 	}
 	
-
+	public void setAlarmMessage(String message) {
+			this.message = message;
+				
+	}
+	public int getAppId(){
+		return appId;
+	}
+	public String getMsg(){
+		return message;
+	}
+	public String getEmail(){
+		return email;
+	}
 
 }
