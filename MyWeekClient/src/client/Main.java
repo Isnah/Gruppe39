@@ -109,7 +109,7 @@ public class Main {
     }
     
     public String getEmail() {
-    	return Person.getEmail();
+    	return Person.getEmail(); 
     }
     public Person getPersonByEmail(String email) {
         // TODO return person from server
