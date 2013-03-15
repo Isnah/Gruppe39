@@ -22,6 +22,8 @@ import model.appointment.Appointment;
  * 
  */
 
+//TODO: addAlarm
+
 public class SQLTranslator2 {
 
 	public static ArrayList<Person> getGroupMembers(int groupId, Connection c){
@@ -211,7 +213,7 @@ public class SQLTranslator2 {
 	
 	
 	
-	//KUN FOR Å UNNGÅ FEILMELDING!:
+	//KUN FOR AA UNNGAA FEILMELDING!:
 	
 	public static Person getPerson(String email, Connection c) {
 

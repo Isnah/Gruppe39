@@ -335,10 +335,15 @@ public class SQLTranslator {
 	 * getMeetingAnswers(String email) - 
 	 * getPersonsAppointments(Person) //dekket av getPersonWithAppointments()
 	 * UpdateAppointmentOrMeeting()
-	 * getCancelNotification()
-	 * deleteAppointmentOrMeeting() //opprette CancelNotifications her
+	 * getCancelNotification() ?
+	 * deleteAppointmentOrMeeting() //1: holder med å slette bare møtet/avtalen - databasen tar seg av resten
+	 * 								//2: opprette CancelNotifications her
 	 * updateMeetingAnswer()
-	 * LEGGE TIL TRE ATTENDEE-LISTER I GET MEETING
+	 * getNotificationsForPerson() //gjelder både cancelNotifications til gjeldende person og meetingAnswers
+	 * 							   //til deltakere i møter som personen har laget (dersom de har declinet).
+	 * 							   //I gjelder i tillegg meetingAnswers til gjeldende person dersom personen
+	 * 							   //står som "pending".
+	 * LEGGE TIL TRE ATTENDEE-LISTER I GET MEETING (og i Meeting-klassen)
 	 */
 	
 	/**
