@@ -26,6 +26,32 @@ import model.notifications.Alarm;
 
 public class SQLTranslator2 {
 	
+	public static ArrayList<Room> getAllRooms(Connection c){
+		
+		ArrayList<Room> allerom = new ArrayList<Room>();
+		
+		//SELECT id FROM Room;
+		
+		StringBuilder query = new StringBuilder(); 
+		query.append("SELECT id FROM Room;");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			while(r.next()){
+				allerom.add(getRoom(r.getInt(1), c));
+			}
+
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
+		
+		return allerom;
+		
+	}
+	
 	public static ArrayList<Alarm> getAlarm(String personId, long startTime, long endTime, Connection c){
 		
 		ArrayList<Alarm> alarmliste = new ArrayList<Alarm>();
@@ -55,19 +81,6 @@ public class SQLTranslator2 {
 		}
 		
 		return alarmliste;
-		
-		/*
-		CREATE TABLE Alarm(
-				id 		int NOT NULL AUTO_INCREMENT,
-				msg		varchar(255),
-				email		varchar(50) NOT NULL,
-				app_id		int NOT NULL,
-				time		datetime NOT NULL,
-				PRIMARY KEY (id),
-				FOREIGN KEY (email) REFERENCES Person(email) ON DELETE CASCADE ON UPDATE CASCADE,
-				FOREIGN KEY (app_id) REFERENCES Appointment(id) ON DELETE CASCADE ON UPDATE CASCADE
-			);
-		*/
 		
 	}
 	
