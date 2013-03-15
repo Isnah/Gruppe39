@@ -22,8 +22,6 @@ import model.appointment.Appointment;
  * 
  */
 
-//TODO: addAlarm
-
 public class SQLTranslator2 {
 
 	public static ArrayList<Person> getGroupMembers(int groupId, Connection c){
