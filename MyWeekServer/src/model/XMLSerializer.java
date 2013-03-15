@@ -375,8 +375,10 @@ public class XMLSerializer {
 		Element not = new Element("notification");
 		
 		Element type = new Element("type");
-		if(notification.isCancelled()) type.appendChild("cancelled");
-		else if(notification.isInvitation()) type.appendChild("invitation");
+		if(!notification.isCancelled() && !notification.isInvitation()) type.appendChild("removed");
+		else if(notification.isCancelled() && !notification.isInvitation()) type.appendChild("decllined");
+		else if(!notification.isCancelled() && notification.isInvitation()) type.appendChild("invitation");
+		else if(notification.isCancelled() && notification.isInvitation()) type.appendChild("cancellation");
 		else type.appendChild("other");
 		
 		Element appID = new Element("app_id");
@@ -856,8 +858,8 @@ public class XMLSerializer {
 		
 		int appID;
 		String message;
-		boolean cancelled = false;
-		boolean invitation = false;
+		boolean cancelled;
+		boolean invitation;
 		
 		Element el = xmlNotificationElement.getFirstChildElement("app_id");
 		if(el == null) {
@@ -872,8 +874,20 @@ public class XMLSerializer {
 			return null;
 		}
 		String value = el.getValue();
-		if(value.equals("cancelled")) cancelled = true;
-		else if(value.equals("invitation")) invitation = true;
+		if(value.equals("cancelled")) {
+			cancelled = true;
+			invitation = true;
+		}
+		else if(value.equals("invitation")) {
+			invitation = true;
+			cancelled = false;
+		} else if(value.equals("declined")) {
+			cancelled = true;
+			invitation = false;
+		} else {
+			cancelled = false;
+			invitation = false;
+		}
 		
 		el = xmlNotificationElement.getFirstChildElement("message");
 		if(el == null) {
