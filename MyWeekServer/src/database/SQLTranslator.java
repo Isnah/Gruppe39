@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import javax.print.attribute.standard.PresentationDirection;
-
 import model.*;
 import model.appointment.Appointment;
 import model.appointment.Meeting;
@@ -372,19 +370,19 @@ public class SQLTranslator {
 	 * *getPersonsAppointments(Person) //dekket av getPersonWithAppointments()
 	 * *UpdateAppointmentOrMeeting()
 	 * getCancelNotification() ?
-	 * deleteAppointmentOrMeeting() //1: holder med å slette bare møtet/avtalen - databasen tar seg av resten
+	 * deleteAppointmentOrMeeting() //1: holder med ï¿½ slette bare mï¿½tet/avtalen - databasen tar seg av resten
 	 * 								//2: opprette CancelNotifications her
 	 * updateMeetingAnswer()
-	 * getNotificationsForPerson() //gjelder både cancelNotifications til gjeldende person og meetingAnswers
-	 * 							   //til deltakere i møter som personen har laget (dersom de har declinet).
+	 * getNotificationsForPerson() //gjelder bï¿½de cancelNotifications til gjeldende person og meetingAnswers
+	 * 							   //til deltakere i mï¿½ter som personen har laget (dersom de har declinet).
 	 * 							   //I gjelder i tillegg meetingAnswers til gjeldende person dersom personen
-	 * 							   //står som "pending".
+	 * 							   //stï¿½r som "pending".
 	 * LEGGE TIL TRE ATTENDEE-LISTER I GET MEETING (og i Meeting-klassen)
 	 * 
 	 * addCancelNotification()
 	 * 
-	 * *removeAttendeeFromMeeting(int mtnID, String email) - gjøres i UpdateAppointmentOrMeeting()
-	 * *removeGroupFromMeeting(int mtnID, Group group) - gjøres i UpdateAppointmentOrMeeting()
+	 * *removeAttendeeFromMeeting(int mtnID, String email) - gjï¿½res i UpdateAppointmentOrMeeting()
+	 * *removeGroupFromMeeting(int mtnID, Group group) - gjï¿½res i UpdateAppointmentOrMeeting()
 	 */
 	
 	/**
