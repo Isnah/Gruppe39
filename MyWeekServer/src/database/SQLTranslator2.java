@@ -50,22 +50,18 @@ public class SQLTranslator2 {
 		query.append("INSERT INTO Alarm (msg, email, app_id, time) VALUES ('");
 		query.append(msg+"', '"+email+"', ");
 		query.append(appId);
-		query.append(", " + longTimeToDatetime(startAlarm.getTime()) + ")");
+		query.append(", '" + longTimeToDatetime(startAlarm.getTime()) + "');");
 		
-		
-		
-		/*
-CREATE TABLE Alarm(
-	id 		int NOT NULL AUTO_INCREMENT,
-	msg		varchar(255),
-	email		varchar(50) NOT NULL,
-	app_id		int NOT NULL,
-	time		datetime NOT NULL,
-	PRIMARY KEY (id),
-	FOREIGN KEY (email) REFERENCES Person(email) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (app_id) REFERENCES Appointment(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-		*/
+		try {
+			Statement s = c.createStatement();
+			s.executeUpdate(query.toString());
+			return true;
+
+		} catch (SQLException ex) {
+			System.err.println("SQLException while adding personappointment");
+			System.err.println("Message: " + ex.getMessage());
+			return false;
+		}
 	}
 
 	public static ArrayList<Person> getGroupMembers(int groupId, Connection c){
