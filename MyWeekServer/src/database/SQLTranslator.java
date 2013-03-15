@@ -365,11 +365,12 @@ public class SQLTranslator {
 	
 	/*
 	 * TODO
-	 * Legge til:
-	 * getMeetingAnswers(Meeting) - Should return answers that belongs to the meeting
-	 * getMeetingAnswers(String email) - 
-	 * getPersonsAppointments(Person) //dekket av getPersonWithAppointments()
-	 * UpdateAppointmentOrMeeting()
+	 * Legge til: (lagt til/dekket av annen funksjon: *)
+	 * *getMeetingAnswers(Meeting) - Should return answers that belongs to the meeting
+	 * 							  - dekket av attendee-lister i meeting
+	 * *getMeetingAnswers(String email) - dekket av getNotificationsForPerson()
+	 * *getPersonsAppointments(Person) //dekket av getPersonWithAppointments()
+	 * *UpdateAppointmentOrMeeting()
 	 * getCancelNotification() ?
 	 * deleteAppointmentOrMeeting() //1: holder med å slette bare møtet/avtalen - databasen tar seg av resten
 	 * 								//2: opprette CancelNotifications her
@@ -379,6 +380,11 @@ public class SQLTranslator {
 	 * 							   //I gjelder i tillegg meetingAnswers til gjeldende person dersom personen
 	 * 							   //står som "pending".
 	 * LEGGE TIL TRE ATTENDEE-LISTER I GET MEETING (og i Meeting-klassen)
+	 * 
+	 * addCancelNotification()
+	 * 
+	 * *removeAttendeeFromMeeting(int mtnID, String email) - gjøres i UpdateAppointmentOrMeeting()
+	 * *removeGroupFromMeeting(int mtnID, Group group) - gjøres i UpdateAppointmentOrMeeting()
 	 */
 	
 	/**
@@ -427,40 +433,25 @@ public class SQLTranslator {
 	 * Deletes a meeting answer related to the person with the email to the database
 	 * @param meetingID The ID of the meeting
 	 * @param email The persons email
-	 * @param answer The persons answer to the meeting
 	 * @param c The connection to the database.
-	 * @return True if the addition was successful, false if an exception is met
+	 * @return True if the deletion was successful, false if an exception is met
 	 * during execution.
 	 */
-	//TODO
 	public static boolean deleteMeetingAnswer(int meetingID, String email, Connection c) {
 		StringBuilder query = new StringBuilder();
 		
-		query.append("INSERT INTO MeetingAnswer VALUES ( ");
+		query.append("DELETE FROM MeetingAnswer WHERE app_id=");
 		query.append(meetingID);
-		query.append(", '");
+		query.append(" AND email='");
 		query.append(email);
-		query.append("', ");
-		if(answer == null)
-		{
-			query.append("NULL");
-		}
-		else if(answer)
-		{
-			query.append("1");
-		}
-		else
-		{
-			query.append("0");
-		}
-		query.append(" )");
+		query.append("'");
 		
 		try {
 			Statement s = c.createStatement();
 			s.executeUpdate(query.toString());
 			return true;
 		} catch (SQLException ex) {
-			System.err.println("SQL exception in room addition");
+			System.err.println("SQL exception in deleteMeetingAnswer()");
 			System.err.println("Message: " + ex.getMessage());
 			return false;
 		}
@@ -507,6 +498,46 @@ public class SQLTranslator {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Adds a cancel notification related to the person with the email to the database
+	 * @param mtn the meeting
+	 * @param email The persons email
+	 * @param cancelled True if meeting is cancelled - False if the person is removed from the meeting
+	 * @param c The connection to the database.
+	 * @return True if the addition was successful, false if an exception is met
+	 * during execution.
+	 */
+	public static boolean addCancelNotification(Meeting mtn, String email, boolean cancelled, Connection c) {
+		StringBuilder query = new StringBuilder();
+		
+		query.append("INSERT INTO CancelNotification email, msg, cancelled VALUES ( '");
+		query.append(email);
+		query.append("', ");
+		query.append(mtn.getName());
+		query.append(", '");
+		query.append(email);
+		query.append("', ");
+		if(cancelled)
+		{
+			query.append("1");
+		}
+		else
+		{
+			query.append("0");
+		}
+		query.append(" )");
+		
+		try {
+			Statement s = c.createStatement();
+			s.executeUpdate(query.toString());
+			return true;
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in room addition");
+			System.err.println("Message: " + ex.getMessage());
+			return false;
+		}
 	}
 	
 	/**
@@ -632,11 +663,15 @@ public class SQLTranslator {
 			}
 			
 			//delete the meetingAnswers belonging to the removed participants
+			//also add cancelNotification with cancelled=false (that is, attendee removed)
 			for(String pEmail : formerParticipants)
 			{
 				if(!participants.contains(pEmail))
-				{//participant is removed, delete meetingAnswer
+				{//participant is removed
+					//delete meetingAnswer
 					deleteMeetingAnswer(mtn.getID(), pEmail, c);
+					//add cancelNotification
+					
 				}
 			}			
 			
@@ -651,6 +686,34 @@ public class SQLTranslator {
 		}
 		
 		return true;
+	}
+	
+	
+	/**
+	 * Deletes an appointment or meeting
+	 * @param app_id The ID of the appointment or meeting
+	 * @param c The connection to the database.
+	 * @return True if the deletion was successful, false if an exception is met
+	 * during execution.
+	 */
+	public static boolean deleteAppointmentOrMeeting(Appointment app, Connection c) {
+		StringBuilder query = new StringBuilder();
+		
+		query.append("DELETE FROM Appointment WHERE app_id=");
+		query.append(app.getID());
+		
+		try {
+			Statement s = c.createStatement();
+			s.executeUpdate(query.toString());
+			return true;
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in deleteAppointmentOrMeeting()");
+			System.err.println("Message: " + ex.getMessage());
+			return false;
+		}
+		
+		//creating cancelNotifications
+		
 	}
 	
 	/**
