@@ -1,23 +1,18 @@
 package model.notifications;
 
+import java.sql.Timestamp;
+
 public class Alarm {
+	private String msg;
+	private String email;
+	private int appId;
+	private Timestamp startAlarm;
 	
-	int id;
-	String msg;
-	String email;
-	int appId;
-	
-	public Alarm(int id, String msg, String email, int appId){
-		
-		this.id = id;
+	public Alarm(String msg, String email, int appId, Timestamp startAlarm){
 		this.msg = msg;
 		this.email = email;
 		this.appId = appId;
-		
-	}
-	
-	public int getId(){
-		return id;
+		this.startAlarm = startAlarm;
 	}
 	
 	public int getAppId(){
@@ -31,5 +26,9 @@ public class Alarm {
 	public String getEmail(){
 		return email;
 	}
-
+	
+	public Timestamp getStartAlarm()
+	{
+		return startAlarm;
+	}
 }

@@ -36,7 +36,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
      */
     public AppointmentEditor(MainWindow frame) {
         newAppointment = true;
-        model = new Meeting(0 /* TODO get correct ID*/, new Time(new Date().getTime()), 
+        model = new Meeting(0, new Time(new Date().getTime()), 
                                 new Time(new Date().getTime()), "", "", null, null, null);
         model.setRoomDescr("Type in a description...");
         init(frame);
@@ -73,38 +73,22 @@ public class AppointmentEditor extends javax.swing.JFrame {
         
         invited = new DefaultListModel<>();
         for (Person person : model.getAttendees()) {
-            invited.addElement(new ListUnit(person.getId(), person.getFirstName() + " " + person.getLastName(), false));
+            invited.addElement(new ListUnit(person.getEmail(), person.getFirstName() + " " + person.getLastName()));
         }
         for (Group group : model.getGroupAttendees()) {
-            invited.addElement(new ListUnit(group.getId(), group.getName(), true));
+            invited.addElement(new ListUnit(group.getId(), group.getName()));
         }
-        //TESTING STUFFS
-        invited.addElement(new ListUnit(1,"Ola", false));
-        invited.addElement(new ListUnit(2,"Knut", false));
-        invited.addElement(new ListUnit(3,"Are", false));
-        invited.addElement(new ListUnit(4,"Odin", false));
-        invited.addElement(new ListUnit(5,"Tor", false));
-        invited.addElement(new ListUnit(1, "39", true));
-        //END TESTING STUFFS
         
         invitedList.setModel(invited);
         
         //TESTING AGAIN
         notInvited = new DefaultListModel<>();
-        for (Person person : model.getAttendees()) {
-            notInvited.addElement(new ListUnit(person.getId(), person.getFirstName() + " " + person.getLastName(), false));
-        }
-        for (Group group : model.getGroupAttendees()) {
-            notInvited.addElement(new ListUnit(group.getId(), group.getName(), true));
-        }
-        //TESTING STUFFS
-        notInvited.addElement(new ListUnit(1,"Per", false));
-        notInvited.addElement(new ListUnit(2,"Olaf", false));
-        notInvited.addElement(new ListUnit(3,"Bernt", false));
-        notInvited.addElement(new ListUnit(4,"Kari", false));
-        notInvited.addElement(new ListUnit(5,"Oda", false));
-        notInvited.addElement(new ListUnit(1, "38", true));
-        //END TESTING STUFFS
+        
+        notInvited.addElement(new ListUnit("Email", "Name"));
+        notInvited.addElement(new ListUnit("1","p1"));
+        notInvited.addElement(new ListUnit("2","p2"));
+        notInvited.addElement(new ListUnit("3","p3"));
+        notInvited.addElement(new ListUnit("4","p4"));
         
         notInvitedList.setModel(notInvited);
         //END TESTING AGAIN
@@ -150,6 +134,14 @@ public class AppointmentEditor extends javax.swing.JFrame {
         model.setStart(date.getTimeInMillis() + Converters.HHMMToMilliseconds(getHHFrom(), getMMFrom()));
         model.setEnd(date.getTimeInMillis() + Converters.HHMMToMilliseconds(getHHTo(), getMMTo()));
         
+        for (int i=0;i<invited.getSize();i++) {
+            if (invited.elementAt(i).isGroup()) {
+                model.addGroupAttendee(frame.getGroupById(invited.getElementAt(i).getId()));
+            }
+            else {
+                model.addAttendee(frame.getPersonByEmail(invited.getElementAt(i).getEmail()));
+            }
+        }
         
         if (roomReserved) {
             model.setRoom(null);

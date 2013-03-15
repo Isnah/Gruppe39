@@ -8,17 +8,48 @@ package client;
  *
  * @author Laxcor
  */
-class Notification {
-    private boolean invitation = false;
-    private boolean canceled = false;
-    private int meetingID;
+public class Notification {
+	private boolean invitation = false;
+    private boolean cancelled = false;
+    private int appID;
     private String message;
     
-    public Notification(int id, boolean invitation) {
+    public Notification(int id, boolean invitation, boolean cancelled, String msg) {
         this.invitation = invitation;
-        this.meetingID = id;
+        this.cancelled = cancelled;
+        if(!(cancelled ^ invitation)) {
+        	System.err.println("cancelled can not also be an invitation");
+        }
+        appID = id;
+        message = msg;
     }
-    public Notification(String msg) {
-        canceled = true;
+    
+    public boolean isInvitation() {
+    	return invitation;
+    }
+    
+    public boolean isCancelled() {
+    	return cancelled;
+    }
+    
+    public int getAppID() {
+    	return appID;
+    }
+    
+    public String getMessage() {
+    	return new String(message);
+    }
+    
+    @Override
+    public String toString(){
+    	String text = "";
+    	if(invitation){
+    		text += "";
+    	}
+    	else if (cancelled){
+    		
+    	}
+    	
+    	return text;
     }
 }
