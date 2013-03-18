@@ -293,6 +293,9 @@
             <Property name="text" type="java.lang.String" value="X"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeRoomButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="reserveRoomButton">
           <Properties>

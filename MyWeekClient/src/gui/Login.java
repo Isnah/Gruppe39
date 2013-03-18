@@ -166,13 +166,15 @@ public class Login extends javax.swing.JFrame {
      * Login check
      */
     private void checkLogin() {
-        if (main.login(usernameField.getText(), passwordField.getPassword())) {
-                dispose();
-                new MainWindow(main).setVisible(true);
-        }
-        else {
-            errorPanel.setVisible(true);
-        }
+        try {
+            if (main.login(usernameField.getText(), passwordField.getPassword())) {
+                    dispose();
+                    new MainWindow(main).setVisible(true);
+            }
+            else {
+                errorPanel.setVisible(true);
+            }
+        } catch(Exception e) {}
         
     } 
     /**

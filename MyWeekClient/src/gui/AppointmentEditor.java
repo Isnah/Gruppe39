@@ -9,6 +9,9 @@ import client.Group;
 import client.Meeting;
 import client.Person;
 import client.Room;
+import com.toedter.calendar.JDateChooser;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import java.sql.Time;
 import java.text.NumberFormat;
@@ -17,6 +20,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -31,6 +38,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private DefaultListModel<ListUnit> notInvited;
     private DefaultListModel<ListUnit> invited;
     private DefaultTableModel roomTableModel;
+    private ListSelectionModel roomTableSelectionModel;
     
     private boolean newAppointment = false;
     private boolean roomReserved = false;
@@ -71,7 +79,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         dateChooser.setSelectableDateRange(new Date(), null);
-        roomTable.setEnabled(false);
+        roomTable.setVisible(false);
         
         oldStart = new Time(model.getStart());
         oldEnd = new Time(model.getEnd());
@@ -99,7 +107,21 @@ public class AppointmentEditor extends javax.swing.JFrame {
         notInvitedList.setModel(notInvited);
         //END TESTING
         
-        
+        roomTableSelectionModel = new DefaultListSelectionModel();
+        roomTableSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        roomTable.setSelectionModel(roomTableSelectionModel);
+        roomTableSelectionModel.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                setRoom();
+            }
+        });
+        dateChooser.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                updateRoomTableModel();
+            }
+        });
     }
     /**
      * Updates all the fields
@@ -128,9 +150,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
         roomTable.setModel(roomTableModel);
     }
     private void setRoom() {
-            // TODO set the selected room
-            removeRoomButton.setEnabled(true);
-            whereField.setEnabled(false);
+            whereField.setText((String)roomTable.getValueAt(roomTable.getSelectedRow(), roomTable.getSelectedColumn()));
     }
     /**
      * 
@@ -179,6 +199,11 @@ public class AppointmentEditor extends javax.swing.JFrame {
         dispose();
     }
     
+    private void setReservation(boolean enabled) {
+        roomTable.setVisible(enabled);
+        removeRoomButton.setEnabled(enabled);
+        whereField.setEnabled(!enabled);
+    }
     private int getHHFrom() {
         return (int)timeFromHH.getValue();
     }
@@ -375,6 +400,11 @@ public class AppointmentEditor extends javax.swing.JFrame {
 
         removeRoomButton.setText("X");
         removeRoomButton.setEnabled(false);
+        removeRoomButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeRoomButtonActionPerformed(evt);
+            }
+        });
 
         reserveRoomButton.setText("... or reserve a room");
         reserveRoomButton.addActionListener(new java.awt.event.ActionListener() {
@@ -639,7 +669,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
 
     private void reserveRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveRoomButtonActionPerformed
         updateRoomTableModel();
-        roomTable.setEnabled(true);
+        setReservation(true);
     }//GEN-LAST:event_reserveRoomButtonActionPerformed
 
     private void timeToHHStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_timeToHHStateChanged
@@ -662,6 +692,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
                 timeToMM.setValue(timeFromMM.getValue());
             }
         }
+        updateRoomTableModel();
     }//GEN-LAST:event_timeFromMMStateChanged
 
     private void timeToMMStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_timeToMMStateChanged
@@ -670,6 +701,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
                 timeFromMM.setValue(timeToMM.getValue());
             }
         }
+        updateRoomTableModel();
     }//GEN-LAST:event_timeToMMStateChanged
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
@@ -686,6 +718,10 @@ public class AppointmentEditor extends javax.swing.JFrame {
         invited.removeElementAt(invitedList.getSelectedIndex());
         }
     }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void removeRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeRoomButtonActionPerformed
+        setReservation(false);
+    }//GEN-LAST:event_removeRoomButtonActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
