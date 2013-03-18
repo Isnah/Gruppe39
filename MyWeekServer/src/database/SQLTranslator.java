@@ -561,17 +561,19 @@ public class SQLTranslator {
 			ResultSet rs = s.executeQuery(query.toString());
 			String msg = null;
 			Boolean cancelled = null;
+			String cancelledStr = null;
 			while(rs.next()) {
 				msg = rs.getString(1);
-				cancelled = rs.getString(1);
-				if(cancelled.equals("1"))
+				cancelledStr = rs.getString(2);
+				if(cancelledStr.equals("1"))
 				{
-					answer = true;
+					cancelled = true;
 				}
-				else if(cancelled.equals("0"))
+				else if(cancelledStr.equals("0"))
 				{
-					answer = false;
+					cancelled = false;
 				}
+				//Se Notification-klassen for hva som skal settes her (for invitation og cancelled):
 				notifications.add(new Notification(-1, invitation, cancelled, msg));
 			}
 			rs.close();
