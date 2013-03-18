@@ -37,6 +37,9 @@ public class Main {
     private MainWindow frame;
     private GregorianCalendar currentCalendar = new GregorianCalendar();
     private Thread server;
+    private Meeting meeting;
+    private Element command;
+    private ConnectionThread ct = new ConnectionThread();
     /**
      * The general login method used by the login frame
      * @param username
@@ -125,25 +128,37 @@ public class Main {
     
     public void newAppointment(Meeting model) {
         //TODO send appointment to the server
+    	command = new Element("new");
         
         //FIX THIS!!!
         addAppointment(model);
         //REALLY NEEDS FIXING!
     }
     private void addAppointment(Meeting model) {
-        person.addAppointment(model);
-        if (getAppointmentsForCurrentWeek().contains(model)) {
-            frame.addAppointment(model);
-        }
-        
+    	if (!person.getAllAppointments().contains(model)) {
+	    	try {
+				ct.addAppointment(model);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        person.addAppointment(model);
+	        if (getAppointmentsForCurrentWeek().contains(model)) {
+	            frame.addAppointment(model);
+	        }
+    	}
     }
 
     public void editAppointment(Meeting model) {
         // TODO send server update
+    	command = new Element("update");
+    	
         addAppointment(model);
     }
     public void removeAppointment(Meeting model) {
         // TODO send server update
+    	command = new Element("delete");
+    	
         person.removeAppointment(model);
     }
     public Main() {
@@ -214,22 +229,16 @@ public class Main {
 							String elementType = XMLSerializer.getType(el);
 							
 							if(elementType.equals("person_simple")) {
-								
+								person = XMLSerializer.assembleSimplePerson(el);
 							}
 							else if(elementType.equals("meeting")) {
-								
+								meeting = XMLSerializer.assembleMeeting(el);
 							}
-							else if(elementType.equals("appointments")) {
+							else if(elementType.equals("room")) {
 								
 							}
 							else if(elementType.equals("group")) {
-								/*for(int j = 0; j < i; j++) {
-								Element getChildElem = el.get(j);
-								String  childType = XMLSerializer.getType(getChildElem);
-									if(childType.equals("")) {
-										
-									}
-								}*/
+								
 							}
 						}
 					}
@@ -250,13 +259,18 @@ public class Main {
 			}
 		}
 		
-		public void addAppointment(Meeting model) {
-			XMLSerializer.meetingToXml(model);
+		public void addAppointment(Meeting model) throws IOException {
+			Element temp = new Element("a"); 
+			temp = XMLSerializer.meetingToXml(model);
+			Document send = new Document(temp);
+			out.writeUTF(send.toXML());
 		}
 		
 		public ConnectionThread(Socket socket, Main main) {
 			this.client = socket;
 			this.main = main;
 		}
+
+		public ConnectionThread() {	}
     }
 }
