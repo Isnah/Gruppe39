@@ -103,7 +103,7 @@ public class Main {
      * Called by the main window to close all connections before disposing.
      */
     public void logout() {
-        ct.logout();
+        ct.logout(); 
     }
     
     public Meeting getMeeting(int id) {
