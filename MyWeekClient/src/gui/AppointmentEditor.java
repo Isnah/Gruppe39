@@ -123,7 +123,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
      * 
      */
     private void saveChanges() {
-        
+         
         model.setName(titleField.getText());
         model.setDescr(descField.getText());
         
