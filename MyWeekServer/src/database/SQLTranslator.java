@@ -509,7 +509,7 @@ public class SQLTranslator {
 	 */
 	private static boolean addCancelNotification(Meeting mtn, String email, boolean cancelled, Connection c) {
 		StringBuilder query = new StringBuilder();
-		//TODO //add app_id
+		//TODO //add app_id 
 		query.append("INSERT INTO CancelNotification email, msg, cancelled VALUES ( '");
 		query.append(email);
 		query.append("', '");
