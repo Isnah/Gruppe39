@@ -68,9 +68,9 @@ public class Person {
 		ArrayList<Appointment> returnAppointments = new ArrayList<Appointment>();
 		for(int i = 0; i < appointments.size(); ++i) {
 			Appointment app = appointments.get(i);
-			if(app.getStart() > start.getTime() && app.getStart() < end.getTime()) {
+			if(app.getStart() >= start.getTime() && app.getStart() <= end.getTime()) {
 				returnAppointments.add(app);
-			} else if(app.getStart() < end.getTime() && app.getEnd() > start.getTime()) {
+			} else if(app.getStart() <= end.getTime() && app.getEnd() >= start.getTime()) {
 				returnAppointments.add(app);
 			}
 		}
