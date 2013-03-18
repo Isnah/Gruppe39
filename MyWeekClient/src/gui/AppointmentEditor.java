@@ -8,16 +8,12 @@ import client.Converters;
 import client.Group;
 import client.Meeting;
 import client.Person;
-import client.Room;
 import java.sql.Time;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.DefaultListModel;
-import javax.swing.JComboBox;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -40,8 +36,8 @@ public class AppointmentEditor extends javax.swing.JFrame {
      */
     public AppointmentEditor(MainWindow frame) {
         newAppointment = true;
-        model = new Meeting(0, new Time(new Date().getTime()), 
-                                new Time(new Date().getTime()), "", "", null, null, null);
+        model = new Meeting(0, new Time(new Date().getTime()), new Time(new Date().getTime()), 
+                                "", "", frame.getPersonByEmail(frame.getEmail()), null, null);
         model.setRoomDescr("Type in a description...");
         init(frame);
         update();
@@ -85,7 +81,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
         
         invitedList.setModel(invited);
         
-        //TESTING AGAIN
+        //TESTING
         notInvited = new DefaultListModel<>();
         
         notInvited.addElement(new ListUnit("Email", "Name"));
@@ -95,20 +91,9 @@ public class AppointmentEditor extends javax.swing.JFrame {
         notInvited.addElement(new ListUnit("4","p4"));
         
         notInvitedList.setModel(notInvited);
-        //END TESTING AGAIN
+        //END TESTING
         
-        DefaultTableModel roomModel = (DefaultTableModel)roomTable.getModel();
-        ArrayList<Room> allRooms = frame.getAllRooms();
-        for (Room room : allRooms) {
-            System.out.println("Adding a room");
-            JComboBox occupied = new JComboBox(room.getOccupiedTime(new Date().getTime()).toArray());
-            roomModel.addRow(new Object[] {
-                room.getName(),
-                room.getSpace(),
-                (Object)occupied
-            });
-        }
-        roomTable.setModel(roomModel);
+        
     }
     /**
      * Updates all the fields
@@ -484,20 +469,6 @@ public class AppointmentEditor extends javax.swing.JFrame {
 
         roomTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
                 {null, null, null}
             },
             new String [] {
@@ -505,7 +476,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
