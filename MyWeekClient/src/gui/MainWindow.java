@@ -47,6 +47,8 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {}
     public MainWindow(Main main) {
         
+     
+        
         //Setting the main and person objects
         this.main = main;
         this.main.setFrame(this);

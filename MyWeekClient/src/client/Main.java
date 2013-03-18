@@ -171,8 +171,17 @@ public class Main {
      * @param args 
      */
     public static void main(String[] args) {
-        new Login(new Main()).setVisible(true);
-        
+    	try {
+    		for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+    			if ("Windows".equals(info.getName())) {
+    				javax.swing.UIManager.setLookAndFeel(info.getClassName());
+    				break;
+    			}
+    		}
+    	} catch (Exception e) {
+    		
+    	}
+    	new Login(new Main()).setVisible(true);
     }
     private class ConnectionThread implements Runnable {
 
