@@ -113,7 +113,6 @@ public class Main {
      */
     public void logout() {
         ct.logout();
-        
     }
     
     public Meeting getMeeting(int id) {
@@ -137,7 +136,6 @@ public class Main {
     }
     
     public void newAppointment(Meeting model) {
-        //TODO send appointment to the server
     	command = new Element("new");
         
         //FIX THIS!!!
@@ -164,20 +162,16 @@ public class Main {
     }
 
     public void editAppointment(Meeting model) {
-        // TODO send server update
     	command = new Element("update");
-    	
         addAppointment(model);
     }
     public void removeAppointment(Meeting model) {
-        // TODO send server update
     	command = new Element("delete");
-    	
         person.removeAppointment(model);
     }
     public Main() {
         person = new Person("awesome@man.com", "Man", "Awesome");
-        //run();
+        run();
     }
     public void run()  {
     	int port = 1234;
@@ -240,6 +234,7 @@ public class Main {
 							String elementType = XMLSerializer.getType(el);
 							
 							if(type.equals("model")) {
+								loggedIn = true;
 								person = XMLSerializer.assembleCompletePerson(root);
 							}
 							else if(elementType.equals("person_simple")) {
@@ -247,6 +242,7 @@ public class Main {
 							}
 							else if(elementType.equals("meeting")) {
 								meeting = XMLSerializer.assembleMeeting(el);
+								
 							}
 							else if(elementType.equals("room")) {
 								
@@ -286,6 +282,7 @@ public class Main {
 				in.close();
 				out.close();
 				client.close();
+				loggedIn = false;
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
