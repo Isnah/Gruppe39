@@ -40,6 +40,8 @@ public class Main {
     private Meeting meeting;
     private Element command;
     private ConnectionThread ct = new ConnectionThread();
+    
+    private boolean loggedIn = false;
     /**
      * The general login method used by the login frame
      * @param username
@@ -47,8 +49,13 @@ public class Main {
      * @return 
      */
     public boolean login(String username, char[] password) {
-        // TODO fix the login check
-        return true;
+    	ct.login(username, password);
+    	while(person == null) {
+    		
+    		Thread.wait(200);
+    	}
+    	
+        return loggedIn;
     }
     
     /**
@@ -272,5 +279,9 @@ public class Main {
 		}
 
 		public ConnectionThread() {	}
+		
+		public void login(String user, char[] password) {
+			out.writeUTF(XMLSerializer.loginToXml(username, password).toXML());
+		}
     }
 }
