@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.DefaultListModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -28,6 +29,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     
     private DefaultListModel<ListUnit> notInvited;
     private DefaultListModel<ListUnit> invited;
+    private DefaultTableModel roomTableModel;
     
     private boolean newAppointment = false;
     private boolean roomReserved = false;
@@ -83,6 +85,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
         
         invitedList.setModel(invited);
         
+        roomTableModel = new DefaultTableModel
         //TESTING
         notInvited = new DefaultListModel<>();
         
@@ -187,6 +190,13 @@ public class AppointmentEditor extends javax.swing.JFrame {
         else {
             return model.getRoomDescr();
         }
+    }
+    private Object[][] getTalbeData() {
+        Object[][] data = new Object[frame.getAllRooms().size()][];
+        for (int i=0;i<frame.getAllRooms().size();i++) {
+            
+        }
+            return data;
     }
     private Object[] getRoomList(Room room) {
     	Object[] roomInfo = {room.getName(), room.getSpace(), getRoomStatus(room)};

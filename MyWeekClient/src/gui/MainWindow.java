@@ -1357,6 +1357,7 @@ public class MainWindow extends javax.swing.JFrame {
      * @param model 
      */
     public void newAppointment(Meeting model) {
+        System.out.println("newAppointment");
         main.newAppointment(model);
     }
     
@@ -1382,6 +1383,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
     public void addAppointment(Meeting model) {
         //Creating a new appointment panel
+        System.out.println("addAppointment");
         AppointmentView av = new AppointmentView(this, model);
         appointments.add(av);
         

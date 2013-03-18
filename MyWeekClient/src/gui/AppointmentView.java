@@ -63,10 +63,19 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         x = 2;
         y = 38*startH + (38f/60)*startM; //*hours and minutes from 00:00
         width = 110;
-        height = 38*durationH + (38f/60)*durationM;
+        height = getDuration(durationH, durationM);
+        System.out.println(height);
         setBounds(x, (int)y, width, (int)height);
     }
-
+    private int getDuration(int durH, float durM) {
+        float actualDuration = 38*durH + (38f/60)*durM;
+        if (actualDuration < 38) {
+            return 38;
+        }
+        else {
+            return (int)actualDuration;
+        }
+    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
