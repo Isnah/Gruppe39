@@ -104,7 +104,7 @@ public class Main {
      */
     public void logout() {
         ct.logout();
-        // waslkjflaskf
+        
     }
     
     public Meeting getMeeting(int id) {
