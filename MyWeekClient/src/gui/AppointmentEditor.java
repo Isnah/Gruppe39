@@ -8,6 +8,8 @@ import client.Converters;
 import client.Group;
 import client.Meeting;
 import client.Person;
+import client.Room;
+
 import java.sql.Time;
 import java.text.NumberFormat;
 import java.util.Calendar;
@@ -185,6 +187,25 @@ public class AppointmentEditor extends javax.swing.JFrame {
         else {
             return model.getRoomDescr();
         }
+    }
+    private Object[] getRoomList(Room room) {
+    	Object[] roomInfo = {room.getName(), room.getSpace(), getRoomStatus(room)};
+    	return roomInfo;
+    }
+    
+    private String getRoomStatus(Room room){
+    	GregorianCalendar date = (GregorianCalendar)dateChooser.getCalendar();
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MILLISECOND, 0);
+    	
+    	long start = date.getTimeInMillis() + Converters.HHMMToMilliseconds(getHHFrom(), getMMFrom());
+        long end = date.getTimeInMillis() + Converters.HHMMToMilliseconds(getHHTo(), getMMTo());
+    	
+    	if (room.isAvailable(start, end)) return "No";
+    	else return "Yes";
+    	
     }
     
     /**
