@@ -551,7 +551,7 @@ public class SQLTranslator {
 		ArrayList<Notification> notifications = new ArrayList<Notification>();
 		
 		StringBuilder query = new StringBuilder();
-		//TODO //get app_id
+		//TODO //get app_id 
 		query.append("SELECT msg, cancelled FROM CancelNotification WHERE email='");
 		query.append(email);
 		query.append("' ");

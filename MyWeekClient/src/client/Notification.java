@@ -19,7 +19,7 @@ public class Notification {
 	F		T		person decl			møtenavn		ja			fra MeetingAnswer
 
 	T		T		møtet cancelled		møtenavn		nei			fra CancelNotification
-	 */
+	*/
 	
 	private boolean invitation = false;
     private boolean cancelled = false;
