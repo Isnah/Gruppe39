@@ -36,7 +36,6 @@ public class Main {
     private Person person;
     private MainWindow frame;
     private GregorianCalendar currentCalendar = new GregorianCalendar();
-    private Thread server;
     private Meeting meeting;
     private Element command;
     private ConnectionThread ct = new ConnectionThread();
@@ -47,12 +46,15 @@ public class Main {
      * @param username
      * @param password
      * @return 
+     * @throws IOException 
      */
-    public boolean login(String username, char[] password) {
+    public boolean login(String username, char[] password) throws IOException {
     	ct.login(username, password);
     	while(person == null) {
-    		
-    		Thread.wait(200);
+    		try {
+    			Thread.sleep(200);
+    		} catch(InterruptedException ex) {
+    		}
     	}
     	
         return loggedIn;
@@ -226,17 +228,17 @@ public class Main {
 					String type = XMLSerializer.getType(doc);
 					Element root = doc.getRootElement();
 					
-					if(type.equals("model")) {
-						person = XMLSerializer.assembleCompletePerson(root);
-					}
-					else if (type.equals("return")) {
+					if (type.equals("return")) {
 						Elements getElem = root.getChildElements();
 						
 						for(int i = 0; i < getElem.size(); i++) {
 							Element el = getElem.get(i);
 							String elementType = XMLSerializer.getType(el);
 							
-							if(elementType.equals("person_simple")) {
+							if(type.equals("model")) {
+								person = XMLSerializer.assembleCompletePerson(root);
+							}
+							else if(elementType.equals("person_simple")) {
 								person = XMLSerializer.assembleSimplePerson(el);
 							}
 							else if(elementType.equals("meeting")) {
@@ -295,8 +297,8 @@ public class Main {
 
 		public ConnectionThread() {	}
 		
-		public void login(String user, char[] password) {
-			out.writeUTF(XMLSerializer.loginToXml(username, password).toXML());
+		public void login(String user, char[] password) throws IOException {
+			out.writeUTF(XMLSerializer.loginToXml(user, password).toXML());
 		}
     }
 }
