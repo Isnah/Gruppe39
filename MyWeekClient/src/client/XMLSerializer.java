@@ -490,14 +490,7 @@ public class XMLSerializer {
 	public static Person assembleSimplePerson(Element xmlPersonElement) {
 		String email, lastName, firstName;
 		
-		Element element = xmlPersonElement.getFirstChildElement("email");
-		if(element == null) {
-			System.err.println("Malformed xml element. No email while assembling simple person");
-			return null;
-		}
-		email = element.getValue();
-		
-		element = xmlPersonElement.getFirstChildElement("first_name");
+		Element element = xmlPersonElement.getFirstChildElement("first_name");
 		if(element == null) {
 			System.err.println("Malformed xml element. No first_name while assembling simple person");
 			return null;
@@ -510,6 +503,13 @@ public class XMLSerializer {
 			return null;
 		}
 		lastName = element.getValue();
+		
+		element = xmlPersonElement.getFirstChildElement("email");
+		if(element == null) {
+			System.err.println("Malformed xml element. No email while assembling simple person");
+			return null;
+		}
+		email = element.getValue();
 		
 		Person person = new Person(email, lastName, firstName);
 		return person;

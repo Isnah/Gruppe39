@@ -96,6 +96,7 @@ public class ServerMain {
 							continue;
 						}
 						valid = SQLTranslator.isValidEmailAndPassword(credentials.getUser(), credentials.getPassword(), connection);
+						System.out.println("Valid: " + valid);
 						if(!valid){
 							out.writeUTF("invalid_login");
 							continue;
@@ -103,6 +104,8 @@ public class ServerMain {
 						Person userPerson = SQLTranslator.getPersonWithAppointments(credentials.getUser(), connection);
 						
 						Document returnDoc = XMLSerializer.modelToXml(userPerson);
+						
+						System.out.println("return doc: " + returnDoc.toXML());
 						
 						out.writeUTF(returnDoc.toXML());
 						

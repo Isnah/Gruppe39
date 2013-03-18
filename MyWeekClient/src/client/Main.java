@@ -170,7 +170,7 @@ public class Main {
         person.removeAppointment(model);
     }
     public Main() {
-        person = new Person("awesome@man.com", "Man", "Awesome");
+
         run();
     }
     public void run()  {
@@ -221,9 +221,14 @@ public class Main {
 				while(true) {
 					Builder builder = new Builder();
 					String input = in.readUTF();
+					System.out.println("reading");
+					System.out.println(input);
 					Document doc = builder.build(input, null);
 					String type = XMLSerializer.getType(doc);
+
 					Element root = doc.getRootElement();
+					
+					
 					
 					if (type.equals("return")) {
 						Elements getElem = root.getChildElements();
@@ -231,10 +236,12 @@ public class Main {
 						for(int i = 0; i < getElem.size(); i++) {
 							Element el = getElem.get(i);
 							String elementType = XMLSerializer.getType(el);
+
 							
-							if(type.equals("model")) {
+							if(elementType.equals("model")) {
+								System.out.println("in");
 								loggedIn = true;
-								person = XMLSerializer.assembleCompletePerson(root);
+								person = XMLSerializer.assembleCompletePerson(root.getFirstChildElement("model").getFirstChildElement("person"));
 							}
 							else if(elementType.equals("person_simple")) {
 								person = XMLSerializer.assembleSimplePerson(el);
