@@ -507,9 +507,9 @@ public class SQLTranslator {
 	 * @return True if the addition was successful, false if an exception is met
 	 * during execution.
 	 */
-	public static boolean addCancelNotification(Meeting mtn, String email, boolean cancelled, Connection c) {
+	private static boolean addCancelNotification(Meeting mtn, String email, boolean cancelled, Connection c) {
 		StringBuilder query = new StringBuilder();
-		
+		//TODO //add app_id
 		query.append("INSERT INTO CancelNotification email, msg, cancelled VALUES ( '");
 		query.append(email);
 		query.append("', '");
@@ -537,6 +537,47 @@ public class SQLTranslator {
 	}
 	
 	/**
+	 * Get a cancelNotification for person
+	 * @param meetingID The ID of the meeting
+	 * @param email The persons email
+	 * @param c The connection to the database.
+	 * @return The cancel notification  if the addition was successful, false if an exception is met
+	 * during execution.
+	 */
+	private static Boolean getPersonsCancelNotifications(String email, Connection c) {
+		StringBuilder query = new StringBuilder();
+		//TODO //get app_id
+		query.append("SELECT msg, cancelled FROM CancelNotification WHERE email='");
+		query.append(email);
+		query.append("' ");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery(query.toString());
+			String msg = null;
+			Boolean cancelled = null;
+			if(rs.next()) {
+				answerStr = rs.getString(1);
+				if(answerStr.equals("1"))
+				{
+					answer = true;
+				}
+				else if(answerStr.equals("0"))
+				{
+					answer = false;
+				}
+			}
+			rs.close();
+			return answer;
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Updates an appointment or a meeting
 	 * @param app The appointment or meeting
 	 * @param c
@@ -555,7 +596,12 @@ public class SQLTranslator {
 			query.append(app.getRoomDescr());
 			query.append("', ");
 		}
+		else
+		{
+			query.append("room_descr=NULL, ");
+		}
 		if(app.getRoom() != null) query.append("room_id=" + app.getRoom().getID());
+		else query.append("room_id=NULL");
 		query.append(" WHERE ");
 		query.append("id=");
 		query.append(app.getID());
@@ -1023,6 +1069,43 @@ public class SQLTranslator {
 		{
 			meeting.setRoom(getRoom(room_id, c));
 		}
+		
+		//partition the attendees in three lists
+		ArrayList<Person> allAttendees = new ArrayList<Person>(initialAttendees);
+		for(int i = 0; i < meeting.getGroupAttendees().size(); ++i)
+		{
+			Group grp = meeting.getGroupAttendee(i);
+			for(int j = 0; j < grp.getMembers().size(); ++j)
+			{
+				if(!allAttendees.contains(grp.getMembers().get(j)))
+				{
+					allAttendees.add(grp.getMembers().get(j));
+				}
+			}
+		}
+		ArrayList<Person> accepted = new ArrayList<Person>();
+		ArrayList<Person> pending = new ArrayList<Person>();
+		ArrayList<Person> declined = new ArrayList<Person>();
+		for(Person p : allAttendees)
+		{
+			Boolean answer = getMeetingAnswer(meeting.getID(), p.getEmail(), c);
+			if(answer == null)
+			{
+				pending.add(p);
+			}
+			else if(answer)
+			{
+				accepted.add(p);
+			}
+			else
+			{
+				declined.add(p);
+			}
+		}
+		meeting.setAccepted(accepted);
+		meeting.setPending(pending);
+		meeting.setDeclined(declined);
+		
 		return meeting;
 	}
 	
