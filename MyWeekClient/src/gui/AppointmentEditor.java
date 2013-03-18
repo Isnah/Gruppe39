@@ -86,7 +86,8 @@ public class AppointmentEditor extends javax.swing.JFrame {
         
         invitedList.setModel(invited);
         
-        roomTableModel = new DefaultTableModel
+        roomTableModel = new DefaultTableModel(getTableData(), new Object[] {"Room","Capacity","Occupied"});
+        roomTable.setModel(roomTableModel);
         //TESTING
         notInvited = new DefaultListModel<>();
         
