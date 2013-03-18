@@ -46,7 +46,14 @@ public class ServerMain {
 		}
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args){
+		ServerMain main = new ServerMain();
+		try{ 
+			main.run();
+		} catch(IOException ex) {
+			System.err.println("IOException");
+			System.err.println("Message: " + ex.getMessage());
+		}
 		
 	}
 	
@@ -61,7 +68,7 @@ public class ServerMain {
 	 */
 	private class ConnectedUserThread implements Runnable {
 		private LoginCredentials credentials;
-		private boolean valid;
+		private boolean valid = false;
 		private Socket socket;
 		
 		public ConnectedUserThread(Socket socket) {
@@ -82,12 +89,13 @@ public class ServerMain {
 					if(type.equals("login")) {
 						credentials = XMLSerializer.assembleLogin(doc);
 						if(credentials == null) {
-							out.writeUTF("Malformed xml in credentials. Disconnecting.");
-							break;
+							out.writeUTF("Malformed xml in credentials. Try again.");
+							continue;
 						}
 						valid = SQLTranslator.isValidEmailAndPassword(credentials.getUser(), credentials.getPassword(), connection);
 						if(!valid){
 							out.writeUTF("invalid_login");
+							continue;
 						}
 						Person userPerson = SQLTranslator.getPersonWithAppointments(credentials.getUser(), connection);
 						
@@ -150,6 +158,13 @@ public class ServerMain {
 								boolean wasRegisteredByUser;
 								
 								Meeting realMtn = SQLTranslator.getMeeting(mtn.getID(), connection);
+								
+								if(realMtn == null) {
+									System.err.println("Error getting meeting.");
+									System.err.println("ID: " + mtn.getID());
+									continue;
+								}
+								
 								Person registeredBy = realMtn.getRegisteredBy();
 								
 								wasRegisteredByUser = registeredBy.getEmail().equals(credentials.getUser());
@@ -216,7 +231,13 @@ public class ServerMain {
 							
 							if(elementType.equals("meeting")) {
 								Meeting mtn = XMLSerializer.assembleMeeting(el);
+								
 								Meeting realMtn = SQLTranslator.getMeeting(mtn.getID(), connection);
+								if(realMtn == null) {
+									System.err.println("Unable to get meeting");
+									System.err.println("ID: " + mtn.getID());
+									continue;
+								}
 								
 								Person registeredBy = realMtn.getRegisteredBy();
 								

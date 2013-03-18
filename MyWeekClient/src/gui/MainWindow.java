@@ -12,6 +12,7 @@ import client.Meeting;
 import client.Notification;
 import client.Person;
 import client.Room;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -1315,7 +1316,14 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     public ArrayList<Room> getAllRooms() {
-        return main.getAllRooms();
+        //return main.getAllRooms();
+        // TODO Get all rooms from server
+        ArrayList<Room> temp = new ArrayList<>();
+        temp.add(new Room(0, 5, "Room 1"));
+        return temp;
+    }
+    public String getEmail() {
+        return main.getEmail();
     }
     public Meeting getMeeting(int id) {
         return main.getMeeting(id);

@@ -12,6 +12,8 @@ import client.Person;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
 import javax.swing.DefaultListModel;
 import javax.swing.SwingUtilities;
 
@@ -391,8 +393,22 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
         int h = (int)alarmHSpinner.getValue();
         int m =  (int)alarmMSpinner.getValue();
         if ((h + m) != 0) {
-            Time alarmTime = new Time(Converters.HHMMToMilliseconds(h,m));
-            model.addAlarm(new Alarm(alarmTime, model, "+"+h + " hour(s) and " + m + " minutes before start"));
+            String alarmMessage = "";
+            if (h != 0 ) {
+                alarmMessage+=h+" hour";
+                if (h > 1) {
+                    alarmMessage+="s";
+                }
+                alarmMessage+=" and ";
+            }
+            
+            alarmMessage+=m+" minute";
+            if (m != 1) {
+                alarmMessage+="s";
+            }
+            alarmMessage+=" before start";
+            model.addAlarm(new Alarm(new Timestamp(model.getStart()+Converters.HHMMToMilliseconds(h, m)),
+                    model.getID(), alarmMessage, frame.getEmail()));
         }
     }//GEN-LAST:event_addAlarmButtonActionPerformed
 

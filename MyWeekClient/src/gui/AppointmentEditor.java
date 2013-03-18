@@ -18,7 +18,6 @@ import java.util.GregorianCalendar;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -101,11 +100,15 @@ public class AppointmentEditor extends javax.swing.JFrame {
         DefaultTableModel roomModel = (DefaultTableModel)roomTable.getModel();
         ArrayList<Room> allRooms = frame.getAllRooms();
         for (Room room : allRooms) {
+            System.out.println("Adding a room");
+            JComboBox occupied = new JComboBox(room.getOccupiedTime(new Date().getTime()).toArray());
             roomModel.addRow(new Object[] {
                 room.getName(),
                 room.getSpace(),
+                (Object)occupied
             });
         }
+        roomTable.setModel(roomModel);
     }
     /**
      * Updates all the fields
