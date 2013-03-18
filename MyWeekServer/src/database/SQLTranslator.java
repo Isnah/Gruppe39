@@ -32,7 +32,7 @@ public class SQLTranslator {
 	 */
 	public static Connection connectToDatabase() {
 		Properties properties = new Properties();
-		properties.put("user", "root");
+		properties.put("user", "user");
 		properties.put("password", "1234");
 		properties.put("characterEncoding", "ISO-8859-1");
 		properties.put("useUnicode", "true");
@@ -184,7 +184,7 @@ public class SQLTranslator {
 	public static int addMeeting(Meeting mtn, Connection c) {
 		StringBuilder query = new StringBuilder();
 		
-		query.append("INSERT INTO Appointment VALUES ( name, start, end_time, descr, ");
+		query.append("INSERT INTO Appointment ( name, start, end_time, descr, ");
 		if(mtn.getRoom() != null) query.append("room_id, ");
 		query.append("created_by ) VALUES ( \"");
 		query.append(mtn.getName() + "\", \"");
@@ -195,6 +195,7 @@ public class SQLTranslator {
 		query.append("\"");
 		query.append(mtn.getRegisteredBy().getEmail());
 		query.append("\" );\n");
+		System.out.println(query);
 		try {
 			Statement s = c.createStatement();
 			s.executeUpdate(query.toString());

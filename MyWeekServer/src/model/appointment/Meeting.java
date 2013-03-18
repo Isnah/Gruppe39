@@ -27,7 +27,7 @@ public class Meeting extends Appointment {
 	 * @param accepted The list of persons that have accepted
 	 */
 	public void setAccepted(ArrayList<Person> accepted) {
-		this.accepted = new ArrayList<>(accepted);
+		this.accepted = new ArrayList<Person>(accepted);
 		
 	}
 	
@@ -36,7 +36,7 @@ public class Meeting extends Appointment {
 	 * @param declined The list of persons that have declined
 	 */
 	public void setDeclined(ArrayList<Person> declined) {
-		this.declined = new ArrayList<>(declined);
+		this.declined = new ArrayList<Person>(declined);
 
 	}
 	
@@ -45,7 +45,7 @@ public class Meeting extends Appointment {
 	 * @param pending The list of persons that are pending
 	 */
 	public void setPending(ArrayList<Person> pending) {
-		this.pending = new ArrayList<>(pending);
+		this.pending = new ArrayList<Person>(pending);
 
 	}
 	

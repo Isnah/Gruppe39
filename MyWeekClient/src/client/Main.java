@@ -274,9 +274,14 @@ public class Main {
 		}
 		
 		public void addAppointment(Meeting model) throws IOException {
+			System.out.println(model.getRegisteredBy().getEmail());
 			Element temp = XMLSerializer.meetingToXml(model);
+			System.out.println(temp.getLocalName());
+			
 			command.appendChild(temp);
+			
 			Document send = new Document(command);
+			System.out.println(send.toXML());
 			out.writeUTF(send.toXML());
 		}
 		

@@ -29,7 +29,7 @@ public class ServerMain {
 	
 	public ServerMain() {
 		connection = SQLTranslator.connectToDatabase();
-		connectThreads = new ArrayList<>();
+		connectThreads = new ArrayList<ConnectedUserThread>();
 	}
 	
 	public void run() throws IOException {
