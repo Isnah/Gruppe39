@@ -29,6 +29,7 @@ public class ServerMain {
 	
 	public ServerMain() {
 		connection = SQLTranslator.connectToDatabase();
+		connectThreads = new ArrayList<>();
 	}
 	
 	public void run() throws IOException {
@@ -83,6 +84,7 @@ public class ServerMain {
 				while(true) {
 					Builder builder = new Builder();
 					String input = in.readUTF();
+					System.out.println(input);
 					Document doc = builder.build(input, null);
 					String type = XMLSerializer.getType(doc);
 					

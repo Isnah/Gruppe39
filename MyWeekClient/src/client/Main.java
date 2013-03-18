@@ -38,7 +38,7 @@ public class Main {
     private GregorianCalendar currentCalendar = new GregorianCalendar();
     private Meeting meeting;
     private Element command;
-    private ConnectionThread ct = new ConnectionThread();
+    private ConnectionThread ct;
     
     private boolean loggedIn = false;
     /**
@@ -177,7 +177,6 @@ public class Main {
     	int port = 1234;
     	String serverName = "localhost";
     	Socket client = null;
-    	ConnectionThread thread;
     	try {
     		System.out.println("Connecting to " + serverName + " on port " + port);
         	client = new Socket(serverName, port);
@@ -186,8 +185,8 @@ public class Main {
     		System.err.println("No connection to the server");
     		System.exit(0);
     	}
-    	thread = new ConnectionThread(client, this);
-    	new Thread(thread).start();
+    	ct = new ConnectionThread(client, this);
+    	new Thread(ct).start();
     }
     /**
      * The main method for the application.
