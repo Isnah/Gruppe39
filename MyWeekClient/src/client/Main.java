@@ -248,6 +248,14 @@ public class Main {
 								meeting = XMLSerializer.assembleMeeting(el);
 								
 							}
+							else if(elementType.equals("app_id")) {
+								Element element = new Element("get");
+								Element mtnEl = new Element("meeting");
+								mtnEl.appendChild(el.getValue());
+								element.appendChild(mtnEl);
+								Document getDoc = new Document(element);
+								out.writeUTF(getDoc.toXML());
+							}
 							else if(elementType.equals("room")) {
 								
 							}
