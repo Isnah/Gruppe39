@@ -9,10 +9,86 @@ import model.Person;
 
 /**
  * @author Hans Olav Slotte
+ * @author Endre Elvestad
  */
 public class Meeting extends Appointment {
 	private ArrayList<Person> attendees;
 	private ArrayList<Group> groupAttendees;
+	
+	
+	private ArrayList<Person> accepted;
+	private ArrayList<Person> pending;
+	private ArrayList<Person> declined;
+	
+	
+	//SETTERS
+	/**
+	 * This is the function that should immediately set one of the three GUI-lists
+	 * @param accepted The list of persons that have accepted
+	 */
+	public void setAccepted(ArrayList<Person> accepted) {
+		this.accepted = new ArrayList<>(accepted);
+		
+	}
+	
+	/**
+	 * This is the function that should immediately set one of the three GUI-lists
+	 * @param declined The list of persons that have declined
+	 */
+	public void setDeclined(ArrayList<Person> declined) {
+		this.declined = new ArrayList<>(declined);
+
+	}
+	
+	/**
+	 * This is the function that should immediately set one of the three GUI-lists
+	 * @param pending The list of persons that are pending
+	 */
+	public void setPending(ArrayList<Person> pending) {
+		this.pending = new ArrayList<>(pending);
+
+	}
+	
+	
+	
+	
+	public void addToAccepted(Person person) {
+		if(accepted.contains(person)) {
+                    return;
+                }
+
+		
+
+	}
+	
+	/**
+	 * Checks whether a person is already in the declined list before adding
+	 * them to it.
+	 * @param person The person you want to add to the declined list
+	 */
+	public void addToDeclined(Person person) {
+		if(declined.contains(person)) {
+                    return;
+                }
+		
+
+		
+
+	}
+	
+	/**
+	 * Checks whether a person is already in the pending list before adding
+	 * them to it.
+	 * @param person The person you want to add to the pending list
+	 */
+	public void addToPending(Person person) {
+		if(pending.contains(person)) {
+                    return;
+                }
+		}
+	
+	
+
 	
 	public Meeting(int id, Timestamp start, Timestamp end, String name, String descr, Person registeredBy, ArrayList<Person> initialAttendees, ArrayList<Group> initialGroups) {
 		super(id, start, end, name, descr, registeredBy);

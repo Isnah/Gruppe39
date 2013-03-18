@@ -128,11 +128,10 @@ public class Meeting extends Appointment {
         }
         
         public void addGroupAttendee(Group group) {
-            for (Group g : groupAttendees) {
                 if(groupAttendees.contains(group)) {
                     return;
                 }
-            }    
+            
                 
                 ArrayList<Group> old = new ArrayList<>(groupAttendees);
                 groupAttendees.add(group);
