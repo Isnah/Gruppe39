@@ -68,6 +68,8 @@
                   <Component id="confirmRemovePanel" max="32767" attributes="0"/>
                   <Component id="removeAppointmentButton" alignment="1" max="32767" attributes="0"/>
                   <Component id="editAppointmentButton" alignment="1" max="32767" attributes="0"/>
+                  <Component id="acceptButton" max="32767" attributes="0"/>
+                  <Component id="declineButton" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -78,6 +80,10 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Component id="editAppointmentButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="acceptButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="declineButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="removeAppointmentButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -359,6 +365,16 @@
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
         <Property name="text" type="java.lang.String" value="min"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="acceptButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Accept"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="declineButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Decline"/>
       </Properties>
     </Component>
   </SubComponents>

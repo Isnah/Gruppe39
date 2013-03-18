@@ -504,10 +504,10 @@
                 <Component class="javax.swing.JTable" name="roomTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="3" rowCount="15">
+                      <Table columnCount="3" rowCount="1">
                         <Column editable="true" title="Room" type="java.lang.String"/>
                         <Column editable="true" title="Capacity" type="java.lang.Integer"/>
-                        <Column editable="true" title="Occupied" type="java.lang.Object"/>
+                        <Column editable="true" title="Occupied" type="java.lang.String"/>
                       </Table>
                     </Property>
                   </Properties>

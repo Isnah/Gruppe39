@@ -11,9 +11,7 @@ import client.Meeting;
 import client.Person;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Date;
 import javax.swing.DefaultListModel;
 import javax.swing.SwingUtilities;
 
@@ -48,6 +46,12 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
         this.model = model;
         this.model.addPropertyChangeListener(this);
         alarmList.setModel(model.getAlarmList());
+        if (frame.getEmail().equals(model.getRegisteredBy().getEmail())) {
+            acceptButton.setVisible(false);
+            declineButton.setVisible(false);
+        }
+        else {
+        }
         initParticipants();
         update();
     }
@@ -150,6 +154,8 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
         alarmMSpinner = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        acceptButton = new javax.swing.JButton();
+        declineButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(200, 230, 230));
 
@@ -267,6 +273,10 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
 
         jLabel2.setText("min");
 
+        acceptButton.setText("Accept");
+
+        declineButton.setText("Decline");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -310,7 +320,9 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(confirmRemovePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(removeAppointmentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editAppointmentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(editAppointmentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(acceptButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(declineButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -318,6 +330,10 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
             .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addComponent(editAppointmentButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(acceptButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(declineButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeAppointmentButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -417,6 +433,7 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
     }//GEN-LAST:event_removeAlarmButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton acceptButton;
     private javax.swing.JButton addAlarmButton;
     private javax.swing.JSpinner alarmHSpinner;
     private javax.swing.JLabel alarmLabel;
@@ -428,6 +445,7 @@ public class InformationPanel extends javax.swing.JPanel implements PropertyChan
     private javax.swing.JButton confirmYes;
     private javax.swing.JLabel confirmationLabel;
     private javax.swing.JLabel date;
+    private javax.swing.JButton declineButton;
     private javax.swing.JLabel desc;
     private javax.swing.JButton editAppointmentButton;
     private javax.swing.JSeparator infoSeparator1;
