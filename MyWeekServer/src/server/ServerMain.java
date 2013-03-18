@@ -51,8 +51,7 @@ public class ServerMain {
 		try{ 
 			main.run();
 		} catch(IOException ex) {
-			System.err.println("IOException");
-			System.err.println("Message: " + ex.getMessage());
+
 		}
 		
 	}
@@ -84,7 +83,7 @@ public class ServerMain {
 				while(true) {
 					Builder builder = new Builder();
 					String input = in.readUTF();
-					System.out.println(input);
+
 					Document doc = builder.build(input, null);
 					String type = XMLSerializer.getType(doc);
 					
@@ -96,7 +95,7 @@ public class ServerMain {
 							continue;
 						}
 						valid = SQLTranslator.isValidEmailAndPassword(credentials.getUser(), credentials.getPassword(), connection);
-						System.out.println("Valid: " + valid);
+						
 						if(!valid){
 							out.writeUTF("invalid_login");
 							continue;
@@ -105,7 +104,7 @@ public class ServerMain {
 						
 						Document returnDoc = XMLSerializer.modelToXml(userPerson);
 						
-						System.out.println("return doc: " + returnDoc.toXML());
+					
 						
 						out.writeUTF(returnDoc.toXML());
 						
@@ -168,8 +167,7 @@ public class ServerMain {
 								Meeting realMtn = SQLTranslator.getMeeting(mtn.getID(), connection);
 								
 								if(realMtn == null) {
-									System.err.println("Error getting meeting.");
-									System.err.println("ID: " + mtn.getID());
+						
 									continue;
 								}
 								
@@ -242,8 +240,7 @@ public class ServerMain {
 								
 								Meeting realMtn = SQLTranslator.getMeeting(mtn.getID(), connection);
 								if(realMtn == null) {
-									System.err.println("Unable to get meeting");
-									System.err.println("ID: " + mtn.getID());
+								
 									continue;
 								}
 								
@@ -267,11 +264,9 @@ public class ServerMain {
 					}
 				}
 			} catch(IOException ex) {
-				System.err.println("IO exception.");
-				System.err.println("Message: " + ex.getMessage());
+
 			} catch(ParsingException ex) {
-				System.err.println("Parsing Exception.");
-				System.err.println("Message: " + ex.getMessage());
+
 			}
 			
 			connectThreads.remove(this);

@@ -178,12 +178,11 @@ public class Main {
     	String serverName = "localhost";
     	Socket client = null;
     	try {
-    		System.out.println("Connecting to " + serverName + " on port " + port);
+
         	client = new Socket(serverName, port);
-        	System.out.println("Connected to " + client.getRemoteSocketAddress());
+
     	}catch (IOException e) {
-    		System.err.println("No connection to the server");
-    		System.exit(0);
+
     	}
     	ct = new ConnectionThread(client, this);
     	new Thread(ct).start();
@@ -221,8 +220,7 @@ public class Main {
 				while(true) {
 					Builder builder = new Builder();
 					String input = in.readUTF();
-					System.out.println("reading");
-					System.out.println(input);
+
 					Document doc = builder.build(input, null);
 					String type = XMLSerializer.getType(doc);
 
@@ -239,7 +237,7 @@ public class Main {
 
 							
 							if(elementType.equals("model")) {
-								System.out.println("in");
+
 								loggedIn = true;
 								person = XMLSerializer.assembleCompletePerson(root.getFirstChildElement("model").getFirstChildElement("person"));
 							}
