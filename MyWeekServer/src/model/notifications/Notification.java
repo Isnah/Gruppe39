@@ -14,9 +14,6 @@ public class Notification {
     public Notification(int id, boolean invitation, boolean cancelled, String msg) {
         this.invitation = invitation;
         this.cancelled = cancelled;
-        if(!(cancelled ^ invitation)) {
-        	System.err.println("cancelled can not also be an invitation");
-        }
         appID = id;
         message = msg;
     }

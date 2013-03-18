@@ -3,14 +3,13 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import model.Group;
 import model.Person;
 import model.Room;
 import model.XMLSerializer;
-import model.appointment.Appointment;
 import model.appointment.Meeting;
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -36,7 +35,7 @@ public class ServerMain {
 		int port = 1234;
 		running = true;
 		
-		ServerSocket welcomeSocket = new ServerSocket(port);
+		ServerSocket welcomeSocket = new ServerSocket(1234);
 		
 		while(running) {
 			Socket socket = welcomeSocket.accept();
@@ -70,8 +69,10 @@ public class ServerMain {
 		private LoginCredentials credentials;
 		private boolean valid = false;
 		private Socket socket;
+		private Timestamp prevNotificationQuery;
 		
 		public ConnectedUserThread(Socket socket) {
+			prevNotificationQuery = new Timestamp(0);
 			this.socket = socket;
 		}
 		
@@ -136,6 +137,8 @@ public class ServerMain {
 							} else if(elementType.equals("group_simple")) {
 								Group group = SQLTranslator.getGroup(Integer.parseInt(el.getValue()), connection);
 								ret.appendChild(XMLSerializer.simpleGroupToXml(group));
+							} else if(elementType.equals("notifications_all")) {
+								// get all notifications since the previous query by this user
 							}
 						}
 						
