@@ -17,7 +17,7 @@ public class Person {
 	private String lastName;
 	private String email;
 	private ArrayList<Meeting> appointments;
-        private ArrayList<Notification> notifications;
+    private ArrayList<Notification> notifications;
 	private PropertyChangeSupport pcs;
 	
 	public final static String NAME = "name";
@@ -118,6 +118,10 @@ public class Person {
 			}
 		}
 		return returnAppointments;
+	}
+	
+	public ArrayList<Meeting> getAllAppointments(){
+		return new ArrayList<Meeting>(appointments);
 	}
 	
 	public Iterator<Meeting> getAppointmentIterator() {
