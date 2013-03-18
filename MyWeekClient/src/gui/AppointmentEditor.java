@@ -12,6 +12,7 @@ import client.Room;
 
 import java.sql.Time;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -191,10 +192,11 @@ public class AppointmentEditor extends javax.swing.JFrame {
             return model.getRoomDescr();
         }
     }
-    private Object[][] getTalbeData() {
+    private Object[][] getTableData() {
         Object[][] data = new Object[frame.getAllRooms().size()][];
-        for (int i=0;i<frame.getAllRooms().size();i++) {
-            
+        ArrayList<Room> roomList = frame.getAllRooms();
+        for (int i=0;i<roomList.size();i++) {
+            data[i] = getRoomList(roomList.get(i));
         }
             return data;
     }
