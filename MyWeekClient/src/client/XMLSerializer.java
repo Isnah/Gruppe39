@@ -5,13 +5,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/*
-import server.helpers.LoginCredentials;
-
-import model.appointment.Appointment;
-import model.appointment.Meeting;
-import model.notifications.Notification;
-*/
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -452,7 +445,7 @@ public class XMLSerializer {
 		}
 		
 		Timestamp startAlarm;
-		int id, appId;
+		int appId;
 		String email, message;
 		
 		Element el = xmlAlarmElement.getFirstChildElement("time");
@@ -485,7 +478,6 @@ public class XMLSerializer {
 		email = el.getValue();
 		
 		return new Alarm(startAlarm, appId, message, email);
-		//return new Alarm(id, message, email, app_id);
 	}
 	
 	/**

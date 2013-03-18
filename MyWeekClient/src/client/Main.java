@@ -23,6 +23,7 @@ import client.XMLSerializer;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.ParsingException;
+import nu.xom.ValidityException;
 
 /**
  *
@@ -132,6 +133,7 @@ public class Main {
         if (getAppointmentsForCurrentWeek().contains(model)) {
             frame.addAppointment(model);
         }
+        
     }
 
     public void editAppointment(Meeting model) {
@@ -183,11 +185,29 @@ public class Main {
 				in = new DataInputStream(client.getInputStream());
 				out = new DataOutputStream(client.getOutputStream());
 				
+				Builder builder = new Builder();
+				String input = in.readUTF();
+				Document doc = builder.build(input, null);
+				String type = XMLSerializer.getType(doc);
+				
+				if(type.equals("model")) {
+					//person = XMLS
+				}
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (ValidityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParsingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+		}
+		
+		public void addAppointment(Meeting model) {
+			XMLSerializer.meetingToXml(model);
 		}
 		
 		public ConnectionThread(Socket socket, Main main) {
