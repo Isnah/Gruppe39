@@ -86,8 +86,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
         
         invitedList.setModel(invited);
         
-        roomTableModel = new DefaultTableModel(getTableDataNoOccupied(), new Object[] {"Room","Capacity","Occupied"});
-        roomTable.setModel(roomTableModel);
+        setRoomTableModel();
         //TESTING
         notInvited = new DefaultListModel<>();
         
@@ -120,7 +119,14 @@ public class AppointmentEditor extends javax.swing.JFrame {
             whereField.setEnabled(false);
         }
     }
-    
+    private void setRoomTableModel() {
+        roomTableModel = new DefaultTableModel(getTableDataNoOccupied(), new Object[] {"Room","Capacity","Occupied"});
+        roomTable.setModel(roomTableModel);
+    }
+    private void updateRoomTableModel() {
+        roomTableModel = new DefaultTableModel(getTableData(), new Object[] {"Room","Capacity","Occupied"});
+        roomTable.setModel(roomTableModel);
+    }
     private void setRoom() {
             // TODO set the selected room
             removeRoomButton.setEnabled(true);
@@ -632,6 +638,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void reserveRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveRoomButtonActionPerformed
+        updateRoomTableModel();
         roomTable.setEnabled(true);
     }//GEN-LAST:event_reserveRoomButtonActionPerformed
 

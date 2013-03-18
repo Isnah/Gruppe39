@@ -12,8 +12,10 @@ import client.Meeting;
 import client.Notification;
 import client.Person;
 import client.Room;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -1315,6 +1317,11 @@ public class MainWindow extends javax.swing.JFrame {
         temp.add(new Room(0, 5, "Room 1"));
         temp.add(new Room(1, 5, "Room 2"));
         temp.add(new Room(2, 5, "Room 3"));
+        Room rom = new Room(3, 9, "fskmisvpmd");
+        Meeting haxx = new Meeting(0, new Time(new Date().getTime()), new Time(new Date().getTime()+999999), "", null, null, null, null);
+        rom.addAppointment(haxx);
+        temp.add(rom);
+        
         return temp;
     }
     public String getEmail() {
@@ -1453,13 +1460,13 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_skipToWeekBoxActionPerformed
 
     private void nextWeekButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextWeekButtonActionPerformed
-        if (weekSelectionModel.getSelectedItem() != maximumWeek) {
+        if ((int)weekSelectionModel.getSelectedItem() != maximumWeek) {
             weekSelectionModel.setSelectedItem((int)weekSelectionModel.getSelectedItem() + 1);
         }
     }//GEN-LAST:event_nextWeekButtonActionPerformed
 
     private void previousWeekButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousWeekButtonActionPerformed
-        if (weekSelectionModel.getSelectedItem() != 1) {
+        if ((int)weekSelectionModel.getSelectedItem() != 1) {
             weekSelectionModel.setSelectedItem((int)weekSelectionModel.getSelectedItem() - 1);
         }
     }//GEN-LAST:event_previousWeekButtonActionPerformed
