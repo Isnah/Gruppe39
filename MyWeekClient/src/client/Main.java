@@ -68,7 +68,7 @@ public class Main {
         this.frame = frame;
         
         for (Meeting app : getAppointmentsForCurrentWeek()) {
-            addAppointment(app);
+            showAppointments(app);
         }
     }
     
@@ -104,7 +104,7 @@ public class Main {
         currentCalendar.set(Calendar.WEEK_OF_YEAR, week);
         
         for (Meeting app : getAppointmentsForCurrentWeek()) {
-            addAppointment(app);
+            showAppointments(app);
         }
     }
     
@@ -153,10 +153,14 @@ public class Main {
 				e.printStackTrace();
 			}
 	        person.addAppointment(model);
-	        if (getAppointmentsForCurrentWeek().contains(model)) {
-	            frame.addAppointment(model);
-	        }
+	        
     	}
+    }
+    
+    private void showAppointments(Meeting model) {
+    	if (getAppointmentsForCurrentWeek().contains(model)) {
+            frame.addAppointment(model);
+        }
     }
 
     public void editAppointment(Meeting model) {
@@ -270,9 +274,9 @@ public class Main {
 		}
 		
 		public void addAppointment(Meeting model) throws IOException {
-			Element temp = new Element("a"); 
-			temp = XMLSerializer.meetingToXml(model);
-			Document send = new Document(temp);
+			Element temp = XMLSerializer.meetingToXml(model);
+			command.appendChild(temp);
+			Document send = new Document(command);
 			out.writeUTF(send.toXML());
 		}
 		
@@ -287,7 +291,6 @@ public class Main {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 		
 		public ConnectionThread(Socket socket, Main main) {
