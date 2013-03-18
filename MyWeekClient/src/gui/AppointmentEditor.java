@@ -86,7 +86,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
         
         invitedList.setModel(invited);
         
-        roomTableModel = new DefaultTableModel(getTableData(), new Object[] {"Room","Capacity","Occupied"});
+        roomTableModel = new DefaultTableModel(getTableDataNoOccupied(), new Object[] {"Room","Capacity","Occupied"});
         roomTable.setModel(roomTableModel);
         //TESTING
         notInvited = new DefaultListModel<>();
@@ -193,6 +193,15 @@ public class AppointmentEditor extends javax.swing.JFrame {
             return model.getRoomDescr();
         }
     }
+    private Object[][] getTableDataNoOccupied() {
+        Object[][] data = new Object[frame.getAllRooms().size()][];
+        ArrayList<Room> roomList = frame.getAllRooms();
+        for (int i=0;i<roomList.size();i++) {
+        	Object[] info = {roomList.get(i).getName(), roomList.get(i).getSpace(), "Set the time"};
+            data[i] = info;
+        }
+            return data;
+    }    
     private Object[][] getTableData() {
         Object[][] data = new Object[frame.getAllRooms().size()][];
         ArrayList<Room> roomList = frame.getAllRooms();
@@ -207,6 +216,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     }
     
     private String getRoomStatus(Room room){
+
     	GregorianCalendar date = (GregorianCalendar)dateChooser.getCalendar();
         date.set(Calendar.HOUR_OF_DAY, 0);
         date.set(Calendar.MINUTE, 0);
