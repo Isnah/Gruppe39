@@ -92,6 +92,8 @@ public class XMLSerializer {
 	public static Element completePersonToXml(Person person) {
 		Element personElem = simplePersonToXml(person);
 		
+		personElem.setLocalName("person");
+		
 		Iterator<Appointment> it = person.getAppointmentIterator();
 		
 		Element appointments = new Element("appointments");
@@ -329,7 +331,7 @@ public class XMLSerializer {
 	 * @param aGroup
 	 */
 	public static Element simpleGroupToXml(Group aGroup) {
-		Element group = new Element("group");
+		Element group = new Element("group_simple");
 		
 		Element id = new Element("id");
 		id.appendChild(Integer.toString(aGroup.getID()));
@@ -348,6 +350,7 @@ public class XMLSerializer {
 	
 	public static Element groupToXml(Group aGroup) {
 		Element group = simpleGroupToXml(aGroup);
+		group.setLocalName("group");
 		
 		Element members = new Element("members");
 		
@@ -377,7 +380,7 @@ public class XMLSerializer {
 		
 		Element type = new Element("type");
 		if(!notification.isCancelled() && !notification.isInvitation()) type.appendChild("removed");
-		else if(notification.isCancelled() && !notification.isInvitation()) type.appendChild("decllined");
+		else if(notification.isCancelled() && !notification.isInvitation()) type.appendChild("declined");
 		else if(!notification.isCancelled() && notification.isInvitation()) type.appendChild("invitation");
 		else if(notification.isCancelled() && notification.isInvitation()) type.appendChild("cancellation");
 		else type.appendChild("other");

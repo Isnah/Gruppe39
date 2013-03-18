@@ -111,9 +111,9 @@ public class Person {
 		ArrayList<Meeting> returnAppointments = new ArrayList<Meeting>();
 		for(int i = 0; i < appointments.size(); ++i) {
 			Meeting app = appointments.get(i);
-			if(app.getStart() > start.getTime() && app.getStart() < end.getTime()) {
+			if(app.getStart() >= start.getTime() && app.getStart() <= end.getTime()) {
 				returnAppointments.add(app);
-			} else if(app.getStart() < end.getTime() && app.getEnd() > start.getTime()) {
+			} else if(app.getStart() <= end.getTime() && app.getEnd() >= start.getTime()) {
 				returnAppointments.add(app);
 			}
 		}
