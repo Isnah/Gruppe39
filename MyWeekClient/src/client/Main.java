@@ -103,7 +103,7 @@ public class Main {
      * Called by the main window to close all connections before disposing.
      */
     public void logout() {
-        // TODO This needs a connection
+        ct.logout();
     }
     
     public Meeting getMeeting(int id) {
@@ -264,6 +264,20 @@ public class Main {
 			temp = XMLSerializer.meetingToXml(model);
 			Document send = new Document(temp);
 			out.writeUTF(send.toXML());
+		}
+		
+		public void logout() {
+			try {
+				out.writeUTF("logout");
+				in.close();
+				out.close();
+				client.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		
 		public ConnectionThread(Socket socket, Main main) {
