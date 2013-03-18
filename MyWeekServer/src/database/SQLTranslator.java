@@ -9,6 +9,7 @@ import java.util.Properties;
 import model.*;
 import model.appointment.Appointment;
 import model.appointment.Meeting;
+import model.notifications.Notification;
 
 /**
  * 
@@ -370,19 +371,22 @@ public class SQLTranslator {
 	 * *getPersonsAppointments(Person) //dekket av getPersonWithAppointments()
 	 * *UpdateAppointmentOrMeeting()
 	 * getCancelNotification() ?
-	 * deleteAppointmentOrMeeting() //1: holder med ï¿½ slette bare mï¿½tet/avtalen - databasen tar seg av resten
+	 * deleteAppointmentOrMeeting() //1: holder med aa slette bare moetet/avtalen - databasen tar seg av resten
 	 * 								//2: opprette CancelNotifications her
 	 * updateMeetingAnswer()
-	 * getNotificationsForPerson() //gjelder bï¿½de cancelNotifications til gjeldende person og meetingAnswers
-	 * 							   //til deltakere i mï¿½ter som personen har laget (dersom de har declinet).
+	 * getNotificationsForPerson() //gjelder baade cancelNotifications til gjeldende person og meetingAnswers
+	 * 							   //til deltakere i moeter som personen har laget (dersom de har declinet).
 	 * 							   //I gjelder i tillegg meetingAnswers til gjeldende person dersom personen
-	 * 							   //stï¿½r som "pending".
+	 * 							   //staar som "pending".
+	 * 							   //Skal i denne metoden også slette alle cancelNotifications - slik at det
+	 * 							   //ikke blir sendt flere ganger.
 	 * LEGGE TIL TRE ATTENDEE-LISTER I GET MEETING (og i Meeting-klassen)
 	 * 
 	 * addCancelNotification()
+	 * deleteCancelNotification()
 	 * 
-	 * *removeAttendeeFromMeeting(int mtnID, String email) - gjï¿½res i UpdateAppointmentOrMeeting()
-	 * *removeGroupFromMeeting(int mtnID, Group group) - gjï¿½res i UpdateAppointmentOrMeeting()
+	 * *removeAttendeeFromMeeting(int mtnID, String email) - gjores i UpdateAppointmentOrMeeting()
+	 * *removeGroupFromMeeting(int mtnID, Group group) - gjores i UpdateAppointmentOrMeeting()
 	 */
 	
 	/**
@@ -537,14 +541,15 @@ public class SQLTranslator {
 	}
 	
 	/**
-	 * Get a cancelNotification for person
-	 * @param meetingID The ID of the meeting
+	 * Get the cancelNotifications for a person
 	 * @param email The persons email
 	 * @param c The connection to the database.
 	 * @return The cancel notification  if the addition was successful, false if an exception is met
 	 * during execution.
 	 */
 	private static Boolean getPersonsCancelNotifications(String email, Connection c) {
+		ArrayList<Notification> notifications = new ArrayList<Notification>();
+		
 		StringBuilder query = new StringBuilder();
 		//TODO //get app_id
 		query.append("SELECT msg, cancelled FROM CancelNotification WHERE email='");
@@ -556,19 +561,20 @@ public class SQLTranslator {
 			ResultSet rs = s.executeQuery(query.toString());
 			String msg = null;
 			Boolean cancelled = null;
-			if(rs.next()) {
-				answerStr = rs.getString(1);
-				if(answerStr.equals("1"))
+			while(rs.next()) {
+				msg = rs.getString(1);
+				cancelled = rs.getString(1);
+				if(cancelled.equals("1"))
 				{
 					answer = true;
 				}
-				else if(answerStr.equals("0"))
+				else if(cancelled.equals("0"))
 				{
 					answer = false;
 				}
+				notifications.add(new Notification(-1, invitation, cancelled, msg));
 			}
 			rs.close();
-			return answer;
 		} catch (SQLException ex) {
 			System.err.println("SQL exception in getMeetingAnswer()");
 			System.err.println("Message: " + ex.getMessage());
@@ -848,10 +854,42 @@ public class SQLTranslator {
 		
 		//fetching the person's appointments
 		//NB: The appointments(meetings) should contain simple persons without appointments
-		ArrayList<Appointment> appointments;
-		//..
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		
-		return new Person(email, lastname, firstname);
+		query = new StringBuilder(); 
+		query.append("SELECT DISTINCT app_id FROM PersonAppointment WHERE email='");
+		query.append(email);
+		query.append("'");
+		
+		int app_id;
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery(query.toString());
+			while(rs.next())
+			{
+				app_id = rs.getInt(1);
+				Statement stmnt = c.createStatement();
+				ResultSet r = stmnt.executeQuery("SELECT DISTINCT email" +
+						"FROM PersonAppointment WHERE app_id=" + app_id);
+				r.next();
+				if(r.next())
+				{//the appointment has attendees and is therefore a meeting
+					appointments.add(getMeeting(app_id, c));
+				}
+				else
+				{//the appointment is not a meeting (just a regular appointment)
+					appointments.add(getAppointment(app_id, c));
+				}
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			System.err.println("SQLException while getting a person with appointments");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}	
+		
+		return new Person(email, lastname, firstname, appointments);
 		
 	}
 	
@@ -1016,10 +1054,10 @@ public class SQLTranslator {
 		
 		//*****SLUTT PAA KOPIERING FRA getAppointment*****
 		
-		//SELECT email FROM PersonAppointment WHERE app_id=[id]
+		//SELECT DISTINCT email FROM PersonAppointment WHERE app_id=[id]
 		
 		StringBuilder query2 = new StringBuilder(); 
-		query2.append("SELECT email FROM PersonAppointment WHERE app_id=");
+		query2.append("SELECT DISTINCT email FROM PersonAppointment WHERE app_id=");
 		query2.append(id);
 		
 		ArrayList<Person> initialAttendees = new ArrayList<Person>();

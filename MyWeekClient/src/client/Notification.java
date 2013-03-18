@@ -10,6 +10,17 @@ package client;
  * @author Tobias Linkjendal
  */
 public class Notification {
+	/*
+	INV		CAN			HVA				MSG	     		app_id
+	F		F		"du er fjernet"		møtenavn		nei			fra CancelNotification
+
+	T		F		vanlig invitiation	møtenavn		ja			fra MeetingAnswer
+
+	F		T		person decl			møtenavn		ja			fra MeetingAnswer
+
+	T		T		møtet cancelled		møtenavn		nei			fra CancelNotification
+	 */
+	
 	private boolean invitation = false;
     private boolean cancelled = false;
     private int appID;
