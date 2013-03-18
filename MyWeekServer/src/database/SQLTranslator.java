@@ -32,11 +32,11 @@ public class SQLTranslator {
 	 */
 	public static Connection connectToDatabase() {
 		Properties properties = new Properties();
-		properties.put("user", "server");
-		properties.put("password", "admin39");
+		properties.put("user", "root");
+		properties.put("password", "1234");
 		properties.put("characterEncoding", "ISO-8859-1");
 		properties.put("useUnicode", "true");
-		String url = "database url here";
+		String url = "jdbc:mysql://localhost:3306/myweek";
 		
 		try {
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -574,7 +574,7 @@ public class SQLTranslator {
 					cancelled = false;
 				}
 				//Se Notification-klassen for hva som skal settes her (for invitation og cancelled):
-				notifications.add(new Notification(-1, invitation, cancelled, msg));
+			//	notifications.add(new Notification(-1, invitation, cancelled, msg));
 			}
 			rs.close();
 		} catch (SQLException ex) {
