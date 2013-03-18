@@ -24,6 +24,8 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.ParsingException;
 import nu.xom.ValidityException;
+import nu.xom.Element;
+import nu.xom.Elements;
 
 /**
  *
@@ -185,13 +187,46 @@ public class Main {
 				in = new DataInputStream(client.getInputStream());
 				out = new DataOutputStream(client.getOutputStream());
 				
-				Builder builder = new Builder();
-				String input = in.readUTF();
-				Document doc = builder.build(input, null);
-				String type = XMLSerializer.getType(doc);
-				
-				if(type.equals("model")) {
-					//person = XMLS
+				while(true) {
+					Builder builder = new Builder();
+					String input = in.readUTF();
+					Document doc = builder.build(input, null);
+					String type = XMLSerializer.getType(doc);
+					Element root = doc.getRootElement();
+					
+					if(type.equals("model")) {
+						person = XMLSerializer.assembleCompletePerson(root);
+					}
+					else if (type.equals("return")) {
+						Elements getElem = root.getChildElements();
+						
+						for(int i = 0; i < getElem.size(); i++) {
+							Element el = getElem.get(i);
+							String elementType = XMLSerializer.getType(el);
+							
+							if(elementType.equals("person_simple")) {
+								
+							}
+							else if(elementType.equals("meeting")) {
+								
+							}
+							else if(elementType.equals("appointments")) {
+								
+							}
+							else if(elementType.equals("group")) {
+								/*for(int j = 0; j < i; j++) {
+								Element getChildElem = el.get(j);
+								String  childType = XMLSerializer.getType(getChildElem);
+									if(childType.equals("")) {
+										
+									}
+								}*/
+							}
+						}
+					}
+					else {
+						System.out.println(input);
+					}
 				}
 				
 			} catch (IOException e) {
@@ -214,6 +249,5 @@ public class Main {
 			this.client = socket;
 			this.main = main;
 		}
-    	
     }
 }
