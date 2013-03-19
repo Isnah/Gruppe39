@@ -37,6 +37,7 @@ public class MainWindow extends javax.swing.JFrame {
     private DefaultListModel<Notification> notifications;
     private DefaultComboBoxModel<Integer> weekSelectionModel;
     private GregorianCalendar defaultCalendar;
+    private GregorianCalendar currentCalendar;
     private ArrayList<AppointmentView> appointments;
     private ArrayList<JPanel> dayPanels;
     /**
@@ -63,6 +64,9 @@ public class MainWindow extends javax.swing.JFrame {
         notifications = new DefaultListModel<>();
         weekSelectionModel = new DefaultComboBoxModel<>();
         appointments = new ArrayList<>();
+        
+        currentCalendar = new GregorianCalendar();
+        currentCalendar.setFirstDayOfWeek(Calendar.MONDAY);
         
         dayPanels = new ArrayList<>();
         dayPanels.add(mondayPanel);
@@ -1335,7 +1339,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     private void populateWeekSelectionModel() {
-        for (int i=1;i<maximumWeek;i++) {
+        for (int i=1;i<=maximumWeek;i++) {
             weekSelectionModel.addElement(i);
         }
     }
@@ -1345,7 +1349,25 @@ public class MainWindow extends javax.swing.JFrame {
         weekNumberLabel.setText(week+"");
         hideInformationPanel();
         removeAllAppointments();
+        updateDates();
         main.setCurrentWeek(week);
+    }
+    private void updateDates() {
+    	currentCalendar.set(Calendar.WEEK_OF_YEAR, currentWeek);
+    	currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+    	jLabel8.setText(currentCalendar.getTime().toString().substring(4,10));
+    	currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+    	jLabel9.setText(currentCalendar.getTime().toString().substring(4,10));
+    	currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+    	jLabel10.setText(currentCalendar.getTime().toString().substring(4,10));
+    	currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+    	jLabel11.setText(currentCalendar.getTime().toString().substring(4,10));
+    	currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+    	jLabel12.setText(currentCalendar.getTime().toString().substring(4,10));
+    	currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+    	jLabel13.setText(currentCalendar.getTime().toString().substring(4,10));
+    	currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+    	jLabel14.setText(currentCalendar.getTime().toString().substring(4,10));
     }
     /**
      * Method used by the main program to fire alarms
@@ -1354,7 +1376,18 @@ public class MainWindow extends javax.swing.JFrame {
     public void fireAlarm(Alarm alarm) {
         JOptionPane.showMessageDialog(this, alarm.getMessage(),"Alarm", JOptionPane.INFORMATION_MESSAGE);
     }
-    
+    public ArrayList<ListUnit> getAllInvitable() {
+        // TODO Make this get the list from the server
+        ArrayList<ListUnit> notInvited = new ArrayList<>();
+        //FOR TESTING
+        notInvited.add(new ListUnit("Tobias", "Tobias"));
+        notInvited.add(new ListUnit("Tor","Tor"));
+        notInvited.add(new ListUnit("Tore","Tore"));
+        notInvited.add(new ListUnit("Jarle","Jarle"));
+        notInvited.add(new ListUnit("Endre","Endre"));
+        //END FOR TESTING
+        return notInvited;
+    }
     public Person getPersonByEmail(String email) {
         return main.getPersonByEmail(email);
     }

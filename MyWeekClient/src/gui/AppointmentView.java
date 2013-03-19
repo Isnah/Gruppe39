@@ -149,6 +149,7 @@ public class AppointmentView extends javax.swing.JPanel implements PropertyChang
         appointmentStatus = new javax.swing.JLabel();
 
         setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         setPreferredSize(new java.awt.Dimension(112, 38));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
