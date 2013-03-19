@@ -32,7 +32,7 @@ public class SQLTranslator {
 	 */
 	public static Connection connectToDatabase() {
 		Properties properties = new Properties();
-		properties.put("user", "user");
+		properties.put("user", "root");
 		properties.put("password", "1234");
 		properties.put("characterEncoding", "ISO-8859-1");
 		properties.put("useUnicode", "true");
@@ -1018,10 +1018,12 @@ public class SQLTranslator {
 	
 	public static Meeting getMeeting(int id, Connection c){
 		
+		System.out.println(id);
+		
 		//SELECT start, end_time, name, descr, created_by FROM Appointment WHERE id=[id];
 		
 		StringBuilder query1 = new StringBuilder();
-		query1.append("SELECT start, end_time, name, descr, room_descr, room_id, created_by" +
+		query1.append("SELECT start, end_time, name, descr, room_descr, room_id, created_by " +
 				"FROM Appointment WHERE id=");
 		query1.append(id);
 		

@@ -81,10 +81,12 @@ public class ServerMain {
 				DataInputStream in = new DataInputStream(socket.getInputStream());
 				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 				while(true) {
+					
 					Builder builder = new Builder();
 					String input = in.readUTF();
-
+					System.out.println(input);
 					Document doc = builder.build(input, null);
+					System.out.println(doc.toXML());
 					String type = XMLSerializer.getType(doc);
 					
 					
@@ -130,7 +132,10 @@ public class ServerMain {
 							} else if(elementType.equals("appointment")) {
 								// TODO: current consensus is that appointment will not be used. Ignore for now
 							} else if(elementType.equals("meeting")) {
+								System.out.println(el.getFirstChildElement("id").getValue());
+								System.out.println(connection.toString());
 								Meeting meeting = SQLTranslator.getMeeting(Integer.parseInt(el.getFirstChildElement("id").getValue()), connection);
+								System.out.println(meeting.toString());
 								ret.appendChild(XMLSerializer.meetingToXml(meeting));
 							} else if(elementType.equals("room")) {
 								Room room = SQLTranslator.getRoom(Integer.parseInt(el.getFirstChildElement("id").getValue()), connection);

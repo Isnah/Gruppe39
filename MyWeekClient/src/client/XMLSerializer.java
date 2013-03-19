@@ -607,7 +607,7 @@ public class XMLSerializer {
 			System.err.println("Malformed xml element. No registered_by while assembling person");
 			return null;
 		}
-		element = element.getFirstChildElement("person");
+		element = element.getFirstChildElement("person_simple");
 		if(element == null) {
 			System.err.println("Malformed xml element. No person under registered_by while assembling meeting");
 			return null;
