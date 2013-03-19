@@ -184,7 +184,7 @@ public class SQLTranslator {
 	public static int addMeeting(Meeting mtn, Connection c) {
 		StringBuilder query = new StringBuilder();
 		
-		query.append("INSERT INTO Appointment VALUES ( name, start, end_time, descr, ");
+		query.append("INSERT INTO Appointment ( name, start, end_time, descr, ");
 		if(mtn.getRoom() != null) query.append("room_id, ");
 		query.append("created_by ) VALUES ( \"");
 		query.append(mtn.getName() + "\", \"");
@@ -195,6 +195,7 @@ public class SQLTranslator {
 		query.append("\"");
 		query.append(mtn.getRegisteredBy().getEmail());
 		query.append("\" );\n");
+		System.out.println(query);
 		try {
 			Statement s = c.createStatement();
 			s.executeUpdate(query.toString());
@@ -1017,10 +1018,12 @@ public class SQLTranslator {
 	
 	public static Meeting getMeeting(int id, Connection c){
 		
+		System.out.println(id);
+		
 		//SELECT start, end_time, name, descr, created_by FROM Appointment WHERE id=[id];
 		
 		StringBuilder query1 = new StringBuilder();
-		query1.append("SELECT start, end_time, name, descr, room_descr, room_id, created_by" +
+		query1.append("SELECT start, end_time, name, descr, room_descr, room_id, created_by " +
 				"FROM Appointment WHERE id=");
 		query1.append(id);
 		

@@ -158,6 +158,7 @@ public class Main {
     private void showAppointments(Meeting model) {
     	if (getAppointmentsForCurrentWeek().contains(model)) {
             frame.addAppointment(model);
+            System.out.println("out");
         }
     }
 
@@ -245,8 +246,21 @@ public class Main {
 								person = XMLSerializer.assembleSimplePerson(el);
 							}
 							else if(elementType.equals("meeting")) {
+								System.out.println(doc.toXML());
 								meeting = XMLSerializer.assembleMeeting(el);
+								showAppointments(meeting);
 								
+								
+							}
+							else if(elementType.equals("app_id")) {
+								Element element = new Element("get");
+								Element mtnEl = new Element("meeting");
+								Element idEl = new Element("id");
+								idEl.appendChild(el.getValue());
+								mtnEl.appendChild(idEl);
+								element.appendChild(mtnEl);
+								Document getDoc = new Document(element);
+								out.writeUTF(getDoc.toXML());
 							}
 							else if(elementType.equals("room")) {
 								
@@ -274,9 +288,14 @@ public class Main {
 		}
 		
 		public void addAppointment(Meeting model) throws IOException {
+			System.out.println(model.getRegisteredBy().getEmail());
 			Element temp = XMLSerializer.meetingToXml(model);
+			System.out.println(temp.getLocalName());
+			
 			command.appendChild(temp);
+			
 			Document send = new Document(command);
+			System.out.println(send.toXML());
 			out.writeUTF(send.toXML());
 		}
 		
