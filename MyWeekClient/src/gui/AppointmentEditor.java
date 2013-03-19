@@ -706,7 +706,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_timeToMMStateChanged
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        if (notInvitedList.getSelectedIndex() != -1) {
+        while (notInvitedList.getSelectedIndex() != -1) {
             invited.addElement(notInvited.getElementAt(notInvitedList.getSelectedIndex()));
             notInvited.removeElementAt(notInvitedList.getSelectedIndex());
         }
@@ -714,7 +714,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        if (invitedList.getSelectedIndex() != -1){
+        while (invitedList.getSelectedIndex() != -1){
         notInvited.addElement(invited.getElementAt(invitedList.getSelectedIndex()));
         invited.removeElementAt(invitedList.getSelectedIndex());
         }
