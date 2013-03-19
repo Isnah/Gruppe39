@@ -32,7 +32,7 @@ public class SQLTranslator {
 	 */
 	public static Connection connectToDatabase() {
 		Properties properties = new Properties();
-		properties.put("user", "root");
+		properties.put("user", "user");
 		properties.put("password", "1234");
 		properties.put("characterEncoding", "ISO-8859-1");
 		properties.put("useUnicode", "true");
@@ -145,7 +145,6 @@ public class SQLTranslator {
 		query.append("INSERT INTO PersonAppointment VALUES ( LAST_INSERT_ID(), \"");
 		query.append(app.getRegisteredBy().getEmail());
 		query.append("\" );");
-		
 		try {
 			Statement s = c.createStatement();
 			s.executeUpdate(query.toString());
@@ -186,12 +185,14 @@ public class SQLTranslator {
 		
 		query.append("INSERT INTO Appointment ( name, start, end_time, descr, ");
 		if(mtn.getRoom() != null) query.append("room_id, ");
+		else query.append("room_descr, ");
 		query.append("created_by ) VALUES ( \"");
 		query.append(mtn.getName() + "\", \"");
 		query.append(longTimeToDatetime(mtn.getStart()) + "\", \"");
 		query.append(longTimeToDatetime(mtn.getEnd()) + "\", \"");
 		query.append(mtn.getDescr() + "\", ");
 		if(mtn.getRoom() != null) query.append(mtn.getRoom().getID() + ", ");
+		else query.append("\"" + mtn.getRoomDescr() + "\",");
 		query.append("\"");
 		query.append(mtn.getRegisteredBy().getEmail());
 		query.append("\" );\n");
@@ -332,7 +333,7 @@ public class SQLTranslator {
 			int id;
 			while(r.next()) {
 				id = r.getInt(1);
-				appointments.add(getAppointment(id, c));
+				appointments.add(getMeeting(id, c));
 			}
 		} catch (SQLException ex) {
 			System.err.println("SQL exception in getMeetingAnswer()");
@@ -750,7 +751,7 @@ public class SQLTranslator {
 	public static boolean deleteAppointmentOrMeeting(Appointment app, Connection c) {
 		StringBuilder query = new StringBuilder();
 		
-		query.append("DELETE FROM Appointment WHERE app_id=");
+		query.append("DELETE FROM Appointment WHERE id=");
 		query.append(app.getID());
 		
 		try {
@@ -834,7 +835,7 @@ public class SQLTranslator {
 		//getting info about the person from the database
 		
 		//SELECT first_name, last_name FROM Person WHERE email=[email];
-		
+		System.out.println("Getting person");
 		StringBuilder query = new StringBuilder(); 
 		query.append("SELECT first_name, last_name FROM Person WHERE email='");
 		query.append(email);
@@ -863,7 +864,7 @@ public class SQLTranslator {
 		query.append("SELECT DISTINCT app_id FROM PersonAppointment WHERE email='");
 		query.append(email);
 		query.append("'");
-		
+		System.out.println(query);
 		int app_id;
 		
 		try {
@@ -872,6 +873,7 @@ public class SQLTranslator {
 			while(rs.next())
 			{
 				app_id = rs.getInt(1);
+				System.out.println(app_id);
 				Statement stmnt = c.createStatement();
 				ResultSet r = stmnt.executeQuery("SELECT DISTINCT email" +
 						"FROM PersonAppointment WHERE app_id=" + app_id);
@@ -882,7 +884,7 @@ public class SQLTranslator {
 				}
 				else
 				{//the appointment is not a meeting (just a regular appointment)
-					appointments.add(getAppointment(app_id, c));
+					appointments.add(getMeeting(app_id, c));
 				}
 			}
 			rs.close();
@@ -890,7 +892,29 @@ public class SQLTranslator {
 			System.err.println("SQLException while getting a person with appointments");
 			System.err.println("Message: " + ex.getMessage());
 			return null;
-		}	
+		}
+		
+		//SELECT app_id FROM Appointment WHERE created_by=[email];
+		
+		query = new StringBuilder(); 
+		query.append("SELECT id FROM Appointment WHERE created_by='");
+		query.append(email);
+		query.append("'");
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery(query.toString());
+			while(rs.next())
+			{
+				app_id = rs.getInt(1);
+				appointments.add(getMeeting(app_id, c));
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			System.err.println("SQLException while getting a person with appointments");
+			System.err.println("Message: " + ex.getMessage());
+			return null;
+		}
 		
 		return new Person(email, lastname, firstname, appointments);
 		
@@ -965,12 +989,12 @@ public class SQLTranslator {
 		return new Group(id, name, email);
 	}
 	
-	public static Appointment getAppointment(int id, Connection c) {
+	/*public static Appointment getAppointment(int id, Connection c) {
 				
 		//SELECT start FROM Appointment WHERE id=[id];
 		
 		StringBuilder query1 = new StringBuilder();
-		query1.append("SELECT start, end_time, name, descr, room_descr, room_id, created_by" +
+		query1.append("SELECT start, end_time, name, descr, room_descr, room_id, created_by " +
 				"FROM Appointment WHERE id=");
 		query1.append(id);
 		
@@ -1014,7 +1038,7 @@ public class SQLTranslator {
 			app.setRoom(getRoom(room_id, c));
 		}
 		return app;
-	}
+	}*/
 	
 	public static Meeting getMeeting(int id, Connection c){
 		
@@ -1097,7 +1121,7 @@ public class SQLTranslator {
 			}
 			
 		} catch (SQLException ex) {
-			System.err.println("SQLException while adding personappointment");
+			System.err.println("SQLException while adding personappointment 1");
 			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}	

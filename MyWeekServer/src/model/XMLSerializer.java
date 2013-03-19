@@ -102,13 +102,9 @@ public class XMLSerializer {
 		Element appointments = new Element("appointments");
 		while(it.hasNext()) {
 			Appointment appointment = it.next();
-			if(appointment.isMeeting()) {
-				Element el = meetingToXml((Meeting)appointment);
-				appointments.appendChild(el);
-			} else {
-				Element el = appointmentToXml(appointment);
-				appointments.appendChild(el);
-			}
+			Element el = meetingToXml((Meeting)appointment);
+			appointments.appendChild(el);
+
 		}
 		personElem.appendChild(appointments);
 		
@@ -145,6 +141,7 @@ public class XMLSerializer {
 	 * @return
 	 */
 	public static Element appointmentToXml(Appointment anAppointment) {
+		System.out.println("WHAT ARE YOU DOING?! STAHP!!!");
 		Element app = new Element("appointment");
 		
 		Element id = new Element("id");

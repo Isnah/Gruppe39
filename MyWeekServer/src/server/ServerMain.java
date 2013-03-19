@@ -164,7 +164,7 @@ public class ServerMain {
 							
 							Element el = elements.get(i);
 							
-							if(XMLSerializer.getType(el).equals("Meeting")) {
+							if(XMLSerializer.getType(el).equals("meeting")) {
 								Meeting mtn = XMLSerializer.assembleMeeting(el);
 								
 								boolean wasRegisteredByUser;
