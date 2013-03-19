@@ -50,20 +50,21 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {}
     public MainWindow(Main main) {
         
-     
         
         //Setting the main and person objects
         this.main = main;
-        this.main.setFrame(this);
-        
         //Setting the fram to a maximized state
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        
         //NetBeans component init
         initComponents();
+        
+        appointments = new ArrayList<>();
+        
+        
+        this.main.setFrame(this);
+        
         notifications = new DefaultListModel<>();
         weekSelectionModel = new DefaultComboBoxModel<>();
-        appointments = new ArrayList<>();
         
         currentCalendar = new GregorianCalendar();
         currentCalendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -1427,8 +1428,9 @@ public class MainWindow extends javax.swing.JFrame {
         //Creating a new appointment panel
         System.out.println("addAppointment");
         AppointmentView av = new AppointmentView(this, model);
+        System.out.println("");
         appointments.add(av);
-        
+        System.out.println();
         //Getting the right day-panel to add the appointment to
         switch (Converters.dayStringFormat(model.getStart())) {
             case "Monday":

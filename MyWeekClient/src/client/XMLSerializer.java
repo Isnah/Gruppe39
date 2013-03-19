@@ -103,7 +103,7 @@ public class XMLSerializer {
 	 * @param anAppointment
 	 * @return
 	 */
-	public static Element appointmentToXml(Appointment anAppointment) {
+	/*public static Element appointmentToXml(Appointment anAppointment) {
 		Element app = new Element("appointment");
 		
 		Element id = new Element("id");
@@ -143,7 +143,7 @@ public class XMLSerializer {
 		
 		return app;
 	}
-	
+	*/
 	/**
 	 * Returns a XOR xml element for a room. Contains room_id, room_name and
 	 * room_space
@@ -384,8 +384,9 @@ public class XMLSerializer {
 				Meeting meeting = assembleMeeting(app);
 				person.addAppointment(meeting);
 			} else if(app.getLocalName().equals("appointment")) {
-				Appointment appointment = assembleAppointment(app);
-				person.addAppointment((Meeting)appointment);
+                                System.out.println("APPOINTMENT IN THE SYSTEM");
+				//Appointment appointment = assembleAppointment(app);
+				//person.addAppointment((Meeting)appointment);
 			}
 		}
 		
@@ -691,7 +692,7 @@ public class XMLSerializer {
 	 * @param xmlAppElement
 	 * @return 
 	 */
-	public static Appointment assembleAppointment(Element xmlAppElement) {
+	/*public static Appointment assembleAppointment(Element xmlAppElement) {
 		int id;
 		Timestamp start, end;
 		Room room;
@@ -738,7 +739,7 @@ public class XMLSerializer {
 			System.err.println("Malformed xml element. No registered_by while assembling appointment");
 			return null;
 		}
-		element = element.getFirstChildElement("person");
+		element = element.getFirstChildElement("person_simple");
 		if(element == null) {
 			System.err.println("Malformed xml element. No person under registered_by while assembling appointment");
 			return null;
@@ -783,7 +784,7 @@ public class XMLSerializer {
 		return app;
 		
 	}
-	
+	*/
 	/**
 	 * Assembles a room from an xml element. Returns null if the element is
 	 * malformed.

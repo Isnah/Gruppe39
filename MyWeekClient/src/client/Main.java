@@ -66,7 +66,7 @@ public class Main {
      */
     public void setFrame(MainWindow frame) {
         this.frame = frame;
-        
+        System.out.println("SetFrame main"+this.frame.toString());
         for (Meeting app : getAppointmentsForCurrentWeek()) {
             showAppointments(app);
         }
@@ -140,23 +140,24 @@ public class Main {
         
         //FIX THIS!!!
         addAppointment(model);
+	person.addAppointment(model);
         //REALLY NEEDS FIXING!
     }
     private void addAppointment(Meeting model) {
-    	if (!person.getAllAppointments().contains(model)) {
 	    	try {
 				ct.addAppointment(model);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	        person.addAppointment(model);
-	        
-    	}
     }
     
     private void showAppointments(Meeting model) {
+    	if (!person.getAllAppointments().contains(model)) {
+	        person.addAppointment(model);
+        }
     	if (getAppointmentsForCurrentWeek().contains(model)) {
+            System.out.println("adding to frame");
             frame.addAppointment(model);
             System.out.println("out");
         }
@@ -168,6 +169,7 @@ public class Main {
     }
     public void removeAppointment(Meeting model) {
     	command = new Element("delete");
+        addAppointment(model);
         person.removeAppointment(model);
     }
     public Main() {
@@ -221,6 +223,7 @@ public class Main {
 				while(true) {
 					Builder builder = new Builder();
 					String input = in.readUTF();
+                                        System.out.println(input);
 
 					Document doc = builder.build(input, null);
 					String type = XMLSerializer.getType(doc);

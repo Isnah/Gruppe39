@@ -189,11 +189,13 @@ public class AppointmentEditor extends javax.swing.JFrame {
             frame.showInformationPanel(model);
         }
         else {
-            if (oldStart.getTime() != model.getStart() && oldEnd.getTime() != model.getEnd()) {
+            if (oldStart.getTime() != model.getStart() || oldEnd.getTime() != model.getEnd()) {
                 frame.deleteAppointment(model);
                 frame.newAppointment(model);
             }
-            frame.editAppointment(model);
+            else {
+                frame.editAppointment(model);
+            }
         }
         dispose();
     }
