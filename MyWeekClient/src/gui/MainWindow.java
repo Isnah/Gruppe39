@@ -12,10 +12,8 @@ import client.Meeting;
 import client.Notification;
 import client.Person;
 import client.Room;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -1389,7 +1387,6 @@ public class MainWindow extends javax.swing.JFrame {
      * @param model 
      */
     public void newAppointment(Meeting model) {
-        System.out.println("newAppointment");
         main.newAppointment(model);
     }
     
@@ -1415,11 +1412,8 @@ public class MainWindow extends javax.swing.JFrame {
     }
     public void addAppointment(Meeting model) {
         //Creating a new appointment panel
-        System.out.println("addAppointment");
         AppointmentView av = new AppointmentView(this, model);
-        System.out.println("");
         appointments.add(av);
-        System.out.println();
         //Getting the right day-panel to add the appointment to
         switch (Converters.dayStringFormat(model.getStart())) {
             case "Monday":

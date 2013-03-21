@@ -6,28 +6,22 @@ package client;
 
 import gui.Login;
 import gui.MainWindow;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Time;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import client.XMLSerializer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nu.xom.Builder;
 import nu.xom.Document;
-import nu.xom.ParsingException;
-import nu.xom.ValidityException;
 import nu.xom.Element;
 import nu.xom.Elements;
+import nu.xom.ParsingException;
+import nu.xom.ValidityException;
 
 /**
  *
@@ -163,9 +157,7 @@ public class Main {
 	        person.addAppointment(model);
         }
     	if (getAppointmentsForCurrentWeek().contains(model)) {
-            System.out.println("adding to frame");
             frame.addAppointment(model);
-            System.out.println("out");
         }
     }
 
@@ -229,7 +221,6 @@ public class Main {
 				while(true) {
 					Builder builder = new Builder();
 					String input = in.readUTF();
-                                        System.out.println(input);
                                         
                                         if(input.equals("invalid_login")) continue;
                                         else if(input.equals("access_error_no_login")) continue;
@@ -265,7 +256,6 @@ public class Main {
 								person = XMLSerializer.assembleSimplePerson(el);
 							}
 							else if(elementType.equals("meeting")) {
-								System.out.println(doc.toXML());
 								meeting = XMLSerializer.assembleMeeting(el);
 								showAppointments(meeting);
 								
@@ -291,7 +281,6 @@ public class Main {
 						}
 					}
 					else {
-						System.out.println(input);
 					}
 				}
 				
@@ -308,14 +297,11 @@ public class Main {
 		}
 		
 		public void addAppointment(Meeting model) throws IOException {
-			System.out.println(model.getRegisteredBy().getEmail());
 			Element temp = XMLSerializer.meetingToXml(model);
-			System.out.println(temp.getLocalName());
 			
 			command.appendChild(temp);
 			
 			Document send = new Document(command);
-			System.out.println(send.toXML());
 			out.writeUTF(send.toXML());
 		}
 		

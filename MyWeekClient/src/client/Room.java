@@ -112,13 +112,11 @@ public class Room {
 		// TODO: Possibly consider sorting the appointments list on start time
 		//       and doing a binary search to see if the room is available at
 		//       the time
-            System.out.println("Checking appointments " + appointments.size());
 		for(int i = 0; i < appointments.size(); ++i) {
 			Appointment app = appointments.get(i);
-                        System.out.println("Checking room status for app " +i);
-                        System.out.println(app.getStart() + " --> " + app.getEnd());
 			if(app.getStart() > start && app.getStart() < end) return false;
-			if(app.getEnd() < end && app.getEnd() > start) return false;
+                        if(app.getEnd() < end && app.getEnd() > start) return false;
+                        if (app.getStart() < start  && app.getEnd() > end) return false;
 		}
 		return true;
 	}

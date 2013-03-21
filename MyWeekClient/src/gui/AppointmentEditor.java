@@ -137,6 +137,8 @@ public class AppointmentEditor extends javax.swing.JFrame {
         timeToMM.setValue(Integer.parseInt(model.getTimeFormat().subSequence(9, 11).toString()));
         if (model.getRoom() != null) {
             roomReserved = true;
+            selectedRoom = model.getRoom();
+            setReservation(true);
             removeRoomButton.setEnabled(true);
             whereField.setEnabled(false);
         }
@@ -185,7 +187,6 @@ public class AppointmentEditor extends javax.swing.JFrame {
                 model.addAttendee(frame.getPersonByEmail(invited.getElementAt(i).getEmail()));
             }
         }
-        
         if (roomReserved) {
             model.setRoom(selectedRoom);
         }
@@ -228,6 +229,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
     }
     private String getRoom() {
         if (model.getRoom() != null) {
+            roomReserved = true;
             return model.getRoom().getName();
         }
         else {
