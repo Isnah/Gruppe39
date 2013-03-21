@@ -165,7 +165,11 @@ public class Appointment {
 	 * @return A copy of the room description
 	 */
 	public String getRoomDescr(){
+            try {
 		return new String(roomDescr);
+            } catch (NullPointerException ex) {
+                return null;
+            }
 	}
 	
 	/**

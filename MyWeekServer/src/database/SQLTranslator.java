@@ -312,12 +312,41 @@ public class SQLTranslator {
 		}
 	}
 	
+	public static Room getRoomWithoutAppointments(int roomID, Connection c) {
+		
+		//SELECT id FROM Appointment WHERE room_id=[roomID];
+		
+		int space;
+		String name;
+		
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT id, capacity, name FROM Room WHERE id=");
+		query.append(roomID);
+		
+		try {
+			Statement s = c.createStatement();
+			ResultSet r = s.executeQuery(query.toString());
+			if(r.next()) {
+				space = r.getInt(2);
+				name = r.getString(3);
+				r.close();
+				return new Room(roomID, space, name, null);
+			}
+		} catch (SQLException ex) {
+			System.err.println("SQL exception in getMeetingAnswer()");
+			System.err.println("Message: " + ex.getMessage());
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Returns the room with id roomID from the database
 	 * @param roomID The ID of the room
 	 * @param c The connection to the database.
 	 * @return the room
 	 */
+	
 	public static Room getRoom(int roomID, Connection c) {
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		
@@ -1134,7 +1163,7 @@ public class SQLTranslator {
 		}
 		if(room_id != null)
 		{
-			meeting.setRoom(getRoom(room_id, c));
+			meeting.setRoom(getRoomWithoutAppointments(room_id, c));
 		}
 		
 		//partition the attendees in three lists

@@ -3,6 +3,7 @@ package client;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
 /**
  * 
  * @author Tobias Linkjendal
@@ -14,6 +15,19 @@ public class Room {
 	private String name;
 	private ArrayList<Appointment> appointments;
 	
+	/**
+	 * 
+	 * @param id
+	 * @param space
+	 * @param name
+	 * @param appointments
+	 */
+	public Room(int id, int space, String name, ArrayList<Appointment> appointments) {
+		this.id = id;
+		this.space = space;
+		this.name = name;
+		this.appointments = appointments;
+	}
 	/**
 	 * @param id The room id
 	 * @param space How many persons there is space for 
@@ -98,8 +112,11 @@ public class Room {
 		// TODO: Possibly consider sorting the appointments list on start time
 		//       and doing a binary search to see if the room is available at
 		//       the time
+            System.out.println("Checking appointments " + appointments.size());
 		for(int i = 0; i < appointments.size(); ++i) {
 			Appointment app = appointments.get(i);
+                        System.out.println("Checking room status for app " +i);
+                        System.out.println(app.getStart() + " --> " + app.getEnd());
 			if(app.getStart() > start && app.getStart() < end) return false;
 			if(app.getEnd() < end && app.getEnd() > start) return false;
 		}

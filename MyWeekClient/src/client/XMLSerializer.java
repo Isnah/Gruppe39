@@ -819,11 +819,42 @@ public class XMLSerializer {
 		}
 		space = Integer.parseInt(element.getValue());
 		
-		/*
-		 * TODO: Needs to check for appointments. Might need to ask the database for appointments through app_id's
-		 */
-		
-		return new Room(id, space, name);
+                ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+                
+                element = xmlRoomElement.getFirstChildElement("appointments");
+                
+                if(element != null) {
+                    Elements appElem = element.getChildElements();
+                    System.out.println("appElem size: " + appElem.size());
+                    for(int i = 0; i < appElem.size(); ++i) {
+                        Element app = appElem.get(i);
+                        
+                        if(app == null) {
+                            System.out.println("app is null while assembling room");
+                            continue;
+                        }
+                        
+                        int app_id;
+                        long start, end;
+                        
+                        Element el = app.getFirstChildElement("id");
+                        if(el == null) continue;
+                        app_id = Integer.parseInt(el.getValue());
+                        
+                        el = app.getFirstChildElement("start");
+                        if(el == null) continue;
+                        start = Long.parseLong(el.getValue());
+                        
+                        el = app.getFirstChildElement("end");
+                        if(el == null) continue;
+                        end = Long.parseLong(el.getValue());
+                        
+                        appointments.add(new Appointment(app_id, new Time(start), new Time(end), null, null, null));
+                        
+                    }
+                }
+		System.out.println("appointments from room: "+appointments.size());
+		return new Room(id, space, name, appointments);
 	}
 	
 	public static Notification assembleNotification(Element xmlNotificationElement) {

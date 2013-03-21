@@ -1316,18 +1316,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     public ArrayList<Room> getAllRooms() {
-        //return main.getAllRooms();
-        // TODO Get all rooms from server
-        ArrayList<Room> temp = new ArrayList<>();
-        temp.add(new Room(0, 5, "Room 1"));
-        temp.add(new Room(1, 5, "Room 2"));
-        temp.add(new Room(2, 5, "Room 3"));
-        Room rom = new Room(3, 9, "fskmisvpmd");
-        Meeting haxx = new Meeting(0, new Time(new Date().getTime()), new Time(new Date().getTime()+999999), "", null, null, null, null);
-        rom.addAppointment(haxx);
-        temp.add(rom);
-        
-        return temp;
+        return main.getRoomList();
     }
     public String getEmail() {
         return main.getEmail();
@@ -1378,7 +1367,7 @@ public class MainWindow extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, alarm.getMessage(),"Alarm", JOptionPane.INFORMATION_MESSAGE);
     }
     public ArrayList<ListUnit> getAllInvitable() {
-        // TODO Make this get the list from the server
+        
         ArrayList<ListUnit> notInvited = new ArrayList<>();
         //FOR TESTING
         notInvited.add(new ListUnit("Tobias", "Tobias"));

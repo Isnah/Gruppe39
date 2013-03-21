@@ -172,6 +172,7 @@ public class Login extends javax.swing.JFrame {
                     new MainWindow(main).setVisible(true);
             }
             else {
+                passwordField.setText("");
                 errorPanel.setVisible(true);
             }
         } catch(Exception e) {}

@@ -148,6 +148,18 @@ public class ServerMain {
 								ret.appendChild(XMLSerializer.simpleGroupToXml(group));
 							} else if(elementType.equals("notifications_all")) {
 								// get all notifications since the previous query by this user
+							} else if (elementType.equals("person_simple_all")) {
+								
+							} else if (elementType.equals("group_simple_all")) {
+								
+							} else if (elementType.equals("room_all")) {
+								Room room = new Room(0, "fake");
+								for(int j = 1; room != null; ++j) {
+									room = SQLTranslator.getRoom(j, connection);
+									if(room == null) break;
+									ret.appendChild(XMLSerializer.roomToXmlWithSimpleAppointment(room));
+								}
+								
 							}
 						}
 						

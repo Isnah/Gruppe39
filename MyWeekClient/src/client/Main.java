@@ -20,6 +20,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import client.XMLSerializer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.ParsingException;
@@ -39,6 +41,7 @@ public class Main {
     private Meeting meeting;
     private Element command;
     private ConnectionThread ct;
+    private ArrayList<Room> allRooms;
     
     private boolean loggedIn = false;
     /**
@@ -50,11 +53,10 @@ public class Main {
      */
     public boolean login(String username, char[] password) throws IOException {
     	ct.login(username, password);
-    	while(person == null) {
-    		try {
-    			Thread.sleep(200);
-    		} catch(InterruptedException ex) {
-    		}
+        
+        try {
+    		Thread.sleep(500);
+    	} catch(InterruptedException ex) {
     	}
     	
         return loggedIn;
@@ -66,7 +68,7 @@ public class Main {
      */
     public void setFrame(MainWindow frame) {
         this.frame = frame;
-        System.out.println("SetFrame main"+this.frame.toString());
+        updateRooms();
         for (Meeting app : getAppointmentsForCurrentWeek()) {
             showAppointments(app);
         }
@@ -90,8 +92,12 @@ public class Main {
     private void sendAlarm(Alarm alarm) {
         frame.fireAlarm(alarm);
     }
-    public ArrayList<Room> getAllRooms() {
-        return new ArrayList<Room>();
+    public ArrayList<Room> getRoomList() {
+        return allRooms;
+    }
+    private void updateRooms() {
+            allRooms = new ArrayList<Room>();
+            ct.getAllRooms();
     }
     /**
      * Used by the main window to get its model
@@ -134,7 +140,6 @@ public class Main {
         // TODO return group from server
         return new Group(8, "a random group");
     }
-    
     public void newAppointment(Meeting model) {
     	command = new Element("new");
         
@@ -150,6 +155,7 @@ public class Main {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+                updateRooms();
     }
     
     private void showAppointments(Meeting model) {
@@ -224,6 +230,16 @@ public class Main {
 					Builder builder = new Builder();
 					String input = in.readUTF();
                                         System.out.println(input);
+                                        
+                                        if(input.equals("invalid_login")) continue;
+                                        else if(input.equals("access_error_no_login")) continue;
+                                        else if(input.equals("meeting_update_ok")) continue;
+                                        else if(input.equals("meeting_update_failed_wrong_user")) continue;
+                                        else if(input.equals("Malformed xml sent. Not able to assemble meeting.")) continue;
+                                        else if(input.equals("Add statement not recognized")) continue;
+                                        else if(input.equals("meeting_deletion_failed_wrong_user")) continue;
+                                        else if(input.equals("Logging out of server")) continue;
+                                        else if(input.equals("invalid_request")) continue;
 
 					Document doc = builder.build(input, null);
 					String type = XMLSerializer.getType(doc);
@@ -266,7 +282,8 @@ public class Main {
 								out.writeUTF(getDoc.toXML());
 							}
 							else if(elementType.equals("room")) {
-								
+                                                                Room room = XMLSerializer.assembleRoom(el);
+                                                                allRooms.add(room);
 							}
 							else if(elementType.equals("group")) {
 								
@@ -326,5 +343,19 @@ public class Main {
 		public void login(String user, char[] password) throws IOException {
 			out.writeUTF(XMLSerializer.loginToXml(user, password).toXML());
 		}
+
+        private void getAllRooms() {
+            try {
+                Element root = new Element("get");
+                Element temp = new Element("room_all");
+
+                root.appendChild(temp);
+
+                Document doc = new Document(root);
+                out.writeUTF(doc.toXML());
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

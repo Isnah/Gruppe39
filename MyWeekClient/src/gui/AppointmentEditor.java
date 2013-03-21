@@ -38,6 +38,8 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private DefaultTableModel roomTableModel;
     private ListSelectionModel roomTableSelectionModel;
     
+    
+    private Room selectedRoom = null;
     private boolean newAppointment = false;
     private boolean roomReserved = false;
     private Time oldStart, oldEnd;
@@ -150,6 +152,13 @@ public class AppointmentEditor extends javax.swing.JFrame {
     private void setRoom() {
         if (roomTable.getValueAt(roomTable.getSelectedRow(), 2).equals("No")) {
             whereField.setText((String)roomTable.getValueAt(roomTable.getSelectedRow(), 0));
+            ArrayList<Room> allRooms = frame.getAllRooms();
+            for (Room room : allRooms) {
+                if (room.getName().equals(roomTable.getValueAt(roomTable.getSelectedRow(), 0))) {
+                    selectedRoom = room;
+                }
+            }
+            roomReserved = true;
     }   }
     /**
      * 
@@ -178,7 +187,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
         }
         
         if (roomReserved) {
-            model.setRoom(null);
+            model.setRoom(selectedRoom);
         }
         else {
             model.setRoomDescr(whereField.getText());
@@ -693,6 +702,8 @@ public class AppointmentEditor extends javax.swing.JFrame {
                 timeToMM.setValue(timeFromMM.getValue());
             }
         }
+        roomReserved = false;
+        setReservation(false);
         updateRoomTableModel();
     }//GEN-LAST:event_timeFromMMStateChanged
 
@@ -702,6 +713,8 @@ public class AppointmentEditor extends javax.swing.JFrame {
                 timeFromMM.setValue(timeToMM.getValue());
             }
         }
+        roomReserved = false;
+        setReservation(false);
         updateRoomTableModel();
     }//GEN-LAST:event_timeToMMStateChanged
 
@@ -722,6 +735,7 @@ public class AppointmentEditor extends javax.swing.JFrame {
 
     private void removeRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeRoomButtonActionPerformed
         setReservation(false);
+        roomReserved = false;
     }//GEN-LAST:event_removeRoomButtonActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
